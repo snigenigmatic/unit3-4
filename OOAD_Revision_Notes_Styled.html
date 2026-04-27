@@ -1,0 +1,3016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OOAD — Units 3 &amp; 4 Revision Notes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --ink: #0f0e0d;
+    --paper: #f7f4ef;
+    --accent: #c0392b;
+    --accent2: #1a5276;
+    --accent3: #117a65;
+    --gold: #b7950b;
+    --muted: #6d6358;
+    --rule: #d5cfc6;
+    --highlight: #fdebd0;
+    --highlight2: #d6eaf8;
+    --highlight3: #d5f5e3;
+    --highlight-warn: #fef9e7;
+    --code-bg: #1e2329;
+    --code-fg: #e6db74;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,.02) 40px, rgba(255,255,255,.02) 80px);
+  }
+  .masthead h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 900;
+    letter-spacing: -1px;
+    position: relative;
+  }
+  .masthead h1 span { color: var(--accent); }
+  .masthead .sub {
+    margin-top: .6rem;
+    font-size: 1rem;
+    opacity: .65;
+    font-style: italic;
+    position: relative;
+  }
+  .badge-row {
+    margin-top: 1.4rem;
+    display: flex;
+    justify-content: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .badge {
+    background: var(--accent);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    padding: .25rem .7rem;
+    border-radius: 2px;
+    letter-spacing: .5px;
+  }
+  .badge.blue { background: var(--accent2); }
+  .badge.green { background: var(--accent3); }
+
+  .toc-wrapper {
+    max-width: 900px;
+    margin: 2.5rem auto;
+    padding: 0 1.5rem;
+  }
+  .toc-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--ink);
+    padding: 1.8rem 2rem;
+  }
+  .toc-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.2rem;
+    color: var(--muted);
+  }
+  .toc-cols { display: grid; grid-template-columns: 1fr 1fr; gap: .2rem 2rem; }
+  .toc-cols a {
+    font-size: .9rem;
+    color: var(--accent2);
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: .4rem;
+    padding: .18rem 0;
+    border-bottom: 1px dashed transparent;
+    transition: border-color .2s;
+  }
+  .toc-cols a:hover { border-bottom-color: var(--accent2); }
+  .toc-cols a .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    color: var(--muted);
+    min-width: 2rem;
+  }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+
+  .unit-divider {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1.2rem 2rem;
+    margin: 3rem 0 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .unit-divider .unit-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    opacity: .5;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .unit-divider h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+  }
+
+  .section {
+    margin-top: 2.5rem;
+    border: 1px solid var(--rule);
+    background: white;
+  }
+  .section-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: .7rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+  }
+  .section-header .s-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    opacity: .5;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 4rem;
+  }
+  .section-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+  }
+  .section-body { padding: 1.4rem 1.8rem; }
+
+  h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--accent2);
+    margin: 1.4rem 0 .5rem;
+    padding-bottom: .3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  h5 {
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 1rem 0 .3rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+
+  p { margin-bottom: .8rem; }
+
+  .def {
+    background: var(--highlight2);
+    border-left: 3px solid var(--accent2);
+    padding: .75rem 1rem;
+    margin: .8rem 0;
+    font-size: .94rem;
+  }
+  .def strong { color: var(--accent2); }
+
+  .warn {
+    background: var(--highlight);
+    border-left: 3px solid var(--gold);
+    padding: .75rem 1rem;
+    margin: .8rem 0;
+    font-size: .94rem;
+  }
+  .warn strong { color: var(--gold); }
+
+  .tip {
+    background: var(--highlight3);
+    border-left: 3px solid var(--accent3);
+    padding: .75rem 1rem;
+    margin: .8rem 0;
+    font-size: .94rem;
+  }
+  .tip strong { color: var(--accent3); }
+
+  .tbl-wrap { overflow-x: auto; margin: 1rem 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .88rem;
+  }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th {
+    padding: .55rem .9rem;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    letter-spacing: .5px;
+  }
+  tbody tr:nth-child(even) { background: var(--paper); }
+  tbody tr:nth-child(odd) { background: white; }
+  tbody td { padding: .5rem .9rem; vertical-align: top; }
+
+  ul, ol { padding-left: 1.5rem; margin-bottom: .8rem; }
+  li { margin-bottom: .3rem; }
+  li strong { color: var(--ink); }
+
+  .kw {
+    display: inline;
+    background: var(--highlight2);
+    color: var(--accent2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .82em;
+    padding: .1em .4em;
+    border-radius: 2px;
+    font-weight: 600;
+  }
+  .kw.red { background: var(--highlight); color: var(--accent); }
+  .kw.green { background: var(--highlight3); color: var(--accent3); }
+
+  .formula {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: .6rem 1rem;
+    margin: .8rem 0;
+    font-size: .9rem;
+    border-radius: 2px;
+  }
+  pre.code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--code-bg);
+    color: #e0e0d8;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    font-size: .82rem;
+    line-height: 1.5;
+    border-radius: 2px;
+    overflow-x: auto;
+    border-left: 3px solid var(--code-fg);
+  }
+  pre.code .k { color: #66d9ef; }
+  pre.code .s { color: #a6e22e; }
+  pre.code .c { color: #75715e; font-style: italic; }
+  pre.code .t { color: #e6db74; }
+
+  .exam-box {
+    background: #fff8e1;
+    border: 1.5px solid var(--gold);
+    padding: .8rem 1.1rem;
+    margin: 1rem 0;
+    font-size: .9rem;
+  }
+  .exam-box::before {
+    content: '★ EXAM FOCUS — ';
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    color: var(--gold);
+    letter-spacing: .5px;
+  }
+
+  .steps { counter-reset: step; list-style: none; padding: 0; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: .8rem;
+    align-items: flex-start;
+    margin-bottom: .6rem;
+  }
+  .steps li::before {
+    content: counter(step);
+    min-width: 1.6rem;
+    height: 1.6rem;
+    background: var(--accent2);
+    color: white;
+    border-radius: 50%;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: .15rem;
+  }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .compare-box {
+    border: 1px solid var(--rule);
+    padding: .9rem 1rem;
+  }
+  .compare-box h5 { margin-top: 0; }
+
+  .pattern-card {
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent);
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    background: white;
+  }
+  .pattern-card .pname {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--ink);
+  }
+  .pattern-card .pone {
+    font-style: italic;
+    color: var(--muted);
+    font-size: .9rem;
+    margin-top: .2rem;
+  }
+
+  .mcq-list { list-style: none; padding: 0; }
+  .mcq-list li {
+    background: var(--paper);
+    border-left: 2px solid var(--accent3);
+    padding: .5rem .8rem;
+    margin-bottom: .35rem;
+    font-size: .9rem;
+  }
+  .mcq-list li .ans {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    color: var(--accent3);
+    font-size: .8rem;
+    margin-left: .4rem;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: .8rem;
+    color: var(--muted);
+    border-top: 1px solid var(--rule);
+    margin-top: 3rem;
+  }
+
+  @media(max-width:640px){
+    .toc-cols { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .section-body { padding: 1rem; }
+  }
+
+  [id] { scroll-margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ MASTHEAD ═══════════════════════ -->
+<div class="masthead">
+  <h1>Object Oriented Analysis<br>&amp; Design <span>Revision Notes</span></h1>
+  <div class="sub">UE23CS352B — Units 3 &amp; 4 · Prof. Shridevi A Sawant</div>
+  <div class="badge-row">
+    <span class="badge">Unit 3: GRASP, SOLID &amp; Creational</span>
+    <span class="badge blue">Unit 4: Structural, Behavioral &amp; Anti-Patterns</span>
+    <span class="badge green">Full slide coverage</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TOC ═══════════════════════ -->
+<div class="toc-wrapper">
+<div class="toc-card">
+  <h2>Table of Contents</h2>
+  <div class="toc-cols">
+    <a href="#u3-grasp-intro"><span class="num">3.1</span>GRASP — Introduction &amp; Responsibility</a>
+    <a href="#u3-creator"><span class="num">3.2</span>Creator</a>
+    <a href="#u3-info-expert"><span class="num">3.3</span>Information Expert</a>
+    <a href="#u3-low-coupling"><span class="num">3.4</span>Low Coupling</a>
+    <a href="#u3-high-cohesion"><span class="num">3.5</span>High Cohesion</a>
+    <a href="#u3-controller"><span class="num">3.6</span>Controller</a>
+    <a href="#u3-polymorphism"><span class="num">3.7</span>Polymorphism</a>
+    <a href="#u3-other-grasp"><span class="num">3.8</span>Indirection · Pure Fab · Protected Var.</a>
+    <a href="#u3-isp"><span class="num">3.9</span>SOLID — Interface Segregation</a>
+    <a href="#u3-dip"><span class="num">3.10</span>SOLID — Dependency Inversion</a>
+    <a href="#u3-dp-intro"><span class="num">3.11</span>Intro to Design Patterns &amp; GoF</a>
+    <a href="#u3-creational"><span class="num">3.12</span>Creational Patterns Overview</a>
+    <a href="#u3-singleton"><span class="num">3.13</span>Singleton</a>
+    <a href="#u3-factory"><span class="num">3.14</span>Factory Method</a>
+    <a href="#u3-builder"><span class="num">3.15</span>Builder</a>
+    <a href="#u3-prototype"><span class="num">3.16</span>Prototype</a>
+    <a href="#u4-structural-intro"><span class="num">4.1</span>Structural Patterns — Overview</a>
+    <a href="#u4-adapter"><span class="num">4.2</span>Adapter</a>
+    <a href="#u4-facade"><span class="num">4.3</span>Facade</a>
+    <a href="#u4-proxy"><span class="num">4.4</span>Proxy</a>
+    <a href="#u4-flyweight"><span class="num">4.5</span>Flyweight</a>
+    <a href="#u4-behavioral-intro"><span class="num">4.6</span>Behavioral Patterns — Overview</a>
+    <a href="#u4-cor"><span class="num">4.7</span>Chain of Responsibility</a>
+    <a href="#u4-command"><span class="num">4.8</span>Command</a>
+    <a href="#u4-interpreter"><span class="num">4.9</span>Interpreter</a>
+    <a href="#u4-iterator"><span class="num">4.10</span>Iterator</a>
+    <a href="#u4-anti-intro"><span class="num">4.11</span>Anti-Patterns — Definitions</a>
+    <a href="#u4-viewpoints"><span class="num">4.12</span>Viewpoints &amp; Reference Model</a>
+    <a href="#u4-sins"><span class="num">4.13</span>Seven Deadly Sins · Primal Forces · SDLM</a>
+    <a href="#u4-analysis-paralysis"><span class="num">4.14</span>Analysis Paralysis</a>
+    <a href="#u4-vendor-lock"><span class="num">4.15</span>Vendor Lock-In</a>
+    <a href="#u4-blob"><span class="num">4.16</span>The Blob</a>
+    <a href="#quickref"><span class="num">★</span>Quick Reference Sheets</a>
+  </div>
+</div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════ UNIT 3 ═══════════════════════ -->
+<div class="unit-divider">
+  <span class="unit-num">Unit 03</span>
+  <h2>GRASP · SOLID (ISP, DIP) · Creational Design Patterns</h2>
+</div>
+
+<!-- ── 3.1 GRASP intro ── -->
+<div class="section" id="u3-grasp-intro">
+<div class="section-header">
+  <span class="s-num">§ 3.1</span>
+  <h3>GRASP — Introduction &amp; Responsibility</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>GRASP</strong> stands for <em>General Responsibility Assignment Software Patterns</em> — a set of guidelines for <strong>assigning responsibilities</strong> to classes and objects in object-oriented design. First published by <strong>Craig Larman</strong> with <strong>9 fundamental principles</strong>. Often paired with <span class="kw">SOLID</span>.
+</div>
+
+<h4>What is a Responsibility?</h4>
+<p>A <strong>responsibility</strong> is a <em>contract or obligation</em> that a class, module, or component must fulfil. It can be accomplished by a single object or by a group of objects collaborating via messages.</p>
+
+<h5>Two Types of Responsibility</h5>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Type</th><th>Meaning</th><th>Examples</th></tr></thead>
+<tbody>
+<tr><td><strong>Doing</strong></td><td>Doing something itself</td><td>Creating an object, performing a calculation, initiating action in others, controlling/coordinating activities</td></tr>
+<tr><td><strong>Knowing</strong></td><td>Knowing information</td><td>Knowing private encapsulated data, knowing related objects, knowing things it can derive or calculate</td></tr>
+</tbody>
+</table>
+</div>
+
+<h5>Responsibility-Driven Design (RDD)</h5>
+<ul>
+<li>Design done in terms of <strong>responsibilities, roles, and collaborations</strong>.</li>
+<li><strong>RDD view:</strong> abstraction of <em>what objects do</em>.</li>
+<li><strong>UML view:</strong> a contract or obligation of a classifier.</li>
+<li>Translation of responsibilities into classes/methods depends on the <strong>granularity</strong> of the responsibility.</li>
+</ul>
+
+<h4>The Nine GRASP Principles</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>#</th><th>Principle</th><th>Core Question</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><span class="kw">Creator</span></td><td>Who creates a new instance of X?</td></tr>
+<tr><td>2</td><td><span class="kw">Information Expert</span></td><td>Who has the info to fulfil the responsibility?</td></tr>
+<tr><td>3</td><td><span class="kw">Low Coupling</span></td><td>How to keep dependencies minimal?</td></tr>
+<tr><td>4</td><td><span class="kw">Controller</span></td><td>Who handles a system event from the UI?</td></tr>
+<tr><td>5</td><td><span class="kw">High Cohesion</span></td><td>How to keep each class focused?</td></tr>
+<tr><td>6</td><td><span class="kw">Polymorphism</span></td><td>How to vary behaviour by type?</td></tr>
+<tr><td>7</td><td><span class="kw">Indirection</span></td><td>How to avoid direct coupling between two elements?</td></tr>
+<tr><td>8</td><td><span class="kw">Protected Variations</span></td><td>How to shield from variation in other elements?</td></tr>
+<tr><td>9</td><td><span class="kw">Pure Fabrication</span></td><td>What if domain-based assignment gives bad design?</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="exam-box">
+The slides explicitly cover principles 1–6 in detail. The remaining three (Indirection, Protected Variations, Pure Fabrication) are listed in the agenda but not expanded — examiners may still ask for the full list of 9.
+</div>
+</div>
+</div>
+
+<!-- ── 3.2 Creator ── -->
+<div class="section" id="u3-creator">
+<div class="section-header">
+  <span class="s-num">§ 3.2</span>
+  <h3>Creator</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Problem:</strong> Who should create a new instance of some class?<br>
+<strong>Solution:</strong> Assign the responsibility of creating instances of class <strong>X</strong> to class <strong>B</strong> if one or more apply.
+</div>
+
+<h5>When B should create X</h5>
+<ul>
+<li>B <strong>contains</strong> or <strong>aggregates</strong> X</li>
+<li>B <strong>records</strong> X</li>
+<li>B <strong>closely uses</strong> X</li>
+<li>B has the <strong>initialising data</strong> for X</li>
+</ul>
+
+<p><em>Principle:</em> "Container" objects create "contained" objects.</p>
+
+<h4>Worked Examples</h4>
+<ul>
+<li><strong>POS:</strong> a <span class="kw">Sale</span> contains <span class="kw">SalesLineItem</span> objects → <span class="kw">Sale</span> is the Creator.</li>
+<li><strong>Monopoly:</strong> the <span class="kw">Board</span> creates <span class="kw">Square</span> objects since the Board aggregates all squares.</li>
+</ul>
+
+<h5>Java — OrderService as Creator</h5>
+<pre class="code"><span class="k">public class</span> OrderService {
+    <span class="k">private final</span> OrderRepository orderRepository;
+
+    <span class="k">public</span> OrderService(OrderRepository orderRepository) {
+        <span class="k">this</span>.orderRepository = orderRepository;
+    }
+
+    <span class="k">public void</span> createOrder(Customer customer, List&lt;Product&gt; products) {
+        Order order = <span class="k">new</span> Order(customer, products);     <span class="c">// OrderService is Creator</span>
+        orderRepository.saveOrder(order);
+    }
+}</pre>
+
+<div class="tip">
+<strong>Note:</strong> When creation logic itself is complex, prefer the <span class="kw green">Factory</span> pattern over plain Creator.
+</div>
+</div>
+</div>
+
+<!-- ── 3.3 Information Expert ── -->
+<div class="section" id="u3-info-expert">
+<div class="section-header">
+  <span class="s-num">§ 3.3</span>
+  <h3>Information Expert</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Problem:</strong> What is the basic principle for assigning responsibilities?<br>
+<strong>Solution:</strong> Assign a responsibility to the class that <strong>has the information needed</strong> to fulfil it.
+</div>
+
+<p><em>"Objects do things related to the information they have."</em> If the information is spread across several classes, the objects collaborate via messages.</p>
+
+<h5>POS — calculating the grand total</h5>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Class</th><th>Responsibility</th></tr></thead>
+<tbody>
+<tr><td><span class="kw">Sale</span></td><td>Knows sale total</td></tr>
+<tr><td><span class="kw">SalesLineItem</span></td><td>Knows line-item subtotal</td></tr>
+<tr><td><span class="kw">ProductDescription</span></td><td>Knows product price</td></tr>
+</tbody>
+</table>
+</div>
+
+<h5>Java — Shopping cart total</h5>
+<pre class="code"><span class="k">public class</span> ShoppingCart {
+    <span class="k">private</span> List&lt;Item&gt; items = <span class="k">new</span> ArrayList&lt;&gt;();
+
+    <span class="k">public void</span> addItem(Item item) { items.add(item); }
+
+    <span class="k">public double</span> calculateTotalPrice() {
+        <span class="k">double</span> totalPrice = 0;
+        <span class="k">for</span> (Item item : items) totalPrice += item.getPrice();
+        <span class="k">return</span> totalPrice;                <span class="c">// ShoppingCart is the Info Expert</span>
+    }
+}
+
+<span class="k">public class</span> Item {
+    <span class="k">private</span> String name;
+    <span class="k">private double</span> price;
+    <span class="k">public double</span> getPrice() { <span class="k">return</span> price; }
+}</pre>
+
+<p>The <span class="kw">ShoppingCart</span> is the info expert for the <em>total</em>; <span class="kw">Item</span> is the info expert for its own <em>price</em>.</p>
+</div>
+</div>
+
+<!-- ── 3.4 Low Coupling ── -->
+<div class="section" id="u3-low-coupling">
+<div class="section-header">
+  <span class="s-num">§ 3.4</span>
+  <h3>Low Coupling</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Coupling</strong> = degree of dependency between classes/modules.<br>
+<strong>Problem:</strong> How to support low dependency, low change impact, and increased reuse?<br>
+<strong>Solution:</strong> Assign responsibility so coupling stays low.
+</div>
+
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent)">Tight Coupling</h5>
+<p style="font-size:.9rem">High dependency. Changes in one class force changes in another. Happens when a class instantiates another concretely and directly calls its methods/fields.</p>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Loose Coupling</h5>
+<p style="font-size:.9rem">Low dependency. Classes interact through well-defined interfaces. Achieved via interfaces, abstract classes, or dependency injection.</p>
+</div>
+</div>
+
+<h5>Two elements are coupled if…</h5>
+<ul>
+<li>One has an aggregation/composition with the other, OR</li>
+<li>One implements/extends the other</li>
+</ul>
+
+<h5>Coupling tells you "X depends on Y" if…</h5>
+<ul>
+<li><span class="kw">TypeX</span> has an attribute of <span class="kw">TypeY</span></li>
+<li><span class="kw">TypeX</span> calls services of a <span class="kw">TypeY</span> object</li>
+<li><span class="kw">TypeX</span> has a method referencing an instance of <span class="kw">TypeY</span></li>
+<li><span class="kw">TypeX</span> is a subclass of <span class="kw">TypeY</span></li>
+<li><span class="kw">TypeY</span> is an interface and <span class="kw">TypeX</span> implements it</li>
+</ul>
+
+<div class="warn">
+<strong>Subclassing implies high coupling.</strong> Inheritance is the strongest form of coupling — prefer composition where possible.
+</div>
+
+<h4>Inversion of Control / Dependency Injection</h4>
+<p>Dependencies are <strong>injected</strong> into objects by a third party (Spring DI, Java EE CDI) rather than created internally. The key benefit is <strong>loose coupling</strong>.</p>
+
+<h5>Loose-coupling Java example</h5>
+<pre class="code"><span class="k">interface</span> Vehicle { <span class="k">void</span> move(); }
+
+<span class="k">class</span> Car <span class="k">implements</span> Vehicle {
+    <span class="k">public void</span> move() { System.out.println(<span class="s">"Car is moving"</span>); }
+}
+
+<span class="k">class</span> Bike <span class="k">implements</span> Vehicle {
+    <span class="k">public void</span> move() { System.out.println(<span class="s">"Bike is moving"</span>); }
+}
+
+<span class="k">class</span> Traveler {
+    <span class="k">private</span> Vehicle v;
+    <span class="k">public void</span> setV(Vehicle v) { <span class="k">this</span>.v = v; }
+    <span class="k">public void</span> startJourney() { v.move(); }
+}
+
+<span class="c">// Main</span>
+Traveler traveler = <span class="k">new</span> Traveler();
+traveler.setV(<span class="k">new</span> Car());  traveler.startJourney();   <span class="c">// Car injected</span>
+traveler.setV(<span class="k">new</span> Bike()); traveler.startJourney();   <span class="c">// Bike injected</span></pre>
+
+<h5>POS Example — Payment association</h5>
+<ul>
+<li><strong>Tight:</strong> <span class="kw">Register</span> creates <span class="kw">Payment</span> and sends it to <span class="kw">Sale</span> → Register now coupled to Payment.</li>
+<li><strong>Loose:</strong> <span class="kw">Register</span> asks <span class="kw">Sale</span> to create the <span class="kw">Payment</span> → Register no longer needs to know about Payment.</li>
+</ul>
+</div>
+</div>
+
+<!-- ── 3.5 High Cohesion ── -->
+<div class="section" id="u3-high-cohesion">
+<div class="section-header">
+  <span class="s-num">§ 3.5</span>
+  <h3>High Cohesion</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Cohesion</strong> = how strongly related and focused the responsibilities of an element are.<br>
+<strong>Problem:</strong> How to keep complexity manageable and support low coupling?<br>
+<strong>Solution:</strong> Assign responsibilities so cohesion remains high.
+</div>
+
+<h5>Problems caused by low cohesion</h5>
+<p>A class that does too many unrelated things is:</p>
+<ul>
+<li>Hard to <strong>understand</strong></li>
+<li>Hard to <strong>reuse</strong></li>
+<li>Hard to <strong>maintain</strong></li>
+<li><strong>Brittle</strong> — easily affected by change</li>
+</ul>
+
+<div class="tip">
+High cohesion and low coupling go hand in hand — a class with a single clear purpose tends to depend on fewer things.
+</div>
+</div>
+</div>
+
+<!-- ── 3.6 Controller ── -->
+<div class="section" id="u3-controller">
+<div class="section-header">
+  <span class="s-num">§ 3.6</span>
+  <h3>Controller</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Problem:</strong> Who should handle a system event? What object receives and coordinates a system operation?<br>
+<strong>Solution:</strong> Assign responsibility to an object that represents either the overall system (<strong>Façade Controller</strong>) or a single use-case scenario (<strong>Use-Case Controller</strong>).
+</div>
+
+<p>Controller deals with <strong>delegating requests from the UI layer to domain-layer objects</strong>. Helps minimise dependency between GUI components and system operation classes. When a UI event arrives, the Controller decides which domain object first receives the message — it <em>delegates</em> work and coordinates activities, but does not do the work itself.</p>
+
+<h5>Two types of Controller</h5>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Type</th><th>What it represents</th></tr></thead>
+<tbody>
+<tr><td><strong>Façade Controller</strong></td><td>The whole system, device, or subsystem</td></tr>
+<tr><td><strong>Use-Case Controller</strong></td><td>A single use case; one controller per use case allows state to be maintained (e.g., events must happen in order)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="warn">
+<strong>Bloated Controller (anti-pattern):</strong> a single class that receives <em>all</em> system events, does the work itself instead of delegating, and hoards state that should live in domain objects.
+</div>
+
+<h5>Java implementation steps</h5>
+<ol class="steps">
+<li>Identify system boundaries (UI, external systems, modules).</li>
+<li>Define Controller classes — one per related set of actions.</li>
+<li>Separate concerns — coordinate, don't implement business logic.</li>
+<li>Handle user inputs via controller methods/event handlers.</li>
+<li>Coordinate interactions between components.</li>
+<li>Promote loose coupling (interact via interfaces/abstractions).</li>
+<li>Handle exceptions gracefully.</li>
+</ol>
+
+<h5>Benefits</h5>
+<ul>
+<li>Reusable controller</li>
+<li>Maintains use-case state</li>
+<li>Controls sequence of activities</li>
+</ul>
+</div>
+</div>
+
+<!-- ── 3.7 Polymorphism ── -->
+<div class="section" id="u3-polymorphism">
+<div class="section-header">
+  <span class="s-num">§ 3.7</span>
+  <h3>Polymorphism</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Problem:</strong> How to handle alternatives based on type? How to swap one server component for another without affecting the client?<br>
+<strong>Solution:</strong> When behaviours vary by type, assign responsibility using <strong>polymorphic operations</strong> — give the same name to similar/related services on the types where behaviour varies.
+</div>
+
+<h4>Four Types of Polymorphism</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Type</th><th>Also called</th><th>Description / Java</th></tr></thead>
+<tbody>
+<tr><td><strong>Ad-hoc</strong></td><td>Overloading</td><td>Same function name acts differently for different types. <span class="kw">+</span> adds ints, concatenates strings.</td></tr>
+<tr><td><strong>Parametric</strong></td><td>Early binding</td><td>Same code works with different types. Implemented via <strong>Generics</strong>.</td></tr>
+<tr><td><strong>Inclusion</strong></td><td>Subtyping / Runtime</td><td>Use derived classes through a base reference. <strong>Dynamic method dispatch</strong> — invoked method decided at runtime by the actual object.</td></tr>
+<tr><td><strong>Coercion</strong></td><td>Casting</td><td>Cast object/primitive into another type. Implicit widening; explicit narrowing.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h5>Coercion example</h5>
+<pre class="code"><span class="k">int</span> x = 10;
+<span class="k">double</span> y = x;             <span class="c">// implicit widening: int → double</span>
+
+<span class="k">double</span> d = 9.7;
+<span class="k">int</span> i = (<span class="k">int</span>) d;          <span class="c">// explicit narrowing cast</span></pre>
+
+<h5>Shape example</h5>
+<p><span class="kw">getArea()</span> varies by shape → assign responsibility to subclasses <span class="kw">Circle</span>, <span class="kw">Triangle</span>. Sending a message to a <span class="kw">Shape</span> reference invokes the right subclass method at runtime.</p>
+</div>
+</div>
+
+<!-- ── 3.8 Other GRASP ── -->
+<div class="section" id="u3-other-grasp">
+<div class="section-header">
+  <span class="s-num">§ 3.8</span>
+  <h3>Indirection · Protected Variations · Pure Fabrication</h3>
+</div>
+<div class="section-body">
+
+<p>These three complete the GRASP nine. The slides list them but don't expand. Quick definitions to keep on hand:</p>
+
+<h4>Indirection</h4>
+<p>To avoid direct coupling between two elements, assign the responsibility of <strong>mediating</strong> between them to an intermediate object. Example: the <span class="kw">Adapter</span> pattern uses an indirection class.</p>
+
+<h4>Protected Variations</h4>
+<p>Identify points of <strong>predicted variation/instability</strong> and wrap them in a stable interface so that variation on the implementation side does not ripple into callers. (Parent of patterns like Polymorphism, Indirection, Adapter.)</p>
+
+<h4>Pure Fabrication</h4>
+<p>When assigning a responsibility based on the domain model would produce bad cohesion/coupling, assign it instead to a <strong>made-up class</strong> that does not represent a domain concept. Common example: a <span class="kw">TableDataGateway</span> or a persistence helper class.</p>
+
+<div class="exam-box">
+GRASP MCQ traps from the slides — GRASP stands for <strong>General Responsibility Assignment Software Patterns</strong>, has <strong>nine</strong> principles, and Controller's main job is <strong>delegating UI requests to domain objects</strong>.
+</div>
+</div>
+</div>
+
+<!-- ── 3.9 ISP ── -->
+<div class="section" id="u3-isp">
+<div class="section-header">
+  <span class="s-num">§ 3.9</span>
+  <h3>SOLID — Interface Segregation Principle (ISP)</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>ISP:</strong> Make fine-grained interfaces that are <strong>client-specific</strong>. Clients should not be forced to implement interfaces they do not use.
+</div>
+
+<h5>Key rules</h5>
+<ul>
+<li>Break up <strong>fat interfaces</strong> with too many methods.</li>
+<li>Many <strong>client-specific</strong> interfaces are better than one general-purpose interface.</li>
+<li>Classes should implement <strong>multiple small interfaces</strong> as needed.</li>
+<li>Failure to comply → implementations depend on methods they don't need but must define.</li>
+</ul>
+
+<h4>Violation Example</h4>
+<pre class="code"><span class="k">interface</span> IUser {
+    <span class="k">boolean</span> login(String name, String password);
+    <span class="k">boolean</span> register(String name, String password, String email);
+    <span class="k">void</span> logError(String error);
+    <span class="k">boolean</span> sendmail(String emailContent);
+}</pre>
+
+<h4>ISP-Compliant Refactor</h4>
+<pre class="code"><span class="k">interface</span> IUser {
+    <span class="k">boolean</span> login(String name, String password);
+    <span class="k">boolean</span> register(String name, String password, String email);
+}
+<span class="k">interface</span> ILogger { <span class="k">void</span> logError(String error); }
+<span class="k">interface</span> IMail   { <span class="k">boolean</span> sendmail(String emailContent); }</pre>
+
+<h4>Bookstore Example</h4>
+<p><strong>Violates ISP — the interface:</strong></p>
+<pre class="code"><span class="k">public interface</span> BookAction {
+    <span class="k">void</span> seeReviews();
+    <span class="k">void</span> searchSecondhand();
+    <span class="k">void</span> listenSample();
+}</pre>
+
+<p><strong>Violates ISP — both classes forced to implement everything:</strong></p>
+<pre class="code"><span class="k">class</span> HardcoverUI <span class="k">implements</span> BookAction {
+    <span class="k">public void</span> seeReviews()       { <span class="c">/* ... */</span> }
+    <span class="k">public void</span> searchSecondhand() { <span class="c">/* ... */</span> }
+    <span class="k">public void</span> listenSample()     { <span class="c">/* ... unused */</span> }
+}
+
+<span class="k">class</span> AudiobookUI <span class="k">implements</span> BookAction {
+    <span class="k">public void</span> seeReviews()       { <span class="c">/* ... */</span> }
+    <span class="k">public void</span> searchSecondhand() { <span class="c">/* ... unused */</span> }
+    <span class="k">public void</span> listenSample()     { <span class="c">/* ... */</span> }
+}</pre>
+
+<p><strong>ISP-compliant:</strong></p>
+<pre class="code"><span class="k">public interface</span> BookAction { <span class="k">void</span> seeReviews(); }
+
+<span class="k">public interface</span> HardcoverAction <span class="k">extends</span> BookAction { <span class="k">void</span> searchSecondhand(); }
+<span class="k">public interface</span> AudioAction     <span class="k">extends</span> BookAction { <span class="k">void</span> listenSample(); }
+
+<span class="k">class</span> HardcoverUI <span class="k">implements</span> HardcoverAction {
+    <span class="k">public void</span> seeReviews()       { <span class="c">/* ... */</span> }
+    <span class="k">public void</span> searchSecondhand() { <span class="c">/* ... */</span> }
+}
+
+<span class="k">class</span> AudiobookUI <span class="k">implements</span> AudioAction {
+    <span class="k">public void</span> seeReviews()  { <span class="c">/* ... */</span> }
+    <span class="k">public void</span> listenSample(){ <span class="c">/* ... */</span> }
+}</pre>
+
+<h4>Case Study — Xerox</h4>
+<p><strong>Robert C. Martin</strong> first formulated ISP while consulting for Xerox. Xerox had a new printer system (print, staple, fax, …). Problem: one large <span class="kw">Job</span> class held every responsibility. Modifications and deployment became complex. Solution: segregate the <span class="kw">Job</span> class into multiple <strong>role interfaces</strong> based on client need.</p>
+
+<div class="exam-box">
+<strong>ISP MCQ keys —</strong> "Clients should not be forced to implement interfaces they do not use" / Implementing classes should implement only necessary methods / ISP suggests fine-grained, client-specific interfaces / Not following ISP → dependencies on unused methods.
+</div>
+</div>
+</div>
+
+<!-- ── 3.10 DIP ── -->
+<div class="section" id="u3-dip">
+<div class="section-header">
+  <span class="s-num">§ 3.10</span>
+  <h3>SOLID — Dependency Inversion Principle (DIP)</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>DIP:</strong> Program to the <strong>interface</strong>, not the implementation.
+</div>
+
+<h5>The two laws of DIP</h5>
+<ul>
+<li><strong>High-level modules should not depend on low-level modules.</strong> Both should depend on abstractions.</li>
+<li><strong>Abstractions should not depend on details.</strong> Details should depend on abstractions.</li>
+</ul>
+
+<p>Goal: avoid tightly coupled code. Decouple high- and low-level classes — their interaction is an <em>abstract</em> interaction. Per Robert C. Martin, DIP is a specific combination of the <strong>Open-Closed</strong> and <strong>Liskov Substitution</strong> principles.</p>
+
+<h4>Violation — Bookstore Shelf</h4>
+<pre class="code"><span class="k">class</span> Book {
+    <span class="k">void</span> seeReviews() { <span class="c">/* ... */</span> }
+    <span class="k">void</span> readSample() { <span class="c">/* ... */</span> }
+}
+<span class="k">class</span> Shelf {
+    Book book;
+    <span class="k">void</span> addBook(Book book)     { <span class="c">/* ... */</span> }
+    <span class="k">void</span> customizeShelf()       { <span class="c">/* ... */</span> }
+}</pre>
+
+<p>Adding DVDs forces the <span class="kw">Shelf</span> class to be modified → violates <strong>Open-Closed</strong> too.</p>
+
+<h4>DIP-Compliant Fix</h4>
+<pre class="code"><span class="k">public interface</span> Product {
+    <span class="k">void</span> seeReviews();
+    <span class="k">void</span> getSample();
+}
+
+<span class="k">class</span> Book <span class="k">implements</span> Product {
+    <span class="k">public void</span> seeReviews() { <span class="c">/* ... */</span> }
+    <span class="k">public void</span> getSample()  { <span class="c">/* ... */</span> }
+}
+<span class="k">class</span> DVD <span class="k">implements</span> Product {
+    <span class="k">public void</span> seeReviews() { <span class="c">/* ... */</span> }
+    <span class="k">public void</span> getSample()  { <span class="c">/* ... */</span> }
+}
+<span class="k">class</span> Shelf {
+    Product p;
+    <span class="k">void</span> addProduct(Product product) { <span class="c">/* ... */</span> }
+    <span class="k">void</span> customizeShelf()             { <span class="c">/* ... */</span> }
+}</pre>
+
+<ul>
+<li>Follows <strong>LSP</strong>: <span class="kw">Product</span> can be substituted by <span class="kw">Book</span> or <span class="kw">DVD</span> without breaking the program.</li>
+<li>Follows <strong>DIP</strong>: the high-level <span class="kw">Shelf</span> depends on the abstraction <span class="kw">Product</span>, not the concretions.</li>
+</ul>
+
+<h5>Layered Architecture</h5>
+<p>Presentation layer → Business layer (<span class="kw">Employee</span>, save button click) → DataAccess layer (save data in DB). Each layer depends on <strong>interfaces exposed by the layer below</strong>, not concrete types.</p>
+
+<div class="exam-box">
+<strong>DIP MCQ keys —</strong> High-level modules depend on <strong>abstractions</strong> / Abstractions should not depend on details / Primary goal is avoiding <strong>tightly coupled</strong> code / Interaction between high- and low-level modules should be <strong>abstract</strong>.
+</div>
+</div>
+</div>
+
+<!-- ── 3.11 DP intro ── -->
+<div class="section" id="u3-dp-intro">
+<div class="section-header">
+  <span class="s-num">§ 3.11</span>
+  <h3>Introduction to Design Patterns &amp; the GoF</h3>
+</div>
+<div class="section-body">
+
+<h4>The Gang of Four (GoF) Book</h4>
+<div class="def">
+<em>Design Patterns: Elements of Reusable Object-Oriented Software</em>, Addison-Wesley, <strong>1994</strong>.<br>
+<strong>Authors:</strong> Erich Gamma, Richard Helm, Ralph Johnson, John Vlissides.<br>
+The book defined <strong>23 patterns</strong> in three categories.
+</div>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Category</th><th>Focus</th></tr></thead>
+<tbody>
+<tr><td><strong>Creational</strong></td><td>The process of <strong>object creation</strong></td></tr>
+<tr><td><strong>Structural</strong></td><td><strong>Static composition</strong> and structure of classes/objects</td></tr>
+<tr><td><strong>Behavioral</strong></td><td><strong>Dynamic interaction</strong> among classes/objects</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>What is a Design Pattern?</h4>
+<ul>
+<li>A <strong>reusable solution</strong> to a commonly occurring problem in software design.</li>
+<li>Shows <strong>relationships and interactions</strong> between classes/objects without specifying final application classes.</li>
+<li>A <strong>template, not a finished solution</strong> — it cannot be directly transferred into code.</li>
+<li><strong>Language-independent.</strong></li>
+</ul>
+
+<h4>Four Essential Elements of a Pattern</h4>
+<ol class="steps">
+<li><strong>Pattern Name</strong> — a handle describing the problem, solutions, and consequences in a word or two.</li>
+<li><strong>The Problem</strong> — describes when to apply the pattern (context, class/object structures, conditions).</li>
+<li><strong>The Solution</strong> — describes the elements, their relationships, responsibilities, and collaborations.</li>
+<li><strong>Consequences</strong> — results and trade-offs of applying the pattern.</li>
+</ol>
+
+<h5>Other elements of a pattern description</h5>
+<ul>
+<li><strong>Applicability</strong> — situations where the pattern applies.</li>
+<li><strong>Structure</strong> — graphical representation (OMT/UML).</li>
+<li><strong>Participants</strong> — the classes/objects taking part.</li>
+<li><strong>Collaborations</strong> — how participants interact.</li>
+<li><strong>Implementation</strong> — pitfalls, hints, language-specific issues.</li>
+<li><strong>Related Patterns</strong> — closely related patterns and their differences.</li>
+</ul>
+
+<h4>Architecture vs Design Patterns</h4>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent2)">Architecture Patterns</h5>
+<p style="font-size:.9rem">Describe the structure of an <strong>entire system</strong> (e.g., MVC, Layered, Microservices).</p>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Design Patterns</h5>
+<p style="font-size:.9rem">Solve recurring problems in <strong>smaller modules/classes</strong> within a system.</p>
+</div>
+</div>
+
+<h4>Why Learn Patterns?</h4>
+<ul>
+<li>Common <strong>design vocabulary</strong> — engineers can discuss abstractions independently of implementation.</li>
+<li><strong>Capture design expertise</strong> for reuse and avoiding mistakes.</li>
+<li><strong>Better documentation</strong> — patterns are documented well once.</li>
+<li><strong>Composition over inheritance:</strong> "Favor object composition over class inheritance." — GoF 1995:20</li>
+</ul>
+
+<h4>Pros and Cons</h4>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Pros</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>Consistency across designs</li>
+<li>Common vocabulary</li>
+<li>Faster time to solution</li>
+<li>Reuse through composition</li>
+</ul>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent)">Cons</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>Some patterns have negative consequences (object proliferation, performance hits, extra layers)</li>
+<li>Consequences are subjective to scenario</li>
+<li>Subject to misinterpretation</li>
+<li>Overuse → <strong>Anti-Patterns</strong></li>
+</ul>
+</div>
+</div>
+
+<h4>How to Select a Design Pattern</h4>
+<ul>
+<li>Consider how patterns solve design problems (granularity, interfaces, object roles).</li>
+<li>Scan <strong>intent</strong> sections.</li>
+<li>Study how patterns interrelate.</li>
+<li>Study patterns of similar purpose for similarities/differences.</li>
+<li>Examine causes of <strong>redesign</strong>.</li>
+<li>Consider <strong>what should be variable</strong> in your design — encapsulate what varies.</li>
+</ul>
+
+<div class="exam-box">
+<strong>Intro MCQs —</strong> Design patterns represent best practices used by experienced developers / GoF book defined <strong>23 patterns</strong> / Creational = object creation / Structural = static composition / Behavioral = dynamic interaction / Disadvantage: extra complexity or layers.
+</div>
+</div>
+</div>
+
+<!-- ── 3.12 Creational overview ── -->
+<div class="section" id="u3-creational">
+<div class="section-header">
+  <span class="s-num">§ 3.12</span>
+  <h3>Creational Patterns — Overview</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Creational patterns</strong> provide various object creation mechanisms → increase flexibility and reuse. The basic <span class="kw">new</span> operator scatters creation across the codebase; over time, classes become tightly coupled. Creational patterns <strong>control</strong> object creation.
+</div>
+
+<h5>Recurring themes</h5>
+<ul>
+<li>Encapsulate knowledge about <strong>which concrete classes</strong> the system uses.</li>
+<li>Hide how instances are <strong>created and put together</strong>.</li>
+</ul>
+
+<div class="pattern-card">
+<div class="pname">Singleton</div>
+<div class="pone">Exactly one instance of a class with a global access point.</div>
+</div>
+<div class="pattern-card">
+<div class="pname">Factory Method</div>
+<div class="pone">Define an interface for creating an object; let subclasses decide the class.</div>
+</div>
+<div class="pattern-card">
+<div class="pname">Abstract Factory</div>
+<div class="pone">Create families of related objects without specifying concrete classes.</div>
+</div>
+<div class="pattern-card">
+<div class="pname">Builder</div>
+<div class="pone">Build a complex object step-by-step; same process produces different representations.</div>
+</div>
+<div class="pattern-card">
+<div class="pname">Prototype</div>
+<div class="pone">Create new objects by cloning a prototypical instance.</div>
+</div>
+
+<div class="tip">
+<strong>Principle:</strong> Composition over inheritance — "Favor object composition over class inheritance." — GoF 1995:20
+</div>
+</div>
+</div>
+
+<!-- ── 3.13 Singleton ── -->
+<div class="section" id="u3-singleton">
+<div class="section-header">
+  <span class="s-num">§ 3.13</span>
+  <h3>Singleton</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intent:</strong> Ensure a class has only <strong>one instance</strong> and provide a <strong>global point of access</strong> to it.
+</div>
+
+<h4>Motivation</h4>
+<ul>
+<li>Part of the creational family.</li>
+<li>Ensures only one instance exists in the JVM.</li>
+<li>Provides a unique <strong>global access point</strong>.</li>
+<li>The singleton is <strong>initialised only when first requested</strong> (in lazy variants).</li>
+<li>Real-life: shared cloud storage — a single shared storage object instead of one per user.</li>
+</ul>
+
+<h5>Why Singleton</h5>
+<ol>
+<li>Ensures a class has only one instance.</li>
+<li>Gives a global access point to that instance.</li>
+<li>Lazy variants: instance initialised only when first requested.</li>
+</ol>
+
+<h5>Problems it solves (at the cost of SRP)</h5>
+<ul>
+<li>Controls access to a <strong>shared resource</strong> (e.g., database, file).</li>
+<li>Protects the single instance from being overwritten (unlike a plain global variable).</li>
+</ul>
+
+<h5>Solution skeleton (all implementations share this)</h5>
+<ol class="steps">
+<li>Make the default <strong>constructor private</strong> → prevents outside <span class="kw">new</span>.</li>
+<li>Create a <strong>static method</strong> acting as a constructor — it calls the private constructor and caches the object in a static field. Every later call returns the cached object.</li>
+</ol>
+
+<h5>Uses</h5>
+<p>Logging, drivers, caching, thread pools. Used in <span class="kw">java.lang.Runtime</span>, <span class="kw">java.awt.Desktop</span>. Common inside Abstract Factory, Builder, Prototype, Façade.</p>
+
+<h4>Four Implementation Methods</h4>
+
+<h5>Method 1 — Lazy Instantiation (NOT thread-safe)</h5>
+<pre class="code"><span class="k">class</span> Singleton {
+    <span class="k">private static</span> Singleton obj;
+    <span class="k">private</span> Singleton() {}                       <span class="c">// private ctor</span>
+    <span class="k">public static</span> Singleton getInstance() {
+        <span class="k">if</span> (obj == <span class="k">null</span>) obj = <span class="k">new</span> Singleton();  <span class="c">// lazy</span>
+        <span class="k">return</span> obj;
+    }
+}</pre>
+<p>Simple, but two threads can both see <span class="kw">obj == null</span> and create two instances.</p>
+
+<h5>Method 2 — Synchronised getInstance()</h5>
+<pre class="code"><span class="k">class</span> Singleton {
+    <span class="k">private static</span> Singleton obj;
+    <span class="k">private</span> Singleton() {}
+    <span class="k">public static synchronized</span> Singleton getInstance() {
+        <span class="k">if</span> (obj == <span class="k">null</span>) obj = <span class="k">new</span> Singleton();
+        <span class="k">return</span> obj;
+    }
+}</pre>
+<p>Thread-safe but slow — every call pays the synchronisation cost.</p>
+
+<h5>Method 3 — Eager Instantiation</h5>
+<pre class="code"><span class="k">class</span> Singleton {
+    <span class="k">private static</span> Singleton obj = <span class="k">new</span> Singleton();   <span class="c">// created at class load</span>
+    <span class="k">private</span> Singleton() {}
+    <span class="k">public static</span> Singleton getInstance() { <span class="k">return</span> obj; }
+}</pre>
+<p>Thread-safe because the JVM runs the static initialiser once. Use only when the singleton is lightweight and used throughout the program.</p>
+
+<h5>Method 4 (Best) — Double-Checked Locking</h5>
+<pre class="code"><span class="k">class</span> Singleton {
+    <span class="k">private static volatile</span> Singleton obj = <span class="k">null</span>;
+    <span class="k">private</span> Singleton() {}
+    <span class="k">public static</span> Singleton getInstance() {
+        <span class="k">if</span> (obj == <span class="k">null</span>) {
+            <span class="k">synchronized</span> (Singleton.<span class="k">class</span>) {
+                <span class="k">if</span> (obj == <span class="k">null</span>)               <span class="c">// second check inside lock</span>
+                    obj = <span class="k">new</span> Singleton();
+            }
+        }
+        <span class="k">return</span> obj;
+    }
+}</pre>
+
+<div class="warn">
+<strong>The <span class="kw">volatile</span> keyword is essential</strong> — it ensures multiple threads see the <span class="kw">obj</span> variable correctly during initialisation. Synchronises only when the instance is still null → much less overhead.
+</div>
+
+<h4>Implementation Trade-offs</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Method</th><th>Thread-safe?</th><th>Lazy?</th><th>Cost</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Classic lazy</td><td>❌</td><td>✔</td><td>Low</td><td>Two threads can both create instances</td></tr>
+<tr><td>Synchronised getInstance</td><td>✔</td><td>✔</td><td><strong>High</strong> on every call</td><td>Simple, slow</td></tr>
+<tr><td>Eager</td><td>✔ (via JVM class loading)</td><td>❌</td><td>Low</td><td>Lightweight, always-used singletons</td></tr>
+<tr><td><strong>Double-Checked Locking</strong></td><td>✔</td><td>✔</td><td>Low after first init</td><td><strong>Best general-purpose choice</strong></td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Participants &amp; Applicability</h4>
+<ul>
+<li><strong>Singleton</strong> — defines an <span class="kw">Instance</span> operation (class method/static) that lets clients access its unique instance. May be responsible for creating its own instance.</li>
+<li><strong>Client</strong> — accesses the instance only via <span class="kw">Singleton.getInstance()</span>.</li>
+</ul>
+
+<h5>Use Singleton when…</h5>
+<ul>
+<li>There must be exactly one instance accessible from a well-known point.</li>
+<li>The sole instance should be extensible by subclassing and clients should use the extended instance without code changes.</li>
+</ul>
+
+<h4>Consequences</h4>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Benefits</h5>
+<ol style="font-size:.85rem;margin:0">
+<li>Controlled access to the sole instance</li>
+<li>Reduced namespace pollution (vs globals)</li>
+<li>Permits refinement of operations (subclassing)</li>
+<li>Permits variable number of instances</li>
+<li>More flexible than class operations (statics can't be overridden polymorphically)</li>
+</ol>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent)">Drawbacks</h5>
+<ol style="font-size:.85rem;margin:0">
+<li>Violates SRP (controls instantiation + global access)</li>
+<li>Can mask bad design — components know too much about each other</li>
+<li>Special treatment in multi-threaded environments</li>
+<li>Hard to unit-test — frameworks use inheritance for mocks; singletons resist</li>
+</ol>
+</div>
+</div>
+
+<h5>Relations with other patterns</h5>
+<ul>
+<li><strong>Façade</strong> is often transformed into a Singleton (one façade usually suffices).</li>
+<li><strong>Flyweight</strong> resembles Singleton if you reduce all shared state to one object — but Flyweight allows many instances with different intrinsic states, and Flyweights are immutable while Singletons can be mutable.</li>
+<li>Abstract Factory, Builder, Prototype can all be implemented as Singletons.</li>
+</ul>
+
+<div class="exam-box">
+<strong>Singleton MCQ keys —</strong> Primary purpose: restrict to one instance, provide global access / Keyword in DCL: <span class="kw red">volatile</span> / Private constructor prevents outside creation / Major drawback: difficult unit testing.
+</div>
+</div>
+</div>
+
+<!-- ── 3.14 Factory ── -->
+<div class="section" id="u3-factory">
+<div class="section-header">
+  <span class="s-num">§ 3.14</span>
+  <h3>Factory Method <span style="opacity:.5;font-size:.9rem">(a.k.a. Virtual Constructor)</span></h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intent:</strong> Provide an interface for creating objects in a superclass, but allow subclasses to alter the type of objects that will be created.<br>
+Per GoF — "defines an interface for creating an object, but lets subclasses decide which class to instantiate. The Factory method lets a class <strong>defer instantiation</strong> to subclasses."
+</div>
+
+<h4>Motivation</h4>
+<ul>
+<li>Create objects <strong>without specifying the exact class</strong>.</li>
+<li>Object creation often requires complex processes not fitting inside the composing object.</li>
+<li>Avoid duplication of creation code; avoid giving the composing object too much knowledge.</li>
+<li>The factory method defines a <strong>separate method for creating objects</strong>; subclasses override to specify the derived type.</li>
+</ul>
+
+<h4>Applicability — use Factory when:</h4>
+<ul>
+<li>A class <strong>can't anticipate</strong> the class of objects it must create.</li>
+<li>A class wants its <strong>subclasses to specify</strong> the objects it creates.</li>
+<li>Classes delegate responsibility to one of several helper subclasses and you want to <strong>localise the knowledge</strong> of which helper is used.</li>
+</ul>
+
+<h4>Participants</h4>
+<ul>
+<li><strong>Product</strong> — defines the interface of the objects the factory method creates.</li>
+<li><strong>ConcreteProduct</strong> — implements the Product interface.</li>
+<li><strong>Creator</strong> — declares the factory method; may provide a default returning a default ConcreteProduct.</li>
+<li><strong>ConcreteCreator</strong> — overrides the factory method to return a specific ConcreteProduct.</li>
+</ul>
+
+<h5>Collaboration</h5>
+<p>The Creator relies on its subclasses to define the factory method so it returns an instance of the appropriate ConcreteProduct.</p>
+
+<h4>Car Rental Example</h4>
+<p>Two customer types (company contract, no contract), each requesting grade A or B cars.</p>
+
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent)">Without Factory</h5>
+<p style="font-size:.85rem">Client's <span class="kw">main</span> is cluttered with selection logic mixed with preparation steps (clean / mechanic / fuel).</p>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent3)">With Factory</h5>
+<p style="font-size:.85rem">A <strong>Factory super-class</strong> has a <span class="kw">create()</span> method which calls the abstract <span class="kw">retrieveCar()</span> (subclass-specific selection logic), then runs shared preparation steps.</p>
+</div>
+</div>
+
+<h4>Consequences</h4>
+<ul>
+<li><strong>Provides hooks for subclasses</strong> — more flexible than direct creation.</li>
+<li><strong>Connects parallel class hierarchies</strong> — when one class delegates responsibilities to another, factory methods can be called from clients.</li>
+</ul>
+
+<h4>Issues</h4>
+<ol>
+<li><strong>Two major varieties:</strong>
+  <ul>
+    <li>Abstract Creator (no default impl) → subclass <em>must</em> override.</li>
+    <li>Concrete Creator (provides default impl).</li>
+  </ul>
+</li>
+<li><strong>Parameterised factory methods</strong> — one factory method creates multiple kinds of products based on a parameter; all share the Product interface.</li>
+<li><strong>Language-specific variants</strong> — e.g., Smalltalk methods returning a class.</li>
+</ol>
+
+<div class="exam-box">
+<strong>Factory MCQ keys —</strong> Main purpose: interface for object creation, subclasses decide the concrete class / Also known as <strong>Virtual Constructor</strong> / Client accesses objects via a common interface / Factory hides creation logic / Improves flexibility by delegating creation to subclasses / Returns objects of the Product interface.
+</div>
+</div>
+</div>
+
+<!-- ── 3.15 Builder ── -->
+<div class="section" id="u3-builder">
+<div class="section-header">
+  <span class="s-num">§ 3.15</span>
+  <h3>Builder</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intent:</strong> Separate the <strong>construction</strong> of a complex object from its <strong>representation</strong> so that the same construction process can create different representations.
+</div>
+
+<h4>Introduction</h4>
+<ul>
+<li>For when a <strong>sequence of complex operations</strong> is needed to produce an object instance.</li>
+<li>Delegate construction to a <strong>specialised class</strong> aware of the required logic.</li>
+<li>Enables <strong>Single-Responsibility</strong> classes — separates creation from business logic.</li>
+<li>Can lead to reusability, smaller code base, better SOLID compliance.</li>
+</ul>
+
+<p>Analogy — a <em>car factory</em>: a boss tells workers/robots to build each part; workers build each part and add them to the car.</p>
+
+<h4>Why Builder — Problems Solved</h4>
+<ul>
+<li>How can the <strong>same construction process</strong> create different representations of a complex object?</li>
+<li>How can a class that creates a complex object be <strong>simplified</strong>?</li>
+</ul>
+<p><strong>Solution:</strong> encapsulate creating and assembling parts of a complex object in a separate <strong>Builder</strong>; let a class <em>delegate</em> creation to a Builder.</p>
+
+<h4>Motivation — RTF Reader</h4>
+<ul>
+<li>An RTF reader needs to convert RTF to many text formats (ASCII, text widget, TeX).</li>
+<li>Number of possible conversions is open-ended → easy to add new conversion without modifying the reader.</li>
+<li>Configure the RTFReader with a <span class="kw">TextConverter</span> object.</li>
+<li>Each converter = a <strong>Builder</strong>; the reader = the <strong>Director</strong>.</li>
+</ul>
+
+<h4>Participants</h4>
+<ul>
+<li><strong>Builder</strong> — abstract interface for creating parts of a Product.</li>
+<li><strong>ConcreteBuilder</strong> — constructs and assembles parts; defines and tracks the representation; provides the product-retrieval method (e.g., <span class="kw">getBurger</span>, <span class="kw">GetASCIIText</span>).</li>
+<li><strong>Director</strong> — constructs an object using the Builder interface.</li>
+<li><strong>Product</strong> — the complex object under construction.</li>
+</ul>
+
+<h5>Collaboration</h5>
+<ol class="steps">
+<li>Client creates the Director and configures it with a Builder.</li>
+<li>Director notifies Builder to build each part of the product.</li>
+<li>Builder handles Director's requests and adds parts.</li>
+<li>Client retrieves the product from the Builder.</li>
+</ol>
+
+<h4>Burger-Restaurant Example</h4>
+<p>Goal: build varieties of burgers (cheeseburger, veg-burger).</p>
+
+<h5>Without Builder — construction in the main context</h5>
+<pre class="code"><span class="k">public class</span> Main {
+    <span class="k">public static void</span> main(String[] args) {
+        Burger cheeseBurger = <span class="k">new</span> Burger();
+        cheeseBurger.setBun(<span class="s">"White Bread"</span>);
+        cheeseBurger.setMeat(<span class="s">"Beef"</span>);
+        cheeseBurger.setSalad(<span class="s">"Iceberg"</span>);
+        cheeseBurger.setCheese(<span class="s">"American Cheese"</span>);
+        cheeseBurger.setSauce(<span class="s">"Secret Sauce"</span>);
+        cheeseBurger.print();
+    }
+}</pre>
+<p>Every variant requires the same boilerplate; client code drowns in setter calls and there's no way to enforce a build order.</p>
+
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent)">Without Builder</h5>
+<p style="font-size:.85rem"><span class="kw">main</span> sets bun, meat, salad, cheese, sauce manually every time.</p>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent3)">With Builder</h5>
+<p style="font-size:.85rem"><span class="kw">Chef</span> (Director) is given a <span class="kw">BurgerBuilder</span> subclass; Chef invokes <span class="kw">setBuilder()</span> then <span class="kw">build()</span>; client only interacts with Chef.</p>
+</div>
+</div>
+
+<h4>Applicability — use Builder when:</h4>
+<ul>
+<li>The algorithm for creating the complex object should be <strong>independent</strong> of the parts and how they're assembled.</li>
+<li>The construction process must allow <strong>different representations</strong>.</li>
+<li>You want to avoid a <strong>telescoping constructor</strong> (a constructor with many optional parameters, overloaded in multiple short versions).</li>
+<li>You want different representations where construction <strong>differs only in details</strong>.</li>
+</ul>
+
+<h4>Consequences</h4>
+<ul>
+<li>Lets you <strong>vary the product's internal representation</strong> by swapping Builders.</li>
+<li>Isolates code for construction and representation.</li>
+<li>Gives <strong>finer-grain control</strong> over construction.</li>
+</ul>
+
+<h4>How to Implement</h4>
+<ol class="steps">
+<li>Clearly define common construction steps for all product representations.</li>
+<li>Declare those steps in the base Builder interface.</li>
+<li>Create a ConcreteBuilder for each representation.</li>
+<li>Consider a Director class encapsulating various construction sequences.</li>
+<li>Client code creates both Builder and Director; passes Builder to Director.</li>
+<li>Result comes from the Director if products share an interface; else the client fetches from the Builder.</li>
+</ol>
+
+<h5>Pros and Cons</h5>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Pros</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>Construct objects step-by-step, defer/recurse steps</li>
+<li>Reuse the same construction code for various representations</li>
+<li><strong>SRP</strong> — isolate complex construction from business logic</li>
+</ul>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent)">Cons</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>More classes → more complexity</li>
+</ul>
+</div>
+</div>
+
+<h5>Relations with other patterns</h5>
+<ul>
+<li>Many designs start with Factory Method (simpler) and <strong>evolve toward</strong> Abstract Factory, Prototype, or Builder (more flexible, more complex).</li>
+<li><strong>Builder</strong> constructs complex objects step by step. <strong>Abstract Factory</strong> creates families of related objects and returns the product immediately; Builder allows extra construction steps before fetching.</li>
+<li>Useful for <strong>Composite trees</strong> — construction can be recursive.</li>
+<li>Can combine with <strong>Bridge</strong> — Director = abstraction, different Builders = implementations.</li>
+<li>Abstract Factory, Builder, Prototype can all be Singletons.</li>
+</ul>
+
+<div class="exam-box">
+<strong>Builder MCQ keys —</strong> Director controls the building process / Builder interface creates parts of a product / ConcreteBuilder implements building steps / Product is the complex object under construction / Benefit: finer control over construction / Helps avoid <strong>telescoping constructors</strong>.
+</div>
+</div>
+</div>
+
+<!-- ── 3.16 Prototype ── -->
+<div class="section" id="u3-prototype">
+<div class="section-header">
+  <span class="s-num">§ 3.16</span>
+  <h3>Prototype</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intent:</strong> Prototype lets you <strong>copy existing objects without making your code dependent on their classes</strong>.
+</div>
+
+<h4>Motivation</h4>
+<ul>
+<li>Specify the kind of objects to create using a <strong>prototypical instance</strong>; create new objects by <strong>copying</strong> this prototype.</li>
+<li>Use Prototype when a client needs objects that are alike or differ only in state, and <span class="kw">new</span> is expensive/complicated.</li>
+<li>Makes new instances by <strong>copying existing instances</strong> — in Java via <span class="kw">clone()</span> or de-serialisation for deep copies.</li>
+<li>Client code can make new instances <strong>without knowing the specific class</strong>.</li>
+</ul>
+
+<h5>Usage in Java</h5>
+<ul>
+<li>Available via the <span class="kw">Cloneable</span> interface.</li>
+<li>Any class implementing <span class="kw">Cloneable</span> can use <span class="kw">Object.clone()</span>.</li>
+<li>Identification: presence of <span class="kw">clone()</span> / <span class="kw">copy()</span> methods.</li>
+</ul>
+
+<h4>Geometric Objects Example</h4>
+<ul>
+<li>All shape classes follow the same interface providing <span class="kw">clone()</span>.</li>
+<li>A subclass may call the parent's cloning method before copying its own fields to the resulting object.</li>
+</ul>
+
+<h4>Prototype Registry</h4>
+<ul>
+<li>A <strong>centralised store</strong> of pre-defined prototype objects.</li>
+<li>Clients ask the registry (by name/parameters) for a new object.</li>
+<li>The registry finds the appropriate prototype, clones it, and returns a copy.</li>
+</ul>
+
+<h4>Cell Division Example</h4>
+<p>The mitotic division of a cell into two identical cells <strong>is</strong> a prototype demonstrating self-cloning.</p>
+
+<h4>Checklist</h4>
+<ol class="steps">
+<li>Add <span class="kw">clone()</span> to the existing product hierarchy.</li>
+<li>Design a <strong>registry</strong> caching prototype objects — encapsulated in a Factory or in the product base class.</li>
+<li>Design a <strong>factory method</strong> that (optionally) accepts arguments, finds the right prototype, calls <span class="kw">clone()</span>, and returns the result.</li>
+<li>Client replaces every <span class="kw">new</span> call with the factory method.</li>
+</ol>
+
+<h4>Applicability — use Prototype when:</h4>
+<ul>
+<li>System should be <strong>independent</strong> of how products are created, composed, or represented.</li>
+<li>Classes to instantiate are <strong>specified at run-time</strong> (e.g., dynamic loading).</li>
+<li>To avoid building a class hierarchy of factories that parallels the products.</li>
+<li>Instances have only a few combinations of state → install a few prototypes and clone them rather than manually instantiating each time.</li>
+</ul>
+
+<h5>Collaboration</h5>
+<p>A client asks a prototype to <strong>clone itself</strong>.</p>
+
+<h4>Consequences</h4>
+<ul>
+<li>Adding/removing products at <strong>run-time</strong>.</li>
+<li>Specify new objects by varying <strong>values</strong> or <strong>structure</strong>.</li>
+<li><strong>Reduced subclassing</strong>.</li>
+<li>Configuring applications with classes dynamically.</li>
+</ul>
+
+<h4>Issues to Consider</h4>
+<ul>
+<li><strong>Using a prototype manager</strong> — keep a registry of available prototypes when the set is dynamic. Clients fetch from the registry before cloning.</li>
+<li><strong>Implementing Clone correctly</strong> — particularly tricky with <strong>circular references</strong>.</li>
+<li><strong>Initialising clones</strong> — some clients want to set state after cloning. Since parameter counts vary across classes, passing params in <span class="kw">clone()</span> would break a uniform cloning interface.</li>
+</ul>
+
+<div class="exam-box">
+<strong>Prototype MCQ keys —</strong> Creates objects by <strong>copying existing objects</strong> / Main intent: copy without depending on classes / Useful when creation is expensive or complex / Registry stores and retrieves prototype objects / Client requests an object to <strong>clone itself</strong> / Benefit: <strong>reduced subclassing</strong>.
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════ UNIT 4 ═══════════════════════ -->
+<div class="unit-divider">
+  <span class="unit-num">Unit 04</span>
+  <h2>Structural · Behavioral · Anti-Patterns</h2>
+</div>
+
+<!-- ── 4.1 Structural intro ── -->
+<div class="section" id="u4-structural-intro">
+<div class="section-header">
+  <span class="s-num">§ 4.1</span>
+  <h3>Structural Patterns — Overview</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Structural design patterns</strong> are concerned with how classes and objects can be <strong>composed</strong> to form larger structures. They simplify structure by identifying <strong>relationships</strong>, focus on inheritance and composition, and keep larger structures <strong>flexible and efficient</strong>.
+</div>
+
+<ul>
+<li>Structural <strong>class</strong> patterns use inheritance.</li>
+<li>Structural <strong>object</strong> patterns use composition.</li>
+</ul>
+
+<h5>The four structural patterns in the syllabus</h5>
+<div class="pattern-card">
+<div class="pname">Adapter</div>
+<div class="pone">Convert one interface into another a client expects (a.k.a. Wrapper).</div>
+</div>
+<div class="pattern-card">
+<div class="pname">Facade</div>
+<div class="pone">Unified simple interface to a complex subsystem.</div>
+</div>
+<div class="pattern-card">
+<div class="pname">Proxy</div>
+<div class="pone">Surrogate / placeholder controlling access to a real object.</div>
+</div>
+<div class="pattern-card">
+<div class="pname">Flyweight</div>
+<div class="pone">Share fine-grained objects efficiently via intrinsic / extrinsic state split.</div>
+</div>
+
+<p style="font-size:.85rem;color:var(--muted)">Other GoF structural patterns (not in syllabus): Bridge, Composite, Decorator.</p>
+</div>
+</div>
+
+<!-- ── 4.2 Adapter ── -->
+<div class="section" id="u4-adapter">
+<div class="section-header">
+  <span class="s-num">§ 4.2</span>
+  <h3>Adapter <span style="opacity:.5;font-size:.9rem">(a.k.a. Wrapper)</span></h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intent:</strong> Adapter lets classes work together that couldn't otherwise because of <strong>incompatible interfaces</strong>. "Convert the interface of a class into another interface that a client wants."
+</div>
+
+<h4>Motivation</h4>
+<ul>
+<li>Adapts between classes/objects — acts as a bridge.</li>
+<li>Real-world: power-supply adapters, camera memory-card adapters.</li>
+<li>Sometimes a reusable toolkit class isn't usable because its interface doesn't match the domain interface the application needs.</li>
+</ul>
+
+<h5>Advantages</h5>
+<ul>
+<li>Lets two previously incompatible objects <strong>interact</strong>.</li>
+<li>Enables <strong>reusability</strong> of existing functionality.</li>
+</ul>
+
+<h4>Participants</h4>
+<ol>
+<li><strong>Target</strong> — defines the domain-specific interface that the Client uses.</li>
+<li><strong>Adapter</strong> — adapts the interface of Adaptee to the Target.</li>
+<li><strong>Adaptee</strong> — the existing interface that needs adapting.</li>
+<li><strong>Client</strong> — collaborates with objects conforming to Target.</li>
+</ol>
+<p>The <strong>Adapter class</strong> is a wrapper that implements the desired Target interface and internally modifies the specific request available from the Adaptee class.</p>
+
+<h4>Example 1 — MediaPlayer</h4>
+<p>We have <span class="kw">MediaPlayer</span> (plays mp3) and <span class="kw">AdvancedMediaPlayer</span> (plays vlc, mp4). Create a <span class="kw">MediaAdapter</span> implementing <span class="kw">MediaPlayer</span> and using <span class="kw">AdvancedMediaPlayer</span> objects internally. <span class="kw">AudioPlayer</span> now uses <span class="kw">MediaAdapter</span> to play vlc/mp4 without knowing the concrete class.</p>
+
+<h4>Example 2 — Bird / ToyDuck</h4>
+<ul>
+<li><span class="kw">Bird</span> has <span class="kw">fly()</span> and <span class="kw">makeSound()</span>. <span class="kw">ToyDuck</span> has <span class="kw">squeak()</span>.</li>
+<li>A <span class="kw">BirdAdapter implements ToyDuck</span> wraps a <span class="kw">Bird</span> and maps <span class="kw">squeak()</span> to <span class="kw">Bird.makeSound()</span>.</li>
+<li>This is an <strong>Object Adapter</strong> — the adapter <em>holds an instance</em> of the adaptee (composition/delegation).</li>
+<li>Switch implementations with one line: <span class="kw">ToyDuck toyDuck = new BirdAdapter(sparrow);</span></li>
+</ul>
+
+<h4>Example 3 — MPH ↔ km/h</h4>
+<p>A US app returns top speed in MPH; a UK client needs km/h. Build an adapter that converts the values.</p>
+
+<h4>Applicability — use Adapter when:</h4>
+<ul>
+<li>You want to use an existing class but its interface doesn't match what you need.</li>
+<li>You want a reusable class that cooperates with unrelated or unforeseen classes with incompatible interfaces.</li>
+<li><strong>(Object Adapter only)</strong> You need to use several existing subclasses but it's impractical to adapt each interface by subclassing.</li>
+</ul>
+
+<p><strong>Software examples:</strong> wrappers for 3rd-party libraries — a middle layer between application and library, decoupling them.</p>
+
+<h4>Class Adapter vs Object Adapter</h4>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent2)">Class Adapter</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>Uses <strong>multiple inheritance</strong></li>
+<li>Only in languages supporting it (NOT Java/C#/PHP directly)</li>
+<li>Subclasses both Target and Adaptee</li>
+<li>Adapts a <strong>specific</strong> Adaptee class — its subclasses can't be adapted</li>
+<li>No delegation code needed</li>
+<li>Single object; no extra pointer indirection</li>
+<li>Adapter <em>can</em> override Adaptee behaviour (it <em>is</em> a subclass)</li>
+</ul>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Object Adapter</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>Uses <strong>composition / delegation</strong></li>
+<li>Single Adapter works with the Adaptee <strong>and all subclasses</strong></li>
+<li>Hard to override Adaptee behaviour</li>
+<li>Main disadvantage: must write delegation code for every method</li>
+<li>If a new method is added to the adaptee, Adapter must be extended</li>
+</ul>
+</div>
+</div>
+
+<h4>Issues</h4>
+<ul>
+<li><strong>How much should the Adapter do?</strong> If Target and Adaptee are similar, delegate; if dissimilar, convert data structures and implement missing operations.</li>
+<li><strong>Two-way adapters for transparency</strong> — an adapted object no longer conforms to the Adaptee interface, so it can't be used where an Adaptee is expected. Two-way adapters provide that transparency — useful when two clients view the object differently.</li>
+</ul>
+
+<div class="exam-box">
+<strong>Adapter MCQ keys —</strong> Primary purpose: convert incompatible interfaces into a compatible one / Allow incompatible classes to <strong>collaborate</strong> / Target defines the interface expected by the client / Adaptee = existing interface that needs adapting.
+</div>
+</div>
+</div>
+
+<!-- ── 4.3 Facade ── -->
+<div class="section" id="u4-facade">
+<div class="section-header">
+  <span class="s-num">§ 4.3</span>
+  <h3>Facade</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intent:</strong> Provide a <strong>unified interface</strong> to a set of interfaces in a subsystem. Façade defines a higher-level interface that makes the subsystem easier to use.
+</div>
+
+<h4>What is a Façade?</h4>
+<ul>
+<li>In architecture: the principal front of a building ("the house has a half-timbered façade").</li>
+<li>Figurative: a deceptive outward appearance.</li>
+</ul>
+
+<h4>Facade in Software</h4>
+<ul>
+<li>An object providing a <strong>simplified interface</strong> to a larger body of code, a library, or any complex set of classes.</li>
+<li>Example: <span class="kw">fopen</span> — a simple interface to open/read system commands.</li>
+<li>A <strong>structural</strong> design pattern wrapping a complicated subsystem with a simpler interface.</li>
+</ul>
+
+<div class="warn">
+<strong>Trade-off:</strong> if the Façade is the only access point, "power users" may lose flexibility.
+</div>
+
+<h4>Why Facade?</h4>
+<ul>
+<li>Structuring a system into <strong>subsystems</strong> reduces complexity.</li>
+<li>Minimises communication and dependencies between subsystems — introduce a façade exposing a single simplified entry point.</li>
+</ul>
+
+<h4>Applicability — use Facade when:</h4>
+<ul>
+<li>Providing a simple interface to a complex subsystem (a default view good enough for most clients).</li>
+<li>Decoupling a subsystem from clients and other subsystems → promotes subsystem independence and portability.</li>
+<li>Defining an <strong>entry point</strong> to each subsystem level.</li>
+<li>Simplifying inter-subsystem dependencies — they communicate only through façades.</li>
+</ul>
+
+<h4>Advantages</h4>
+<ul>
+<li>Shields clients from subsystem components → fewer objects for clients → easier to use.</li>
+<li>Promotes <strong>weak coupling</strong> between the subsystem and its clients.</li>
+<li>Eliminates complex/circular dependencies when client and subsystem are developed independently.</li>
+<li>Limits <strong>recompilation</strong> needed for small changes in an important subsystem.</li>
+</ul>
+
+<h4>Known Uses</h4>
+<ul>
+<li><strong>ET++ framework</strong> — built-in browsing tools implemented in a separate subsystem with a <span class="kw">ProgrammingEnvironment</span> façade class with operations like <span class="kw">InspectObject</span>, <span class="kw">InspectClass</span>.</li>
+<li><strong>Choices OS</strong> — uses façades to compose many frameworks. Key abstractions (processes, storage, address spaces) each have a façade supporting porting to different hardware platforms.</li>
+</ul>
+
+<h4>Implementation</h4>
+<ul>
+<li><strong>Reduce client-subsystem coupling</strong> by creating a "Façade Abstract Class" and concrete subclasses implementing the subsystem. Clients talk to the abstract façade. Alternative: configure a façade object with different subsystem objects.</li>
+<li><strong>Public vs Private interfaces:</strong> classes and subsystems both have public/private interfaces. Façade belongs to the public interface — the private interface is only for subsystem extenders.</li>
+</ul>
+
+<h4>Examples</h4>
+<ul>
+<li><strong>Booking a package:</strong> a <span class="kw">TravelFacade</span> simplifies booking flight + hotel + cab through a single call.</li>
+<li><strong>Home theater:</strong> a <span class="kw">HomeTheaterFacade</span> provides <span class="kw">watchMovie()</span> / <span class="kw">endMovie()</span> calls coordinating amplifier, tuner, DVD player, projector, lights, screen, popcorn popper.</li>
+</ul>
+
+<div class="exam-box">
+<strong>Facade MCQ keys —</strong> Primary intent: unified interface to a set of interfaces / Used to minimise communication/dependencies between subsystems / Key advantage: reduces objects clients interact with / Promotes <strong>weak coupling</strong> between subsystem and client.
+</div>
+</div>
+</div>
+
+<!-- ── 4.4 Proxy ── -->
+<div class="section" id="u4-proxy">
+<div class="section-header">
+  <span class="s-num">§ 4.4</span>
+  <h3>Proxy</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Core idea:</strong> A <strong>proxy</strong> object provides a <strong>surrogate or placeholder</strong> for another object to control access to it. The client doesn't directly talk to the original — it calls the proxy, which calls the real subject.
+</div>
+
+<h4>Intent</h4>
+<ul>
+<li>Heavily used for <strong>lazy loading</strong> — don't create a full object until actually needed.</li>
+<li>A class represents the functionality of another class.</li>
+</ul>
+
+<h4>Three Main Variations</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Variation</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><strong>Remote Proxy</strong></td><td>Local representative for an object in a different address space.</td></tr>
+<tr><td><strong>Virtual Proxy</strong></td><td>Creates expensive objects on demand.</td></tr>
+<tr><td><strong>Protection Proxy</strong></td><td>Controls access rights to the original object.</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>An additional one often discussed: <strong>Cache Proxy</strong> — caches request results (data that doesn't change often or is expensive to create).</p>
+
+<h4>Participants</h4>
+<ul>
+<li><strong>Subject</strong> — interface exposing the functionality available to clients.</li>
+<li><strong>Real Subject</strong> — class implementing Subject; concrete logic hidden behind the proxy.</li>
+<li><strong>Proxy</strong> — hides the real object by extending the same interface; clients talk to the real object via the proxy.</li>
+</ul>
+
+<h4>Examples</h4>
+<ul>
+<li><strong>Check / bank draft</strong> as a proxy for funds in an account — used in place of cash; controls access to cash in the issuer's account.</li>
+<li><strong>Corporate network proxy</strong> — all network requests go through a proxy that checks allowed websites/data; if suspicious, blocks the request.</li>
+</ul>
+
+<h4>When to use — Applicability</h4>
+<ul>
+<li><strong>Cache Proxy</strong> — caches relevant data; Proxy returns cached results without hitting the real object.</li>
+<li><strong>Remote Proxy</strong> — local object represents one in another location; handles wrapping/unwrapping and remote calls.</li>
+<li><strong>Protection Proxy</strong> — security around the Real Subject, enforcing access control.</li>
+<li><strong>Virtual Proxy</strong> — lazy initialisation for a complex/expensive object only needed some of the time.</li>
+</ul>
+
+<h4>Advantages and Disadvantages</h4>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Advantages</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>Works even if the real service isn't ready/available</li>
+<li>Follows the <strong>Open/Closed Principle</strong> — new proxies introduced without changing service or clients</li>
+</ul>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent)">Disadvantages</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>Adds an extra layer between client and Real Subject → more complexity</li>
+<li>Response time may be delayed</li>
+<li>Extra request forwarding introduced</li>
+</ul>
+</div>
+</div>
+
+<h4>Usage Examples</h4>
+<ol>
+<li><strong>Image viewer</strong> that lists + displays high-res photos — don't load actual photos until the user selects one.</li>
+<li><strong>Document editor</strong> with embedded graphics — don't load all pictures on open since not all are visible.</li>
+<li><strong>Protective proxy</strong> — office proxy server allows only valid sites.</li>
+<li>Adds <strong>thread-safety</strong> to an existing class without modifying it.</li>
+</ol>
+
+<h4>Worked Example — Lazy Image Loading</h4>
+<ul>
+<li>Interface accessed by the client is implemented by both <span class="kw">ProxyImage</span> and <span class="kw">RealImage</span>.</li>
+<li><span class="kw">RealImage</span> lives on another system, loading image info from the DB.</li>
+<li><span class="kw">ProxyImage</span> on our system represents the <span class="kw">RealImage</span>, avoiding repeated heavy loads.</li>
+</ul>
+
+<h4>YouTube Downloader Example (lazy + caching)</h4>
+<ul>
+<li>A 3rd-party <span class="kw">YouTubeDownloader</span> keeps re-downloading the same video.</li>
+<li>A <span class="kw">CachedYouTubeDownloader</span> proxy implements the same interface, delegates to the real downloader, caches downloaded files, and returns cached files on repeat requests.</li>
+</ul>
+
+<div class="exam-box">
+<strong>Proxy MCQ keys —</strong> Primary role: act as a placeholder/surrogate / Key use: <strong>lazy loading</strong> / Subject defines the interface used by clients / Virtual Proxy creates expensive objects only when needed / Protection Proxy controls access rights / Common scenario: controlling internet access in networks.
+</div>
+</div>
+</div>
+
+<!-- ── 4.5 Flyweight ── -->
+<div class="section" id="u4-flyweight">
+<div class="section-header">
+  <span class="s-num">§ 4.5</span>
+  <h3>Flyweight</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intent:</strong> Use <strong>sharing</strong> to support a large number of fine-grained objects efficiently. Flyweight lets you fit more objects into available RAM by sharing common parts of state instead of keeping all data in each object.
+</div>
+
+<h4>Motivation</h4>
+<ul>
+<li>Application uses many objects.</li>
+<li>A flyweight is a <strong>shared</strong> object used in multiple contexts simultaneously.</li>
+<li>Acts as an individual object in each context.</li>
+<li>Key concept: <strong>intrinsic vs extrinsic state</strong>.</li>
+</ul>
+
+<h4>Problem</h4>
+<p>Placing the same information in many different places:</p>
+<ol>
+<li>Mistakes can be made in copying information.</li>
+<li>If data changes, every occurrence must be located and changed → difficult maintenance.</li>
+<li>Documents become large if the same info is repeated.</li>
+</ol>
+
+<p><strong>Issues:</strong> RAM overhead per instance, CPU overhead managing memory.</p>
+
+<h4>Solution — Intrinsic vs Extrinsic State</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th></th><th>Intrinsic State</th><th>Extrinsic State</th></tr></thead>
+<tbody>
+<tr><td><strong>Shareable?</strong></td><td>✔ Yes</td><td>✗ No (stateless)</td></tr>
+<tr><td><strong>Depends on context?</strong></td><td>✗ No</td><td>✔ Yes</td></tr>
+<tr><td><strong>Storage</strong></td><td>Inside flyweight (stored once for many objects)</td><td>Outside flyweight; computed on the spot or passed in</td></tr>
+<tr><td><strong>Example</strong></td><td>Name, postal abbreviation, time zone</td><td>Access to region</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Flyweight objects contain <strong>only intrinsic state</strong>; extrinsic state is passed in by the client.</p>
+
+<h4>Example — OO Document Editor</h4>
+<ul>
+<li>Represent each character as an object → flexibility; characters and embedded elements treated uniformly for drawing/formatting.</li>
+<li><strong>One flyweight per letter</strong> of the alphabet:
+  <ul>
+    <li><strong>Intrinsic:</strong> character code (stored in the flyweight).</li>
+    <li><strong>Extrinsic:</strong> coordinate position in the document; typographic style (font, color) — determined by text-layout algorithms and formatting commands at each location.</li>
+  </ul>
+</li>
+</ul>
+
+<h4>Participants</h4>
+<ul>
+<li><strong>Flyweight (e.g., <span class="kw">Glyph</span>)</strong> — interface through which flyweights receive and act on extrinsic state.</li>
+<li><strong>ConcreteFlyweight (e.g., <span class="kw">CharacterGlyph</span>)</strong> — implements Flyweight; adds storage for intrinsic state. Must be sharable; stored state must be intrinsic.</li>
+<li><strong>UnsharedConcreteFlyweight (e.g., <span class="kw">Row</span>, <span class="kw">Column</span>)</strong> — not all subclasses need to be shared. The interface <em>enables</em> sharing; it doesn't enforce it.</li>
+<li><strong>FlyweightFactory (e.g., <span class="kw">GlyphFactory</span>)</strong> — creates and manages flyweight objects; ensures proper sharing. When a client asks, factory supplies an existing instance or creates one.</li>
+<li><strong>Client</strong> — keeps a reference to flyweight(s); computes or stores the extrinsic state.</li>
+</ul>
+
+<h4>Applicability — use Flyweight when:</h4>
+<ul>
+<li>Application uses a <strong>large number of objects</strong>.</li>
+<li>Storage costs are high due to sheer quantity.</li>
+<li>Most object state can be made <strong>extrinsic</strong>.</li>
+<li>Many groups can be replaced by relatively few shared objects once extrinsic state is removed.</li>
+<li>Application doesn't depend on <strong>object identity</strong> (since flyweights are shared, identity tests will return true for conceptually distinct objects).</li>
+</ul>
+
+<h4>Consequences</h4>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent)">Disadvantage</h5>
+<p style="font-size:.85rem">Run-time cost of transferring/finding/computing extrinsic state — especially if it was previously intrinsic.</p>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Advantage</h5>
+<p style="font-size:.85rem">Storage savings depend on:</p>
+<ul style="font-size:.85rem;margin:0">
+<li>Reduction in total instances from sharing</li>
+<li>Amount of intrinsic state per object</li>
+<li>Whether extrinsic state is computed or stored</li>
+</ul>
+</div>
+</div>
+
+<h4>Implementation Notes</h4>
+<ul>
+<li><strong>Removing extrinsic state</strong> — applicability is largely determined by how easily you can identify and externalise it. If extrinsic kinds are as varied as the objects, no sharing benefit.</li>
+<li><strong>Managing shared objects</strong> — clients shouldn't instantiate directly. FlyweightFactory lets clients <strong>look up</strong> flyweights, often via an associative store.</li>
+</ul>
+
+<h4>More Examples</h4>
+<ul>
+<li><strong>Pen with refills</strong> — pen is a flyweight with <span class="kw">refill</span> as an extrinsic attribute; body, pointer are intrinsic. Modules asking for a red pen share the same instance.</li>
+<li><strong>Java <span class="kw">String</span> constants</strong> — string pool is a flyweight. Strings with the same content share the same reference.</li>
+<li><strong>Browsers</strong> — images used in multiple places are loaded once and reused from cache. URL = intrinsic; position/width/height = extrinsic.</li>
+</ul>
+
+<div class="exam-box">
+<strong>Flyweight MCQ keys —</strong> Primary goal: reduce memory by sharing objects / Intrinsic state: context-independent and sharable / Extrinsic state: context-dependent and not shared / FlyweightFactory creates and manages shared flyweight objects / Flyweight objects must be <strong>sharable</strong> / Example: <strong>String constant pool</strong>.
+</div>
+</div>
+</div>
+
+<!-- ── 4.6 Behavioral intro ── -->
+<div class="section" id="u4-behavioral-intro">
+<div class="section-header">
+  <span class="s-num">§ 4.6</span>
+  <h3>Behavioral Patterns — Overview</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Behavioral patterns</strong> identify common <strong>communication patterns between objects</strong> and realise them. They increase flexibility in communication, influencing how state and behaviour flow through a system. Optimising how state and behaviour are transferred/modified simplifies and increases maintainability.
+</div>
+
+<h4>The 11 Behavioral Patterns</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Pattern</th><th>One-liner</th></tr></thead>
+<tbody>
+<tr><td><strong>Chain of Responsibility</strong></td><td>Command objects are handled or passed on to other objects by logic-containing processing objects.</td></tr>
+<tr><td><strong>Command</strong></td><td>Command objects encapsulate an action and its parameters.</td></tr>
+<tr><td><strong>Interpreter</strong></td><td>Implement a specialised computer language to solve a specific set of problems.</td></tr>
+<tr><td><strong>Iterator</strong></td><td>Access elements of an aggregate object sequentially without exposing its underlying representation.</td></tr>
+<tr><td>Mediator</td><td>Centralises communication so objects don't refer to each other directly.</td></tr>
+<tr><td>Memento</td><td>Restore an object to a previous state (rollback).</td></tr>
+<tr><td>Observer</td><td>Publish/Subscribe / Event Listener.</td></tr>
+<tr><td>State</td><td>An object can partially change its type at runtime.</td></tr>
+<tr><td>Strategy</td><td>Algorithms can be selected on the fly.</td></tr>
+<tr><td>Template Method</td><td>Describes the program skeleton.</td></tr>
+<tr><td>Visitor</td><td>Separate an algorithm from an object.</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="exam-box">
+The four <strong>explicitly covered</strong> in the slides: <strong>Chain of Responsibility, Command, Interpreter, Iterator</strong>. Be ready for definitions of all 11 (the slides include the list).
+</div>
+</div>
+</div>
+
+<!-- ── 4.7 Chain of Responsibility ── -->
+<div class="section" id="u4-cor">
+<div class="section-header">
+  <span class="s-num">§ 4.7</span>
+  <h3>Chain of Responsibility</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intent:</strong> Avoid coupling the <strong>sender of a request</strong> to its <strong>receiver</strong> by giving more than one object a chance to handle the request. Chain receiving objects and pass the request along until one handles it.
+</div>
+
+<h4>Core Idea</h4>
+<p>Establishes a <strong>chain</strong> within a system: a message is either handled at the level where it is first received, or directed to an object that can handle it. Used to manage algorithms, relationships, and responsibilities between objects.</p>
+
+<h4>Motivation</h4>
+<ul>
+<li>Promotes <strong>loose coupling</strong> between sender and receiver.</li>
+<li>More than one object gets an opportunity to handle the request.</li>
+<li>Receiving objects are chained; the request passes along until one handles it.</li>
+<li>The set of potential handlers and the chain order can be decided <strong>dynamically at runtime</strong> by the client.</li>
+</ul>
+
+<h4>Participants</h4>
+<ul>
+<li><strong>Handler</strong> — usually an interface; the entry point that receives and dispatches to the chain. Holds reference only to the first handler.</li>
+<li><strong>ConcreteHandler</strong> — handles the requests it is responsible for; can access its <strong>successor</strong>; if it can't handle, forwards to the successor.</li>
+<li><strong>Client</strong> — initiates the request to a ConcreteHandler on the chain.</li>
+</ul>
+
+<h4>Applicability — use when:</h4>
+<ul>
+<li>More than one object may handle a request, and the handler isn't known <em>a priori</em>.</li>
+<li>You want to issue a request to one of several objects without specifying the receiver explicitly.</li>
+<li>The set of objects that can handle a request should be specified <strong>dynamically</strong>.</li>
+</ul>
+
+<h4>Scenario 1 — Enterprise Email Triage</h4>
+<p>Enterprise gets 4 types of email: <strong>fan mail, complaints, feature requests, spam</strong>. AI detectors exist for each type. Build a chain that routes incoming mail to the right detector.</p>
+
+<h4>Scenario 2 — Transaction Approval (full implementation)</h4>
+<div class="warn">
+<strong>Rule:</strong> Transactions &lt; ₹1,00,000 — Manager / &lt; ₹10,00,000 — Vice President / &lt; ₹25,00,000 — CEO.
+</div>
+
+<h5>Abstract Handler</h5>
+<pre class="code"><span class="k">abstract class</span> TransactionProcessor {
+    <span class="k">private</span> TransactionProcessor transactionProcessor;
+
+    <span class="k">abstract protected</span> Double getApprovalLimit();
+    <span class="k">abstract protected</span> String getDesignation();
+
+    <span class="k">public void</span> setSuccessor(TransactionProcessor tp) { <span class="k">this</span>.transactionProcessor = tp; }
+
+    <span class="k">public void</span> approve(Transaction transaction) {
+        <span class="k">if</span> (transaction.getAmount() &lt;= 0.0) {
+            System.out.println(<span class="s">"Invalid Amount. Amount should be &gt; 0"</span>); <span class="k">return</span>;
+        }
+        <span class="k">if</span> (transaction.getAmount() &lt;= getApprovalLimit()) {
+            System.out.println(<span class="s">"Transaction for amount "</span> + transaction.getAmount()
+                + <span class="s">" approved by "</span> + getDesignation());
+        } <span class="k">else</span> {
+            <span class="k">if</span> (transactionProcessor == <span class="k">null</span>) {
+                System.out.println(<span class="s">"Invalid Amount. Amount should not exceed 25lacs!"</span>);
+                <span class="k">return</span>;
+            }
+            transactionProcessor.approve(transaction);     <span class="c">// forward to successor</span>
+        }
+    }
+}</pre>
+
+<h5>Concrete Handlers</h5>
+<pre class="code"><span class="k">class</span> Manager <span class="k">extends</span> TransactionProcessor {
+    <span class="k">protected</span> Double getApprovalLimit() { <span class="k">return</span> 100000.0; }
+    <span class="k">protected</span> String getDesignation()   { <span class="k">return</span> <span class="s">"manager"</span>; }
+}
+<span class="k">class</span> VicePresident <span class="k">extends</span> TransactionProcessor {
+    <span class="k">protected</span> Double getApprovalLimit() { <span class="k">return</span> 1000000.0; }
+    <span class="k">protected</span> String getDesignation()   { <span class="k">return</span> <span class="s">"Vice President"</span>; }
+}
+<span class="k">class</span> CEO <span class="k">extends</span> TransactionProcessor {
+    <span class="k">protected</span> Double getApprovalLimit() { <span class="k">return</span> 2500000.0; }
+    <span class="k">protected</span> String getDesignation()   { <span class="k">return</span> <span class="s">"CEO"</span>; }
+}</pre>
+
+<h5>Request Object</h5>
+<pre class="code"><span class="k">class</span> Transaction {
+    <span class="k">private</span> Double amount;
+    <span class="k">private</span> String purpose;
+    Transaction(Double amount, String purpose) { <span class="k">this</span>.amount = amount; <span class="k">this</span>.purpose = purpose; }
+    <span class="k">public</span> Double getAmount() { <span class="k">return</span> amount; }
+    <span class="k">public</span> String getPurpose() { <span class="k">return</span> purpose; }
+}</pre>
+
+<h5>Wiring the Chain</h5>
+<pre class="code"><span class="k">public class</span> ChainOfResponsibility {
+    <span class="k">public static void</span> main(String[] args) {
+        Manager manager = <span class="k">new</span> Manager();
+        VicePresident vicePresident = <span class="k">new</span> VicePresident();
+        CEO ceo = <span class="k">new</span> CEO();
+
+        manager.setSuccessor(vicePresident);
+        vicePresident.setSuccessor(ceo);
+
+        manager.approve(<span class="k">new</span> Transaction(2600000.0, <span class="s">"general"</span>)); <span class="c">// rejected (exceeds 25 lac)</span>
+        manager.approve(<span class="k">new</span> Transaction(50000.0,   <span class="s">"general"</span>)); <span class="c">// manager</span>
+        manager.approve(<span class="k">new</span> Transaction(120000.0,  <span class="s">"general"</span>)); <span class="c">// VP</span>
+        manager.approve(<span class="k">new</span> Transaction(1500000.0, <span class="s">"general"</span>)); <span class="c">// CEO</span>
+        manager.approve(<span class="k">new</span> Transaction(0.0,       <span class="s">"general"</span>)); <span class="c">// invalid</span>
+    }
+}</pre>
+
+<h4>Consequences</h4>
+<ul>
+<li><strong>Reduced Coupling</strong> — objects free from knowing which object handles the request.</li>
+<li><strong>Added Flexibility</strong> in assigning responsibilities — chain can change at runtime; specialised handlers via subclassing.</li>
+<li><strong>Receipt not guaranteed</strong> — request could fall off the chain or be dropped with a bad chain.</li>
+</ul>
+
+<h4>Benefits, Uses, Drawbacks</h4>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Benefits</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>Decouples sender and receivers</li>
+<li>Object doesn't need to know chain structure or direct member references</li>
+<li>Add/remove responsibilities dynamically by changing members or order</li>
+</ul>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent2)">Uses</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>Event handling in Windows systems (mouse clicks, keyboard events)</li>
+<li>Handling chains of Exceptions in Java</li>
+</ul>
+</div>
+</div>
+
+<div class="warn">
+<strong>Drawbacks:</strong> Execution isn't guaranteed — may fall off the end (can be advantage or disadvantage). Hard to observe runtime characteristics and debug.
+</div>
+
+<div class="exam-box">
+<strong>CoR MCQ keys —</strong> Main idea: requests handled by multiple objects sequentially in a chain / Passed along a chain until handled / Handler receives requests and dispatches / ConcreteHandler handles its requests and forwards others / Used when multiple objects may handle a request / Drawback: execution not guaranteed.
+</div>
+</div>
+</div>
+
+<!-- ── 4.8 Command ── -->
+<div class="section" id="u4-command">
+<div class="section-header">
+  <span class="s-num">§ 4.8</span>
+  <h3>Command</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intent:</strong> <strong>Encapsulate a request</strong> in an object. Allows parameterisation of clients with different requests, and saving requests in a queue.
+</div>
+
+<h4>Core Idea</h4>
+<ul>
+<li>Command pattern is a <strong>data-driven</strong> behavioral pattern.</li>
+<li>A <strong>request is wrapped as an object</strong> (command) and passed to an invoker.</li>
+<li>The invoker looks up the right object to handle the Command and passes it.</li>
+<li>The Command object contains everything needed to perform the action: method name, owner, arguments.</li>
+</ul>
+
+<h4>Motivation</h4>
+<ul>
+<li>Sometimes you need to issue requests to objects without knowing the operation or the receiver.</li>
+<li>Example: UI toolkits have buttons and menus that carry out a request on user input. The toolkit can't know what should happen on which object — only applications using it know.</li>
+<li>Command lets toolkit objects make requests of <strong>unspecified application objects</strong> by turning the request itself into an object.</li>
+</ul>
+
+<h4>Participants</h4>
+<ul>
+<li><strong>Command</strong> — interface with an <span class="kw">execute()</span> operation.</li>
+<li><strong>ConcreteCommand</strong> — binds a Receiver to an action; implements <span class="kw">execute()</span> by invoking the corresponding operation on the Receiver.</li>
+<li><strong>Client (Application)</strong> — creates a ConcreteCommand and sets its Receiver.</li>
+<li><strong>Invoker</strong> — asks the Command to carry out the request.</li>
+<li><strong>Receiver</strong> — knows how to perform the operation. Can be any class.</li>
+</ul>
+
+<h5>Collaborations</h5>
+<ol class="steps">
+<li>Client creates a ConcreteCommand and specifies its Receiver.</li>
+<li>Invoker stores the ConcreteCommand.</li>
+<li>Invoker calls <span class="kw">execute()</span>. For undoable commands, ConcreteCommand stores state for undoing prior to executing.</li>
+<li>ConcreteCommand invokes operations on the Receiver.</li>
+</ol>
+
+<h4>Scenario 1 — Video Game Joystick</h4>
+<p>Use the Command pattern to control a player's movement via a joystick — joystick inputs invoke commands that move the player.</p>
+
+<h4>Consequences</h4>
+<ul>
+<li>Decouples the object that <strong>invokes</strong> the operation from the one that <strong>knows how</strong> to perform it.</li>
+<li>Commands are <strong>first-class objects</strong> — manipulable and extendable like any object.</li>
+<li>Easy to <strong>add new Commands</strong> without changing existing classes.</li>
+<li>Commands can be composed into a <strong>composite command</strong>.</li>
+</ul>
+
+<div class="warn">
+<strong>Limitations:</strong> Must create a concrete command class for each request. Can end up with a large number of classes if not managed.
+</div>
+
+<h4>Applicability — use when:</h4>
+<ul>
+<li>Parameterise objects by the actions they perform (a way to implement <strong>callbacks</strong>).</li>
+<li>Specify, queue, and execute requests at different times (partitioning complex requests).</li>
+<li>Need to support <strong>undo</strong> (single or multi-level).</li>
+<li>Need a <strong>change log</strong> for recovery.</li>
+<li><strong>Transaction</strong>-based applications (extendable).</li>
+<li>Applications that learn the receiver <strong>dynamically</strong>.</li>
+</ul>
+
+<h4>Scenario 2 — Stock Broker (full implementation)</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Role</th><th>Class</th></tr></thead>
+<tbody>
+<tr><td>Command</td><td><span class="kw">Order</span></td></tr>
+<tr><td>ConcreteCommand</td><td><span class="kw">BuyStock</span>, <span class="kw">SellStock</span></td></tr>
+<tr><td>Client</td><td><span class="kw">CommandPatternDemo</span></td></tr>
+<tr><td>Invoker</td><td><span class="kw">Broker</span></td></tr>
+<tr><td>Receiver</td><td><span class="kw">Stock</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<h5>Step 1 — Command interface</h5>
+<pre class="code"><span class="k">public interface</span> Order { <span class="k">void</span> execute(); }</pre>
+
+<h5>Step 2 — Receiver</h5>
+<pre class="code"><span class="k">public class</span> Stock {
+    <span class="k">private</span> String name = <span class="s">"ABC"</span>;
+    <span class="k">private int</span> quantity = 10;
+    <span class="k">public void</span> buy()  { System.out.println(<span class="s">"Stock [ Name: "</span> + name + <span class="s">", Quantity: "</span> + quantity + <span class="s">" ] bought"</span>); }
+    <span class="k">public void</span> sell() { System.out.println(<span class="s">"Stock [ Name: "</span> + name + <span class="s">", Quantity: "</span> + quantity + <span class="s">" ] sold"</span>); }
+}</pre>
+
+<h5>Step 3 — Concrete Commands</h5>
+<pre class="code"><span class="k">public class</span> BuyStock <span class="k">implements</span> Order {
+    <span class="k">private</span> Stock abcStock;
+    <span class="k">public</span> BuyStock(Stock abcStock) { <span class="k">this</span>.abcStock = abcStock; }
+    <span class="k">public void</span> execute() { abcStock.buy(); }
+}
+<span class="k">public class</span> SellStock <span class="k">implements</span> Order {
+    <span class="k">private</span> Stock abcStock;
+    <span class="k">public</span> SellStock(Stock abcStock) { <span class="k">this</span>.abcStock = abcStock; }
+    <span class="k">public void</span> execute() { abcStock.sell(); }
+}</pre>
+
+<h5>Step 4 — Invoker</h5>
+<pre class="code"><span class="k">public class</span> Broker {
+    <span class="k">private</span> List&lt;Order&gt; orderList = <span class="k">new</span> ArrayList&lt;Order&gt;();
+    <span class="k">public void</span> takeOrder(Order order) { orderList.add(order); }
+    <span class="k">public void</span> placeOrders() {
+        <span class="k">for</span> (Order order : orderList) order.execute();
+        orderList.clear();
+    }
+}</pre>
+
+<h5>Step 5 — Client</h5>
+<pre class="code"><span class="k">public class</span> CommandPatternDemo {
+    <span class="k">public static void</span> main(String[] args) {
+        Stock abcStock = <span class="k">new</span> Stock();
+        BuyStock  buyStockOrder  = <span class="k">new</span> BuyStock(abcStock);
+        SellStock sellStockOrder = <span class="k">new</span> SellStock(abcStock);
+
+        Broker broker = <span class="k">new</span> Broker();
+        broker.takeOrder(buyStockOrder);
+        broker.takeOrder(sellStockOrder);
+        broker.placeOrders();
+    }
+}</pre>
+
+<h4>Benefits and Drawbacks</h4>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Benefits</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>Decouples invoker from receiver</li>
+<li>Lets you create a <strong>sequence</strong> of commands via a queue</li>
+<li>Easy to add new commands without changing existing code</li>
+<li>Can define a <strong>rollback</strong> system (Wizard with <span class="kw">rollback()</span>)</li>
+</ul>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent)">Drawbacks</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>High number of classes working together → careful development required</li>
+<li>Every command = one ConcreteCommand class → volume of classes grows</li>
+</ul>
+</div>
+</div>
+
+<div class="exam-box">
+<strong>Command MCQ keys —</strong> Intent: encapsulate a request as an object / Invoker invokes execution / Receiver knows how to perform the operation / ConcreteCommand binds receiver with action / <span class="kw">execute()</span> invokes operation on receiver / Key benefit: decouples sender and receiver.
+</div>
+</div>
+</div>
+
+<!-- ── 4.9 Interpreter ── -->
+<div class="section" id="u4-interpreter">
+<div class="section-header">
+  <span class="s-num">§ 4.9</span>
+  <h3>Interpreter</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intent:</strong> Define a way to <strong>interpret a domain-specific language or grammar</strong>. Define the grammar of a language and provide a way to evaluate sentences in it.
+</div>
+
+<h4>Intent / Capabilities</h4>
+<ol>
+<li>Interpret and execute expressions in the language.</li>
+<li>Break complex expressions into smaller components.</li>
+<li>Create parsers and compilers for the defined language.</li>
+<li>Build scripting and domain-specific languages.</li>
+<li>Provide flexibility/extensibility for defining and interpreting expressions.</li>
+<li>Support rules governing the behaviour of the language.</li>
+<li>Facilitate creation of <strong>abstract syntax trees (AST)</strong> to represent expressions.</li>
+<li>Allow interpreters that handle different types of expressions and operators.</li>
+</ol>
+
+<h4>Motivation</h4>
+<ol>
+<li><strong>Define a domain-specific language</strong> — tailored to a particular problem; makes code expressive and concise.</li>
+<li><strong>Dynamic interpretation</strong> — interpret/execute expressions at runtime; useful where static evaluation is hard.</li>
+<li><strong>Separate concerns</strong> — defining the language and interpreting it are separate; changes are easier.</li>
+<li><strong>Build parsers/compilers</strong> for the defined language.</li>
+<li><strong>Facilitate communication between components</strong> via a common language.</li>
+</ol>
+
+<h4>Participants</h4>
+<ul>
+<li><strong>AbstractExpression</strong> — declares an <span class="kw">interpret()</span> operation.</li>
+<li><strong>TerminalExpression</strong> (e.g., <span class="kw">ThousandExpression</span>, <span class="kw">HundredExpression</span>, <span class="kw">TenExpression</span>, <span class="kw">OneExpression</span>) — implements <span class="kw">interpret()</span> for terminal symbols. One instance per terminal symbol in a sentence.</li>
+<li><strong>NonterminalExpression</strong> — one class per grammar rule <span class="kw">R ::= R1 R2 ... Rn</span>. Maintains <span class="kw">AbstractExpression</span> variables for each symbol. Implements <span class="kw">interpret()</span> recursively.</li>
+<li><strong>Context</strong> — contains information global to the interpreter.</li>
+<li><strong>Client (InterpreterApp)</strong> — builds or receives an AST for a sentence; invokes <span class="kw">interpret()</span>.</li>
+</ul>
+
+<h4>Example</h4>
+<p>Expression <strong>2 + 3</strong>:</p>
+<ul>
+<li>Model with <span class="kw">ConstantExpression</span> for operands and <span class="kw">AddExpression</span> for addition. All implement a common <span class="kw">Expression</span> interface.</li>
+<li><span class="kw">AddExpression(ConstantExpression(2), ConstantExpression(3))</span></li>
+</ul>
+
+<p>Expression <strong>(2 + 6) + (1 + 9)</strong>:</p>
+<pre class="code">AddExpression(
+    AddExpression(ConstantExpression(2), ConstantExpression(6)),
+    AddExpression(ConstantExpression(1), ConstantExpression(9))
+)</pre>
+
+<h4>Applicability</h4>
+<p>Useful when you need to interpret a domain-specific language or grammar — compilers, interpreters for scripting languages, rule-based systems.</p>
+
+<h4>Applications</h4>
+<ul>
+<li><strong>Regular expressions</strong> — parse and execute regexes for complex matching.</li>
+<li><strong>SQL queries</strong> — parse and execute queries.</li>
+<li><strong>Mathematical expressions</strong> — parse and evaluate.</li>
+<li><strong>Programming languages</strong> — interpreters execute scripts/runtime code/on-the-fly compilation.</li>
+</ul>
+
+<h4>Advantages and Disadvantages</h4>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Advantages</h5>
+<ul style="font-size:.85rem;margin:0">
+<li><strong>Flexibility</strong> — implement your own grammar</li>
+<li><strong>Extensibility</strong> — add new expressions easily</li>
+<li><strong>Separation of Concerns</strong> — parsing separated from execution</li>
+</ul>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent)">Disadvantages</h5>
+<ul style="font-size:.85rem;margin:0">
+<li><strong>Complexity</strong> — adds complexity for complex grammars</li>
+<li><strong>Performance</strong> — slower than compiling or using a parser generator</li>
+<li><strong>Maintenance</strong> — hard when language changes frequently</li>
+</ul>
+</div>
+</div>
+
+<div class="tip">
+<strong>Consequence:</strong> Interpreter is powerful for flexible/extensible languages but trades off complexity, performance, and maintenance. Weigh these before adopting.
+</div>
+
+<div class="exam-box">
+<strong>Interpreter MCQ keys —</strong> Primary purpose: interpret a DSL or grammar / Useful for DSLs because it lets developers define a language specific to a problem domain / Context contains information global to the interpreter / Client builds an AST and invokes <span class="kw">interpret()</span> / Typical application: <strong>Regular expressions</strong> / Key advantage: flexibility for complex grammars.
+</div>
+</div>
+</div>
+
+<!-- ── 4.10 Iterator ── -->
+<div class="section" id="u4-iterator">
+<div class="section-header">
+  <span class="s-num">§ 4.10</span>
+  <h3>Iterator</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intent:</strong> Provide a way to <strong>access the elements of an aggregate object sequentially</strong> without exposing the underlying representation. Gives a uniform way to access elements of a list, set, or map without knowing the collection's implementation.
+</div>
+
+<h4>Core Idea</h4>
+<ul>
+<li>Standardised way to access and manipulate collections simply, efficiently, and flexibly.</li>
+<li>Useful for algorithms needing <strong>sequential access</strong> — sorting, searching, filtering. Iterator-based algorithms work on any collection regardless of its implementation.</li>
+</ul>
+
+<h4>Motivation — Five Key Concepts</h4>
+<ul>
+<li><strong>Encapsulation</strong> — encapsulates traversal logic separately from the collection. Algorithms and clients don't need to know internal representation.</li>
+<li><strong>Separation of Concerns</strong> — separates managing the collection from traversal. Code is modular, reusable, maintainable.</li>
+<li><strong>Abstraction</strong> — provides a standard interface for traversing. Multiple kinds of collections share the same traversal interface.</li>
+<li><strong>Lazy Evaluation</strong> — objects in the collection can be computed or retrieved only when needed (useful for large datasets or streams).</li>
+<li><strong>Multiple Traversals</strong> — multiple iterators over the same collection can coexist, each with its own state. Pause and resume iteration.</li>
+</ul>
+
+<h4>Participants</h4>
+<ul>
+<li><strong>Iterator (AbstractIterator)</strong> — interface for accessing and traversing elements.</li>
+<li><strong>ConcreteIterator</strong> — implements the iterator interface; tracks current position in the traversal.</li>
+<li><strong>Aggregate (AbstractCollection)</strong> — interface for creating an Iterator object.</li>
+<li><strong>ConcreteAggregate (Collection)</strong> — implements the creation interface; returns an instance of the proper ConcreteIterator.</li>
+</ul>
+
+<h4>How to Implement</h4>
+<ol class="steps">
+<li>Declare the iterator interface — at minimum a method to fetch the next element; add conveniences (previous, current position, <span class="kw">hasNext</span>).</li>
+<li>Declare the collection interface; describe a method for fetching iterators. Return type equals the iterator interface.</li>
+<li>Implement concrete iterator classes for each collection. Iterator linked with a collection instance via constructor.</li>
+<li>Implement the collection interface in your collection classes. Collection passes itself to the iterator's constructor.</li>
+<li>Replace all collection traversal code in the client with uses of iterators. Client fetches a new iterator whenever it needs to traverse.</li>
+</ol>
+
+<h4>Consequences</h4>
+<ol>
+<li><strong>Improved code flexibility</strong> — iterate in different ways without changing the collection's structure.</li>
+<li><strong>Better encapsulation</strong> — collection internals hidden from the client.</li>
+<li><strong>Simplified client code</strong> — standardised access reduces complexity.</li>
+<li><strong>Performance overhead</strong> — extra method calls and object creations; negligible for small collections.</li>
+</ol>
+
+<h4>Applicability — use when you need:</h4>
+<ul>
+<li><strong>Accessing elements</strong> in a collection (standard interface for traversal).</li>
+<li><strong>Simplifying complex data structures</strong> — traverse trees and graphs.</li>
+<li><strong>Implementing lazy evaluation</strong> — elements computed only when needed.</li>
+<li><strong>Supporting multiple traversals</strong> — without resetting state.</li>
+<li><strong>Providing a standard interface</strong> to algorithms working with different collection types.</li>
+</ul>
+
+<h4>Advantages and Disadvantages</h4>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Advantages</h5>
+<ul style="font-size:.85rem;margin:0">
+<li><strong>Single Responsibility</strong> — extracting bulky traversal cleans up clients and collections</li>
+<li><strong>Open/Closed</strong> — new collections and iterators pluggable without breaking existing code</li>
+<li>Iterate the same collection in <strong>parallel</strong> (each iterator has its own state)</li>
+<li>Can <strong>delay</strong> iteration and continue when needed</li>
+</ul>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent)">Disadvantages</h5>
+<ul style="font-size:.85rem;margin:0">
+<li>Overkill for simple collections</li>
+<li>May be less efficient than going through specialised collections directly</li>
+</ul>
+</div>
+</div>
+
+<div class="exam-box">
+<strong>Iterator MCQ keys —</strong> Main purpose: sequential access to aggregate elements without exposing implementation / Provides a uniform way to access collection elements / ConcreteIterator implements the interface and tracks position / Aggregate defines the interface for creating an iterator / Supports <strong>lazy evaluation</strong> for large datasets / Hides internal collection details from client.
+</div>
+</div>
+</div>
+
+<!-- ── 4.11 Anti-Patterns Definitions ── -->
+<div class="section" id="u4-anti-intro">
+<div class="section-header">
+  <span class="s-num">§ 4.11</span>
+  <h3>Anti-Patterns — Definitions</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Pattern:</strong> Good ideas. <strong>AntiPattern:</strong> Bad ideas. <strong>Refactoring:</strong> Better ideas.
+</div>
+
+<h4>What is an Anti-Pattern?</h4>
+<p>A literary form describing a <strong>commonly occurring solution</strong> to a problem that <strong>generates decidedly negative consequences</strong>.</p>
+
+<h5>May result from…</h5>
+<ul>
+<li>A manager/developer <strong>not knowing any better</strong></li>
+<li>Having <strong>insufficient knowledge/experience</strong> for the problem</li>
+<li>Applying a <strong>perfectly good pattern in the wrong context</strong></li>
+</ul>
+
+<h5>Also described as…</h5>
+<ul>
+<li>"Negative solutions" — solutions presenting more problems than they address.</li>
+<li>A natural extension of design patterns.</li>
+<li>Bridge the gap between architectural concepts and real-world implementations.</li>
+<li>Provide knowledge to <strong>prevent and recover</strong> from common mistakes.</li>
+<li>Present detailed plans for <strong>reversing causes</strong> and implementing productive solutions.</li>
+</ul>
+
+<h4>Anti-Patterns vs Design Patterns</h4>
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent3)">Design Pattern</h5>
+<p style="font-size:.9rem">A general repeatable solution to a commonly occurring problem.</p>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent)">Anti-Pattern</h5>
+<p style="font-size:.9rem">A recognised <strong>poor</strong> solution to the problem, plus a <strong>refactored</strong> solution.</p>
+</div>
+</div>
+
+<h4>Why Study Anti-Patterns?</h4>
+<ul>
+<li>Easily identifiable templates for common problems + a path of action to fix them.</li>
+<li>Real-world experience in recognising recurring problems with detailed remedies.</li>
+<li>A common <strong>vocabulary</strong> for identifying problems and discussing solutions.</li>
+<li>Provide <strong>stress release</strong> as shared misery.</li>
+<li>Ensure common problems are not repeated within an organisation.</li>
+</ul>
+</div>
+</div>
+
+<!-- ── 4.12 Viewpoints ── -->
+<div class="section" id="u4-viewpoints">
+<div class="section-header">
+  <span class="s-num">§ 4.12</span>
+  <h3>Three Viewpoints &amp; Reference Model</h3>
+</div>
+<div class="section-body">
+
+<h4>The Three Viewpoints</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Viewpoint</th><th>Focus</th></tr></thead>
+<tbody>
+<tr><td><strong>Development AntiPatterns</strong></td><td>Situations encountered by programmers while solving programming problems.</td></tr>
+<tr><td><strong>Architectural AntiPatterns</strong></td><td>Common problems in system structure — consequences and solutions. Many of the most serious unresolved problems in software systems occur from this perspective.</td></tr>
+<tr><td><strong>Management AntiPatterns</strong></td><td>Problems and solutions arising from the software organisation. Affects people in all roles; solutions directly affect technical project success.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Reference Model — Three Common Topics</h4>
+<ol class="steps">
+<li><strong>Root Causes</strong> — fundamental context for the AntiPattern.</li>
+<li><strong>Primal Forces</strong> — key motivators for decision-making.</li>
+<li><strong>Software Design-Level Model (SDLM)</strong> — defines architectural scale.</li>
+</ol>
+</div>
+</div>
+
+<!-- ── 4.13 Sins, Forces, SDLM ── -->
+<div class="section" id="u4-sins">
+<div class="section-header">
+  <span class="s-num">§ 4.13</span>
+  <h3>Seven Deadly Sins · Primal Forces · SDLM</h3>
+</div>
+<div class="section-body">
+
+<h4>Root Causes — The "Seven Deadly Sins"</h4>
+<div class="def">
+Root causes are mistakes in software development resulting in failed projects, cost overruns, schedule slips, and unfulfilled business needs.
+</div>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Sin</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><strong>Haste</strong></td><td>Tight deadlines lead to neglecting important activities.</td></tr>
+<tr><td><strong>Apathy</strong></td><td>Not caring about solving known problems.</td></tr>
+<tr><td><strong>Narrow-Mindedness</strong></td><td>Refusal of developers to learn proven solutions.</td></tr>
+<tr><td><strong>Sloth</strong></td><td>Adopting the simplest "solution" regardless of fit.</td></tr>
+<tr><td><strong>Avarice</strong></td><td>Greed in building a system produces very complex, hard-to-maintain software.</td></tr>
+<tr><td><strong>Ignorance</strong></td><td>Lack of motivation to understand things.</td></tr>
+<tr><td><strong>Pride</strong></td><td>Failure to reuse existing packages because they weren't invented here.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Primal Forces</h4>
+<p>Forces are concerns or issues within a decision-making context. Resolved forces → benefits; unresolved → consequences.</p>
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Force</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><strong>Management of Functionality</strong></td><td>Meeting the requirements</td></tr>
+<tr><td><strong>Management of Performance</strong></td><td>Meeting required speed and operation</td></tr>
+<tr><td><strong>Management of Complexity</strong></td><td>Defining abstractions</td></tr>
+<tr><td><strong>Management of Change</strong></td><td>Controlling software evolution</td></tr>
+<tr><td><strong>Management of IT Resources</strong></td><td>Managing people and IT artifacts</td></tr>
+<tr><td><strong>Management of Technology Transfer</strong></td><td>Controlling technology evolution</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Software Design-Level Model (SDLM)</h4>
+<p>Architectural scale goes from widest to narrowest:</p>
+
+<ul>
+<li><strong>Global level</strong> — design issues globally applicable across systems; coordination across organisations participating in cross-organisational communication and information sharing.</li>
+<li><strong>Enterprise level</strong> — coordination and communication across a single organisation; may be distributed across locations and heterogeneous systems.</li>
+<li><strong>System level</strong> — communications and coordination across applications and sets of applications.</li>
+<li><strong>Application level</strong> — organisation of applications meeting a set of user requirements.</li>
+<li><strong>Macro-component level</strong> — organisation and development of application frameworks.</li>
+<li><strong>Micro-component level</strong> — software components solving recurring problems; relatively self-contained, often part of a larger problem.</li>
+<li><strong>Object level</strong> — reusable objects and classes; more concerned with <strong>code reuse</strong> than design reuse.</li>
+</ul>
+
+<div class="exam-box">
+<strong>Anti-Pattern intro MCQ keys —</strong> AntiPattern produces negative consequences / AntiPatterns are poor solutions vs design patterns / Development AntiPatterns describe programming-level issues / Root causes = mistakes leading to project failures.
+</div>
+</div>
+</div>
+
+<!-- ── 4.14 Analysis Paralysis ── -->
+<div class="section" id="u4-analysis-paralysis">
+<div class="section-header">
+  <span class="s-num">§ 4.14</span>
+  <h3>Project Management — Analysis Paralysis</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+In modern engineering, more than half the job is human communication. Management anti-patterns identify scenarios where these issues are destructive to software processes. Managers play a vital role in (1) software process management, (2) resource management, (3) external relationship management.
+</div>
+
+<h4>Symptoms and Consequences</h4>
+<ul>
+<li>Multiple project restarts and model rework due to personnel changes or shifts in direction.</li>
+<li>Design/implementation issues continually reintroduced in the analysis phase.</li>
+<li>Cost of analysis exceeds expectation with no predictable end point.</li>
+<li>Analysis phase no longer involves user interaction; analysis becomes <strong>speculative</strong>.</li>
+<li>Complexity of analysis models produces intricate implementations — hard to develop, document, test.</li>
+<li>GoF-level design decisions are being made in the analysis phase.</li>
+</ul>
+
+<h4>Typical Causes</h4>
+<ul>
+<li>Management assumes a <strong>waterfall</strong> progression, but in reality systems are built incrementally.</li>
+<li>Management trusts its ability to analyse/decompose more than to design/implement.</li>
+<li>Insistence on completing all analysis before design begins.</li>
+<li>Analysis-phase goals aren't well defined.</li>
+<li>Planning/leadership lapses when moving past analysis.</li>
+<li>Management unwilling to declare any part of the domain sufficiently described.</li>
+<li>Project vision/focus on deliverable is diffused; analysis goes beyond meaningful value.</li>
+</ul>
+
+<h4>Refactored Solution — Incremental Development</h4>
+<p>Key to OO development is <strong>incremental development</strong>. Waterfall assumes a-priori problem knowledge; incremental processes assume problem+solution details emerge during development.</p>
+
+<div class="compare">
+<div class="compare-box">
+<h5 style="color:var(--accent2)">Internal Increment</h5>
+<p style="font-size:.85rem">Builds software essential to implementation infrastructure. E.g., a third-tier database + data-access layer. Builds common infrastructure used by multiple use cases and <strong>minimises rework</strong>.</p>
+</div>
+<div class="compare-box">
+<h5 style="color:var(--accent3)">External Increment</h5>
+<p style="font-size:.85rem">User-visible functionality.</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ── 4.15 Vendor Lock-In ── -->
+<div class="section" id="u4-vendor-lock">
+<div class="section-header">
+  <span class="s-num">§ 4.15</span>
+  <h3>Software Architecture — Vendor Lock-In</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+A software project adopts a product technology and becomes <strong>completely dependent</strong> on the vendor's implementation. When upgrades happen, software changes and interoperability problems occur, requiring continuous maintenance to keep the system running.
+</div>
+
+<p>Architecture AntiPatterns focus on <strong>system-level and enterprise-level structure</strong> of applications and components. Although software architecture as an engineering discipline is relatively immature, its overarching importance has been demonstrated repeatedly.</p>
+
+<h4>Symptoms and Consequences</h4>
+<ul>
+<li>Commercial product upgrades drive the application-software maintenance cycle.</li>
+<li>Promised features are delayed or never delivered → causes failure to deliver application updates.</li>
+<li>The product deviates significantly from the advertised open-systems standard.</li>
+<li>If a product upgrade is missed entirely, a <strong>repurchase and reintegration</strong> is often required.</li>
+</ul>
+
+<h4>Typical Causes</h4>
+<ul>
+<li>Product varies from open-systems standards because there's no effective <strong>conformance process</strong>.</li>
+<li>Product selected based entirely on <strong>marketing/sales</strong> info, not technical inspection.</li>
+<li>No technical approach for <strong>isolating</strong> application software from direct product dependency.</li>
+<li>Application programming requires in-depth product knowledge.</li>
+<li>Product's complexity/generality greatly exceeds the application's needs.</li>
+</ul>
+
+<h4>Refactored Solution — Isolation Layer</h4>
+<p>Separate software packages and technology with an isolation layer. Applicable when:</p>
+<ul>
+<li>Isolation of application software from lower-level infrastructure (middleware, OS, security).</li>
+<li>Changes to infrastructure anticipated within the life cycle.</li>
+<li>A more convenient programming interface is needed.</li>
+<li>Consistent handling of the infrastructure is needed across many systems.</li>
+<li>Multiple infrastructures must be supported (serially or concurrently).</li>
+</ul>
+</div>
+</div>
+
+<!-- ── 4.16 The Blob ── -->
+<div class="section" id="u4-blob">
+<div class="section-header">
+  <span class="s-num">§ 4.16</span>
+  <h3>Software Development — The Blob (God Class)</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+Procedural-style design produces <strong>one object holding the lion's share of responsibilities</strong>, while other objects only hold data or execute simple processes. Solution: refactor to distribute responsibilities more uniformly and isolate change.
+</div>
+
+<p>Good software structure is essential for extension and maintenance. Development is chaotic, so implemented structure tends to stray from planned structure (architecture, analysis, design).</p>
+
+<h4>Background</h4>
+<p>Found in designs where one class monopolises processing, and other classes primarily encapsulate data. Class diagram: a single complex controller class surrounded by simple data classes. The majority of responsibilities are allocated to a single class.</p>
+
+<h4>Symptoms and Consequences</h4>
+<ul>
+<li>A single class with a <strong>large number</strong> of attributes/operations — <strong>60+</strong> usually indicates a Blob.</li>
+<li>A <strong>disparate collection</strong> of unrelated attributes/operations in a single class → lack of cohesion.</li>
+<li>The Blob class is typically <strong>too complex for reuse and testing</strong>; reusing for a subset introduces excessive complexity.</li>
+<li>May be <strong>expensive to load</strong> into memory, wasting resources for simple operations.</li>
+</ul>
+
+<h4>Typical Causes</h4>
+<ul>
+<li>Lack of an object-oriented architecture.</li>
+<li>Lack of (any) architecture.</li>
+<li>Lack of architecture enforcement.</li>
+<li>Too limited intervention.</li>
+<li>Specified disaster — architecture explicitly specifies a blob.</li>
+</ul>
+
+<h4>Refactored Solution (Steps)</h4>
+<ol class="steps">
+<li><strong>Categorise</strong> related attributes and operations according to contracts — cohesive groups directly related to a common focus, behaviour, or function within the system.</li>
+<li>Look for <strong>"natural homes"</strong> for these contract-based collections of functionality and migrate them there. E.g., catalog-related operations move from <span class="kw">LIBRARY</span> to <span class="kw">CATALOG</span>.</li>
+<li>Remove all <strong>"far-coupled"</strong> / redundant indirect associations. E.g., <span class="kw">ITEM</span> was far-coupled to <span class="kw">LIBRARY</span>, but each item really belongs to a <span class="kw">CATALOG</span>, which belongs to a <span class="kw">LIBRARY</span>. Migrate <span class="kw">ITEM</span> to <span class="kw">CATALOG</span>.</li>
+<li>Where appropriate, <strong>migrate associates to derived classes → a common base class</strong>.</li>
+<li>Remove <strong>transient associations</strong>, replacing them with type specifiers to attribute and operation arguments.</li>
+</ol>
+
+<div class="exam-box">
+<strong>Anti-Pattern MCQ keys —</strong> Project Management AntiPatterns deal with human communication and management issues / Major cause of Analysis Paralysis: insistence on completing all analysis before design / Vendor Lock-In = dependency on a specific vendor's technology / Vendor Lock-In problem: interoperability and maintenance issues / The Blob = one class handling most responsibilities / Key Blob issue: difficult reuse and high complexity.
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════════ QUICK REFERENCE ═══════════════════════ -->
+<div class="unit-divider" id="quickref">
+  <span class="unit-num">★</span>
+  <h2>Quick Reference Sheets</h2>
+</div>
+
+<div class="section">
+<div class="section-header">
+  <span class="s-num">REF · 1</span>
+  <h3>Pattern Categories at a Glance</h3>
+</div>
+<div class="section-body">
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Category</th><th>Purpose</th><th>Patterns in Syllabus</th></tr></thead>
+<tbody>
+<tr><td><strong>Creational</strong></td><td>Object creation mechanisms</td><td>Singleton, Factory, Builder, Prototype</td></tr>
+<tr><td><strong>Structural</strong></td><td>Composition of classes/objects</td><td>Adapter, Facade, Proxy, Flyweight</td></tr>
+<tr><td><strong>Behavioral</strong></td><td>Interaction and responsibility</td><td>Chain of Responsibility, Command, Interpreter, Iterator</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+  <span class="s-num">REF · 2</span>
+  <h3>Pattern One-Liners</h3>
+</div>
+<div class="section-body">
+
+<h4>Creational</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Pattern</th><th>One-liner</th><th>Key Participants</th></tr></thead>
+<tbody>
+<tr><td><strong>Singleton</strong></td><td>Exactly one instance + global access</td><td>Singleton, Client</td></tr>
+<tr><td><strong>Factory Method</strong></td><td>Subclasses decide the concrete class</td><td>Product, ConcreteProduct, Creator, ConcreteCreator</td></tr>
+<tr><td><strong>Builder</strong></td><td>Build step-by-step; same process → different representations</td><td>Builder, ConcreteBuilder, Director, Product</td></tr>
+<tr><td><strong>Prototype</strong></td><td>Create new objects by cloning a prototype</td><td>Prototype, ConcretePrototype, Client</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Structural</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Pattern</th><th>One-liner</th><th>Key Participants</th></tr></thead>
+<tbody>
+<tr><td><strong>Adapter</strong></td><td>Convert one interface into another a client expects</td><td>Target, Adapter, Adaptee, Client</td></tr>
+<tr><td><strong>Facade</strong></td><td>Unified simple interface to a complex subsystem</td><td>Facade, Subsystem classes</td></tr>
+<tr><td><strong>Proxy</strong></td><td>Surrogate / placeholder controlling access</td><td>Subject, RealSubject, Proxy</td></tr>
+<tr><td><strong>Flyweight</strong></td><td>Share fine-grained objects efficiently</td><td>Flyweight, ConcreteFlyweight, FlyweightFactory, Client</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Behavioral</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Pattern</th><th>One-liner</th><th>Key Participants</th></tr></thead>
+<tbody>
+<tr><td><strong>Chain of Responsibility</strong></td><td>Pass the request along a chain until handled</td><td>Handler, ConcreteHandler, Client</td></tr>
+<tr><td><strong>Command</strong></td><td>Encapsulate a request as an object</td><td>Command, ConcreteCommand, Invoker, Receiver, Client</td></tr>
+<tr><td><strong>Interpreter</strong></td><td>Define a grammar; evaluate sentences</td><td>AbstractExpression, Terminal/Nonterminal Expression, Context, Client</td></tr>
+<tr><td><strong>Iterator</strong></td><td>Sequential access to aggregate elements</td><td>Iterator, ConcreteIterator, Aggregate, ConcreteAggregate</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+  <span class="s-num">REF · 3</span>
+  <h3>GRASP &amp; SOLID Cheat Sheet</h3>
+</div>
+<div class="section-body">
+
+<h4>GRASP — All 9 Principles</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Pattern</th><th>Core Question</th></tr></thead>
+<tbody>
+<tr><td><strong>Creator</strong></td><td>Who creates an instance of X?</td></tr>
+<tr><td><strong>Information Expert</strong></td><td>Who has the info to do the job?</td></tr>
+<tr><td><strong>Low Coupling</strong></td><td>How to keep dependencies minimal?</td></tr>
+<tr><td><strong>High Cohesion</strong></td><td>How to keep each class focused?</td></tr>
+<tr><td><strong>Controller</strong></td><td>Who handles a system event from the UI?</td></tr>
+<tr><td><strong>Polymorphism</strong></td><td>How to vary behaviour by type?</td></tr>
+<tr><td><strong>Indirection</strong></td><td>How to avoid direct coupling between two elements?</td></tr>
+<tr><td><strong>Protected Variations</strong></td><td>How to shield from variation in other elements?</td></tr>
+<tr><td><strong>Pure Fabrication</strong></td><td>When domain-based assignment gives bad design, make something up</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>SOLID — All 5 Principles</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Letter</th><th>Principle</th><th>One-liner</th></tr></thead>
+<tbody>
+<tr><td>S</td><td>Single Responsibility</td><td>One reason to change per class</td></tr>
+<tr><td>O</td><td>Open-Closed</td><td>Open for extension, closed for modification</td></tr>
+<tr><td>L</td><td>Liskov Substitution</td><td>Subtypes must be substitutable for base types</td></tr>
+<tr><td><strong>I</strong></td><td><strong>Interface Segregation</strong></td><td><strong>Many client-specific interfaces &gt; one fat interface</strong></td></tr>
+<tr><td><strong>D</strong></td><td><strong>Dependency Inversion</strong></td><td><strong>Depend on abstractions, not concretions</strong></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+  <span class="s-num">REF · 4</span>
+  <h3>Polymorphism · Proxy · Flyweight</h3>
+</div>
+<div class="section-body">
+
+<h4>Four Types of Polymorphism</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Type</th><th>Also Called</th><th>Java</th></tr></thead>
+<tbody>
+<tr><td>Ad-hoc</td><td>Overloading</td><td>Method overloading, operator overloading</td></tr>
+<tr><td>Parametric</td><td>Early binding</td><td>Generics</td></tr>
+<tr><td>Inclusion</td><td>Subtyping, runtime polymorphism</td><td>Dynamic method dispatch</td></tr>
+<tr><td>Coercion</td><td>Casting</td><td>Implicit widening, explicit cast</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Proxy Variations</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Variation</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td><strong>Remote Proxy</strong></td><td>Local representative for a remote object</td></tr>
+<tr><td><strong>Virtual Proxy</strong></td><td>Create expensive objects on demand</td></tr>
+<tr><td><strong>Protection Proxy</strong></td><td>Enforce access rights</td></tr>
+<tr><td><strong>Cache Proxy</strong></td><td>Cache results of requests</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Flyweight: Intrinsic vs Extrinsic</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th></th><th>Intrinsic</th><th>Extrinsic</th></tr></thead>
+<tbody>
+<tr><td>Shareable</td><td>✔</td><td>✗</td></tr>
+<tr><td>Context-dependent</td><td>✗</td><td>✔</td></tr>
+<tr><td>Stored in flyweight</td><td>✔</td><td>✗</td></tr>
+<tr><td>Example (character glyph)</td><td>character code</td><td>coordinate, font, color</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="section">
+<div class="section-header">
+  <span class="s-num">REF · 5</span>
+  <h3>Anti-Patterns Summary</h3>
+</div>
+<div class="section-body">
+
+<h4>The Three Anti-Patterns Covered</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Type</th><th>Anti-Pattern</th><th>Fix</th></tr></thead>
+<tbody>
+<tr><td>Management</td><td><strong>Analysis Paralysis</strong></td><td>Incremental development (internal + external increments)</td></tr>
+<tr><td>Architectural</td><td><strong>Vendor Lock-In</strong></td><td>Isolation Layer</td></tr>
+<tr><td>Development</td><td><strong>The Blob</strong></td><td>Distribute responsibilities; natural homes; remove far-coupling</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Seven Deadly Sins</h4>
+<p style="text-align:center;font-size:1.05rem;font-family:'Playfair Display',serif;color:var(--accent);font-style:italic">
+Haste · Apathy · Narrow-Mindedness · Sloth · Avarice · Ignorance · Pride
+</p>
+
+<h4>Six Primal Forces</h4>
+<p style="text-align:center;font-size:.95rem;font-family:'Playfair Display',serif;color:var(--accent2)">
+Functionality · Performance · Complexity · Change · IT Resources · Technology Transfer
+</p>
+</div>
+</div>
+
+</div><!-- /container -->
+
+<div class="footer">
+  Built from PES University UE23CS352B Unit 3 (337 slides) &amp; Unit 4 (237 slides) decks &middot; All MCQ answers preserved in the section exam-focus boxes.
+</div>
+
+</body>
+</html>
