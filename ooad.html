@@ -83,9 +83,8 @@
   .badge.green { background: var(--accent3); }
 
   .toc-wrapper {
-    max-width: 900px;
+    width: min(1400px, calc(100% - 3rem));
     margin: 2.5rem auto;
-    padding: 0 1.5rem;
   }
   .toc-card {
     background: white;
@@ -121,7 +120,11 @@
     min-width: 2rem;
   }
 
-  .container { max-width: 900px; margin: 0 auto; padding: 0 1.5rem 4rem; }
+  .container {
+    width: min(1400px, calc(100% - 3rem));
+    margin: 0 auto;
+    padding: 0 0 4rem;
+  }
 
   .unit-divider {
     background: var(--ink);
@@ -318,6 +321,21 @@
     margin-top: .15rem;
   }
 
+  .blob-steps {
+    display: grid;
+    gap: .75rem;
+  }
+  .blob-steps li {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent2);
+    padding: .8rem 1rem;
+    margin-bottom: 0;
+  }
+  .blob-steps li::before {
+    margin-top: 0;
+  }
+
   .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
   .compare-box {
     border: 1px solid var(--rule);
@@ -361,6 +379,7 @@
     margin-left: .4rem;
   }
 
+
   .footer {
     text-align: center;
     padding: 2rem;
@@ -388,7 +407,7 @@
   <div class="badge-row">
     <span class="badge">Unit 3: GRASP, SOLID &amp; Creational</span>
     <span class="badge blue">Unit 4: Structural, Behavioral &amp; Anti-Patterns</span>
-    <span class="badge green">Full slide coverage</span>
+    <span class="badge green">Exam-focused revision</span>
   </div>
 </div>
 
@@ -405,14 +424,17 @@
     <a href="#u3-controller"><span class="num">3.6</span>Controller</a>
     <a href="#u3-polymorphism"><span class="num">3.7</span>Polymorphism</a>
     <a href="#u3-other-grasp"><span class="num">3.8</span>Indirection · Pure Fab · Protected Var.</a>
-    <a href="#u3-isp"><span class="num">3.9</span>SOLID — Interface Segregation</a>
-    <a href="#u3-dip"><span class="num">3.10</span>SOLID — Dependency Inversion</a>
-    <a href="#u3-dp-intro"><span class="num">3.11</span>Intro to Design Patterns &amp; GoF</a>
-    <a href="#u3-creational"><span class="num">3.12</span>Creational Patterns Overview</a>
-    <a href="#u3-singleton"><span class="num">3.13</span>Singleton</a>
-    <a href="#u3-factory"><span class="num">3.14</span>Factory Method</a>
-    <a href="#u3-builder"><span class="num">3.15</span>Builder</a>
-    <a href="#u3-prototype"><span class="num">3.16</span>Prototype</a>
+    <a href="#u3-srp"><span class="num">3.9</span>SOLID — Single Responsibility</a>
+    <a href="#u3-ocp"><span class="num">3.10</span>SOLID — Open/Closed</a>
+    <a href="#u3-lsp"><span class="num">3.11</span>SOLID — Liskov Substitution</a>
+    <a href="#u3-isp"><span class="num">3.12</span>SOLID — Interface Segregation</a>
+    <a href="#u3-dip"><span class="num">3.13</span>SOLID — Dependency Inversion</a>
+    <a href="#u3-dp-intro"><span class="num">3.14</span>Intro to Design Patterns &amp; GoF</a>
+    <a href="#u3-creational"><span class="num">3.15</span>Creational Patterns Overview</a>
+    <a href="#u3-singleton"><span class="num">3.16</span>Singleton</a>
+    <a href="#u3-factory"><span class="num">3.17</span>Factory Method</a>
+    <a href="#u3-builder"><span class="num">3.18</span>Builder</a>
+    <a href="#u3-prototype"><span class="num">3.19</span>Prototype</a>
     <a href="#u4-structural-intro"><span class="num">4.1</span>Structural Patterns — Overview</a>
     <a href="#u4-adapter"><span class="num">4.2</span>Adapter</a>
     <a href="#u4-facade"><span class="num">4.3</span>Facade</a>
@@ -439,7 +461,7 @@
 <!-- ═══════════════════════ UNIT 3 ═══════════════════════ -->
 <div class="unit-divider">
   <span class="unit-num">Unit 03</span>
-  <h2>GRASP · SOLID (ISP, DIP) · Creational Design Patterns</h2>
+  <h2>GRASP · SOLID · Creational Design Patterns</h2>
 </div>
 
 <!-- ── 3.1 GRASP intro ── -->
@@ -702,6 +724,19 @@ traveler.setV(<span class="k">new</span> Bike()); traveler.startJourney();   <sp
 <div class="tip">
 High cohesion and low coupling go hand in hand — a class with a single clear purpose tends to depend on fewer things.
 </div>
+
+<h5>Java example — split unrelated responsibilities</h5>
+<pre class="code"><span class="c">// Low cohesion: one class calculates, prints, and saves.</span>
+<span class="k">class</span> InvoiceManager {
+    <span class="k">double</span> calculateTotal(Invoice invoice) { <span class="c">/* pricing */</span> <span class="k">return</span> 0; }
+    <span class="k">void</span> print(Invoice invoice) { <span class="c">/* formatting */</span> }
+    <span class="k">void</span> save(Invoice invoice) { <span class="c">/* database */</span> }
+}
+
+<span class="c">// High cohesion: each class has one focused reason to change.</span>
+<span class="k">class</span> InvoiceCalculator { <span class="k">double</span> calculateTotal(Invoice invoice) { <span class="k">return</span> 0; } }
+<span class="k">class</span> InvoicePrinter    { <span class="k">void</span> print(Invoice invoice) { <span class="c">/* formatting */</span> } }
+<span class="k">class</span> InvoiceRepository { <span class="k">void</span> save(Invoice invoice) { <span class="c">/* database */</span> } }</pre>
 </div>
 </div>
 
@@ -752,6 +787,25 @@ High cohesion and low coupling go hand in hand — a class with a single clear p
 <li>Maintains use-case state</li>
 <li>Controls sequence of activities</li>
 </ul>
+
+<h5>Java example — Controller delegates, Service does the work</h5>
+<pre class="code"><span class="k">class</span> OrderController {
+    <span class="k">private final</span> OrderService service;
+    OrderController(OrderService service) { <span class="k">this</span>.service = service; }
+
+    <span class="k">public</span> Receipt checkout(CheckoutRequest request) {
+        <span class="c">// Controller coordinates the system event from the UI.</span>
+        <span class="k">if</span> (request.items().isEmpty()) <span class="k">throw new</span> IllegalArgumentException(<span class="s">"empty cart"</span>);
+        <span class="k">return</span> service.placeOrder(request.customerId(), request.items());
+    }
+}
+
+<span class="k">class</span> OrderService {
+    Receipt placeOrder(String customerId, List&lt;Item&gt; items) {
+        <span class="c">// Domain/application logic lives here, not in the UI controller.</span>
+        <span class="k">return new</span> Receipt(customerId, items.size());
+    }
+}</pre>
 </div>
 </div>
 
@@ -790,6 +844,19 @@ High cohesion and low coupling go hand in hand — a class with a single clear p
 
 <h5>Shape example</h5>
 <p><span class="kw">getArea()</span> varies by shape → assign responsibility to subclasses <span class="kw">Circle</span>, <span class="kw">Triangle</span>. Sending a message to a <span class="kw">Shape</span> reference invokes the right subclass method at runtime.</p>
+<pre class="code"><span class="k">interface</span> Shape { <span class="k">double</span> getArea(); }
+
+<span class="k">class</span> Circle <span class="k">implements</span> Shape {
+    <span class="k">private final double</span> radius;
+    Circle(<span class="k">double</span> radius) { <span class="k">this</span>.radius = radius; }
+    <span class="k">public double</span> getArea() { <span class="k">return</span> Math.PI * radius * radius; }
+}
+
+<span class="k">class</span> Triangle <span class="k">implements</span> Shape {
+    <span class="k">private final double</span> base, height;
+    Triangle(<span class="k">double</span> base, <span class="k">double</span> height) { <span class="k">this</span>.base = base; <span class="k">this</span>.height = height; }
+    <span class="k">public double</span> getArea() { <span class="k">return</span> 0.5 * base * height; }
+}</pre>
 </div>
 </div>
 
@@ -805,12 +872,38 @@ High cohesion and low coupling go hand in hand — a class with a single clear p
 
 <h4>Indirection</h4>
 <p>To avoid direct coupling between two elements, assign the responsibility of <strong>mediating</strong> between them to an intermediate object. Example: the <span class="kw">Adapter</span> pattern uses an indirection class.</p>
+<pre class="code"><span class="k">interface</span> PaymentService { <span class="k">void</span> pay(<span class="k">double</span> amount); }
+
+<span class="k">class</span> RazorpaySdk {
+    <span class="k">void</span> makePayment(<span class="k">int</span> paise) { <span class="c">/* vendor call */</span> }
+}
+
+<span class="k">class</span> RazorpayAdapter <span class="k">implements</span> PaymentService {
+    <span class="k">private final</span> RazorpaySdk sdk = <span class="k">new</span> RazorpaySdk();
+    <span class="k">public void</span> pay(<span class="k">double</span> amount) {
+        sdk.makePayment((<span class="k">int</span>) (amount * 100));
+    }
+}</pre>
 
 <h4>Protected Variations</h4>
 <p>Identify points of <strong>predicted variation/instability</strong> and wrap them in a stable interface so that variation on the implementation side does not ripple into callers. (Parent of patterns like Polymorphism, Indirection, Adapter.)</p>
+<pre class="code"><span class="k">interface</span> ShippingPolicy { <span class="k">double</span> costFor(Order order); }
+
+<span class="k">class</span> CheckoutService {
+    <span class="k">private final</span> ShippingPolicy shipping;
+    CheckoutService(ShippingPolicy shipping) { <span class="k">this</span>.shipping = shipping; }
+    <span class="k">double</span> total(Order order) {
+        <span class="k">return</span> order.subtotal() + shipping.costFor(order);
+    }
+}</pre>
 
 <h4>Pure Fabrication</h4>
 <p>When assigning a responsibility based on the domain model would produce bad cohesion/coupling, assign it instead to a <strong>made-up class</strong> that does not represent a domain concept. Common example: a <span class="kw">TableDataGateway</span> or a persistence helper class.</p>
+<pre class="code"><span class="c">// Persistence is not a natural responsibility of Student.</span>
+<span class="k">class</span> StudentRepository {
+    <span class="k">void</span> save(Student student) { <span class="c">/* INSERT into database */</span> }
+    Optional&lt;Student&gt; findByUsn(String usn) { <span class="k">return</span> Optional.empty(); }
+}</pre>
 
 <div class="exam-box">
 GRASP MCQ traps from the slides — GRASP stands for <strong>General Responsibility Assignment Software Patterns</strong>, has <strong>nine</strong> principles, and Controller's main job is <strong>delegating UI requests to domain objects</strong>.
@@ -818,10 +911,148 @@ GRASP MCQ traps from the slides — GRASP stands for <strong>General Responsibil
 </div>
 </div>
 
-<!-- ── 3.9 ISP ── -->
-<div class="section" id="u3-isp">
+<!-- ── 3.9 SRP ── -->
+<div class="section" id="u3-srp">
 <div class="section-header">
   <span class="s-num">§ 3.9</span>
+  <h3>SOLID — Single Responsibility Principle (SRP)</h3>
+</div>
+<div class="section-body">
+<div class="def">
+<strong>SRP:</strong> A class should have <strong>one reason to change</strong>. It should own one cohesive responsibility, not several unrelated jobs.
+</div>
+
+<h4>Why SRP matters</h4>
+<ul>
+<li>Classes become easier to understand, test, and reuse.</li>
+<li>Changes in persistence, printing, validation, or business rules affect only the class responsible for that concern.</li>
+<li>SRP is the SOLID version of the same design instinct behind <strong>High Cohesion</strong>.</li>
+</ul>
+
+<h4>Violation — many reasons to change</h4>
+<pre class="code"><span class="k">class</span> Report {
+    String generate() { <span class="k">return</span> <span class="s">"marks report"</span>; }  <span class="c">// report content</span>
+    <span class="k">void</span> print() { <span class="c">/* printer-specific code */</span> }       <span class="c">// output device</span>
+    <span class="k">void</span> saveToFile(String path) { <span class="c">/* file system */</span> } <span class="c">// storage</span>
+}</pre>
+
+<h4>SRP-Compliant Refactor</h4>
+<pre class="code"><span class="k">class</span> ReportGenerator {
+    String generate() { <span class="k">return</span> <span class="s">"marks report"</span>; }
+}
+
+<span class="k">class</span> ReportPrinter {
+    <span class="k">void</span> print(String report) { <span class="c">/* printer-specific code */</span> }
+}
+
+<span class="k">class</span> ReportStorage {
+    <span class="k">void</span> save(String report, String path) { <span class="c">/* file system */</span> }
+}</pre>
+
+<div class="exam-box">
+<strong>SRP MCQ keys —</strong> one class should have one reason to change / split unrelated responsibilities / improves cohesion, maintainability, and testability.
+</div>
+</div>
+</div>
+
+<!-- ── 3.10 OCP ── -->
+<div class="section" id="u3-ocp">
+<div class="section-header">
+  <span class="s-num">§ 3.10</span>
+  <h3>SOLID — Open/Closed Principle (OCP)</h3>
+</div>
+<div class="section-body">
+<div class="def">
+<strong>OCP:</strong> Software entities should be <strong>open for extension</strong> but <strong>closed for modification</strong>.
+</div>
+
+<p>When a new requirement arrives, prefer adding a new implementation behind a stable abstraction instead of editing already-tested conditional logic.</p>
+
+<h4>Violation — every new discount modifies this class</h4>
+<pre class="code"><span class="k">class</span> DiscountCalculator {
+    <span class="k">double</span> discount(String customerType, <span class="k">double</span> amount) {
+        <span class="k">if</span> (customerType.equals(<span class="s">"STUDENT"</span>)) <span class="k">return</span> amount * 0.10;
+        <span class="k">if</span> (customerType.equals(<span class="s">"PREMIUM"</span>)) <span class="k">return</span> amount * 0.20;
+        <span class="k">return</span> 0;
+    }
+}</pre>
+
+<h4>OCP-Compliant Refactor</h4>
+<pre class="code"><span class="k">interface</span> DiscountPolicy { <span class="k">double</span> discount(<span class="k">double</span> amount); }
+
+<span class="k">class</span> StudentDiscount <span class="k">implements</span> DiscountPolicy {
+    <span class="k">public double</span> discount(<span class="k">double</span> amount) { <span class="k">return</span> amount * 0.10; }
+}
+
+<span class="k">class</span> PremiumDiscount <span class="k">implements</span> DiscountPolicy {
+    <span class="k">public double</span> discount(<span class="k">double</span> amount) { <span class="k">return</span> amount * 0.20; }
+}
+
+<span class="k">class</span> BillingService {
+    <span class="k">double</span> payable(<span class="k">double</span> amount, DiscountPolicy policy) {
+        <span class="k">return</span> amount - policy.discount(amount);
+    }
+}</pre>
+
+<div class="exam-box">
+<strong>OCP MCQ keys —</strong> extend by adding new classes / avoid modifying stable code / usually implemented using abstraction and polymorphism.
+</div>
+</div>
+</div>
+
+<!-- ── 3.11 LSP ── -->
+<div class="section" id="u3-lsp">
+<div class="section-header">
+  <span class="s-num">§ 3.11</span>
+  <h3>SOLID — Liskov Substitution Principle (LSP)</h3>
+</div>
+<div class="section-body">
+<div class="def">
+<strong>LSP:</strong> Objects of a superclass should be replaceable with objects of its subclasses <strong>without breaking correctness</strong>.
+</div>
+
+<p>A subtype must honour the contract promised by the base type. It should not remove expected behaviour, strengthen preconditions, or surprise callers.</p>
+
+<h4>Violation — subtype breaks the base contract</h4>
+<pre class="code"><span class="k">class</span> Bird {
+    <span class="k">void</span> fly() { <span class="c">/* flies */</span> }
+}
+
+<span class="k">class</span> Ostrich <span class="k">extends</span> Bird {
+    <span class="k">void</span> fly() { <span class="k">throw new</span> UnsupportedOperationException(); }
+}
+
+<span class="k">void</span> startFlying(Bird bird) {
+    bird.fly();   <span class="c">// breaks when bird is an Ostrich</span>
+}</pre>
+
+<h4>LSP-Compliant Refactor</h4>
+<pre class="code"><span class="k">interface</span> Bird { <span class="k">void</span> eat(); }
+<span class="k">interface</span> FlyingBird <span class="k">extends</span> Bird { <span class="k">void</span> fly(); }
+
+<span class="k">class</span> Sparrow <span class="k">implements</span> FlyingBird {
+    <span class="k">public void</span> eat() { }
+    <span class="k">public void</span> fly() { }
+}
+
+<span class="k">class</span> Ostrich <span class="k">implements</span> Bird {
+    <span class="k">public void</span> eat() { }
+}
+
+<span class="k">void</span> startFlying(FlyingBird bird) {
+    bird.fly();
+}</pre>
+
+<div class="exam-box">
+<strong>LSP MCQ keys —</strong> subclasses must be substitutable for base classes / do not break parent contracts / wrong inheritance often violates LSP and ISP together.
+</div>
+</div>
+</div>
+
+<!-- ── 3.12 ISP ── -->
+<div class="section" id="u3-isp">
+<div class="section-header">
+  <span class="s-num">§ 3.12</span>
   <h3>SOLID — Interface Segregation Principle (ISP)</h3>
 </div>
 <div class="section-body">
@@ -900,10 +1131,10 @@ GRASP MCQ traps from the slides — GRASP stands for <strong>General Responsibil
 </div>
 </div>
 
-<!-- ── 3.10 DIP ── -->
+<!-- ── 3.13 DIP ── -->
 <div class="section" id="u3-dip">
 <div class="section-header">
-  <span class="s-num">§ 3.10</span>
+  <span class="s-num">§ 3.13</span>
   <h3>SOLID — Dependency Inversion Principle (DIP)</h3>
 </div>
 <div class="section-body">
@@ -967,10 +1198,10 @@ GRASP MCQ traps from the slides — GRASP stands for <strong>General Responsibil
 </div>
 </div>
 
-<!-- ── 3.11 DP intro ── -->
+<!-- ── 3.14 DP intro ── -->
 <div class="section" id="u3-dp-intro">
 <div class="section-header">
-  <span class="s-num">§ 3.11</span>
+  <span class="s-num">§ 3.14</span>
   <h3>Introduction to Design Patterns &amp; the GoF</h3>
 </div>
 <div class="section-body">
@@ -1080,7 +1311,7 @@ The book defined <strong>23 patterns</strong> in three categories.
 <!-- ── 3.12 Creational overview ── -->
 <div class="section" id="u3-creational">
 <div class="section-header">
-  <span class="s-num">§ 3.12</span>
+  <span class="s-num">§ 3.15</span>
   <h3>Creational Patterns — Overview</h3>
 </div>
 <div class="section-body">
@@ -1125,7 +1356,7 @@ The book defined <strong>23 patterns</strong> in three categories.
 <!-- ── 3.13 Singleton ── -->
 <div class="section" id="u3-singleton">
 <div class="section-header">
-  <span class="s-num">§ 3.13</span>
+  <span class="s-num">§ 3.16</span>
   <h3>Singleton</h3>
 </div>
 <div class="section-body">
@@ -1280,7 +1511,7 @@ The book defined <strong>23 patterns</strong> in three categories.
 <!-- ── 3.14 Factory ── -->
 <div class="section" id="u3-factory">
 <div class="section-header">
-  <span class="s-num">§ 3.14</span>
+  <span class="s-num">§ 3.17</span>
   <h3>Factory Method <span style="opacity:.5;font-size:.9rem">(a.k.a. Virtual Constructor)</span></h3>
 </div>
 <div class="section-body">
@@ -1357,7 +1588,7 @@ Per GoF — "defines an interface for creating an object, but lets subclasses de
 <!-- ── 3.15 Builder ── -->
 <div class="section" id="u3-builder">
 <div class="section-header">
-  <span class="s-num">§ 3.15</span>
+  <span class="s-num">§ 3.18</span>
   <h3>Builder</h3>
 </div>
 <div class="section-body">
@@ -1496,7 +1727,7 @@ Per GoF — "defines an interface for creating an object, but lets subclasses de
 <!-- ── 3.16 Prototype ── -->
 <div class="section" id="u3-prototype">
 <div class="section-header">
-  <span class="s-num">§ 3.16</span>
+  <span class="s-num">§ 3.19</span>
   <h3>Prototype</h3>
 </div>
 <div class="section-body">
@@ -2798,8 +3029,8 @@ Procedural-style design produces <strong>one object holding the lion's share of 
 <li>Specified disaster — architecture explicitly specifies a blob.</li>
 </ul>
 
-<h4>Refactored Solution (Steps)</h4>
-<ol class="steps">
+<h4>Refactored Solution — Steps</h4>
+<ol class="steps blob-steps">
 <li><strong>Categorise</strong> related attributes and operations according to contracts — cohesive groups directly related to a common focus, behaviour, or function within the system.</li>
 <li>Look for <strong>"natural homes"</strong> for these contract-based collections of functionality and migrate them there. E.g., catalog-related operations move from <span class="kw">LIBRARY</span> to <span class="kw">CATALOG</span>.</li>
 <li>Remove all <strong>"far-coupled"</strong> / redundant indirect associations. E.g., <span class="kw">ITEM</span> was far-coupled to <span class="kw">LIBRARY</span>, but each item really belongs to a <span class="kw">CATALOG</span>, which belongs to a <span class="kw">LIBRARY</span>. Migrate <span class="kw">ITEM</span> to <span class="kw">CATALOG</span>.</li>
@@ -2916,9 +3147,9 @@ Procedural-style design produces <strong>one object holding the lion's share of 
 <table>
 <thead><tr><th>Letter</th><th>Principle</th><th>One-liner</th></tr></thead>
 <tbody>
-<tr><td>S</td><td>Single Responsibility</td><td>One reason to change per class</td></tr>
-<tr><td>O</td><td>Open-Closed</td><td>Open for extension, closed for modification</td></tr>
-<tr><td>L</td><td>Liskov Substitution</td><td>Subtypes must be substitutable for base types</td></tr>
+<tr><td><strong>S</strong></td><td><strong>Single Responsibility</strong></td><td><strong>One cohesive responsibility; one reason to change</strong></td></tr>
+<tr><td><strong>O</strong></td><td><strong>Open-Closed</strong></td><td><strong>Extend with new code, avoid modifying stable code</strong></td></tr>
+<tr><td><strong>L</strong></td><td><strong>Liskov Substitution</strong></td><td><strong>Subtypes must preserve the base type contract</strong></td></tr>
 <tr><td><strong>I</strong></td><td><strong>Interface Segregation</strong></td><td><strong>Many client-specific interfaces &gt; one fat interface</strong></td></tr>
 <tr><td><strong>D</strong></td><td><strong>Dependency Inversion</strong></td><td><strong>Depend on abstractions, not concretions</strong></td></tr>
 </tbody>
@@ -3009,7 +3240,7 @@ Functionality · Performance · Complexity · Change · IT Resources · Technolo
 </div><!-- /container -->
 
 <div class="footer">
-  Built from PES University UE23CS352B Unit 3 (337 slides) &amp; Unit 4 (237 slides) decks &middot; All MCQ answers preserved in the section exam-focus boxes.
+  Built from PES University UE23CS352B Unit 3 (337 slides) &amp; Unit 4 (237 slides) decks &middot; Focused revision notes with expanded SOLID coverage and exam examples.
 </div>
 
 </body>
