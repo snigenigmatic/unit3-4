@@ -1,0 +1,2889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compiler Design — Units 3 &amp; 4 Revision Notes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --ink: #0f0e0d;
+    --paper: #f7f4ef;
+    --accent: #c0392b;
+    --accent2: #1a5276;
+    --accent3: #117a65;
+    --gold: #b7950b;
+    --muted: #6d6358;
+    --rule: #d5cfc6;
+    --highlight: #fdebd0;
+    --highlight2: #d6eaf8;
+    --highlight3: #d5f5e3;
+    --highlight-warn: #fef9e7;
+    --code-bg: #1e2329;
+    --code-fg: #e6db74;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.75;
+  }
+
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .masthead::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent, transparent 40px, rgba(255,255,255,.02) 40px, rgba(255,255,255,.02) 80px);
+  }
+  .masthead h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.6rem);
+    font-weight: 900;
+    letter-spacing: -1px;
+    position: relative;
+  }
+  .masthead h1 span { color: var(--accent); }
+  .masthead .sub {
+    margin-top: .6rem;
+    font-size: 1rem;
+    opacity: .65;
+    font-style: italic;
+    position: relative;
+  }
+  .badge-row {
+    margin-top: 1.4rem;
+    display: flex;
+    justify-content: center;
+    gap: .6rem;
+    flex-wrap: wrap;
+    position: relative;
+  }
+  .badge {
+    background: var(--accent);
+    color: #fff;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    padding: .25rem .7rem;
+    border-radius: 2px;
+    letter-spacing: .5px;
+  }
+  .badge.blue { background: var(--accent2); }
+  .badge.green { background: var(--accent3); }
+
+  .toc-wrapper {
+    width: min(1400px, calc(100% - 3rem));
+    margin: 2.5rem auto;
+  }
+  .toc-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--ink);
+    padding: 1.8rem 2rem;
+  }
+  .toc-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 1.2rem;
+    color: var(--muted);
+  }
+  .toc-cols { display: grid; grid-template-columns: 1fr 1fr; gap: .2rem 2rem; }
+  .toc-cols a {
+    font-size: .9rem;
+    color: var(--accent2);
+    text-decoration: none;
+    display: flex;
+    align-items: baseline;
+    gap: .4rem;
+    padding: .18rem 0;
+    border-bottom: 1px dashed transparent;
+    transition: border-color .2s;
+  }
+  .toc-cols a:hover { border-bottom-color: var(--accent2); }
+  .toc-cols a .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    color: var(--muted);
+    min-width: 2rem;
+  }
+
+  .container {
+    width: min(1400px, calc(100% - 3rem));
+    margin: 0 auto;
+    padding: 0 0 4rem;
+  }
+
+  .unit-divider {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1.2rem 2rem;
+    margin: 3rem 0 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .unit-divider .unit-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    opacity: .5;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .unit-divider h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+  }
+
+  .section {
+    margin-top: 2.5rem;
+    border: 1px solid var(--rule);
+    background: white;
+  }
+  .section-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: .7rem 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+  }
+  .section-header .s-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .7rem;
+    opacity: .5;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    min-width: 4rem;
+  }
+  .section-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+  }
+  .section-body { padding: 1.4rem 1.8rem; }
+
+  h4 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--accent2);
+    margin: 1.4rem 0 .5rem;
+    padding-bottom: .3rem;
+    border-bottom: 1px solid var(--rule);
+  }
+  h5 {
+    font-size: .9rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin: 1rem 0 .3rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+  }
+
+  p { margin-bottom: .8rem; }
+
+  .def {
+    background: var(--highlight2);
+    border-left: 3px solid var(--accent2);
+    padding: .75rem 1rem;
+    margin: .8rem 0;
+    font-size: .94rem;
+  }
+  .def strong { color: var(--accent2); }
+
+  .warn {
+    background: var(--highlight);
+    border-left: 3px solid var(--gold);
+    padding: .75rem 1rem;
+    margin: .8rem 0;
+    font-size: .94rem;
+  }
+  .warn strong { color: var(--gold); }
+
+  .tip {
+    background: var(--highlight3);
+    border-left: 3px solid var(--accent3);
+    padding: .75rem 1rem;
+    margin: .8rem 0;
+    font-size: .94rem;
+  }
+  .tip strong { color: var(--accent3); }
+
+  .tbl-wrap { overflow-x: auto; margin: 1rem 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .88rem;
+  }
+  thead tr { background: var(--ink); color: var(--paper); }
+  thead th {
+    padding: .55rem .9rem;
+    text-align: left;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    letter-spacing: .5px;
+  }
+  tbody tr:nth-child(even) { background: var(--paper); }
+  tbody tr:nth-child(odd) { background: white; }
+  tbody td { padding: .5rem .9rem; vertical-align: top; }
+  tbody td code, tbody td .mono { font-family: 'JetBrains Mono', monospace; font-size: .82em; }
+
+  ul, ol { padding-left: 1.5rem; margin-bottom: .8rem; }
+  li { margin-bottom: .3rem; }
+  li strong { color: var(--ink); }
+
+  .kw {
+    display: inline;
+    background: var(--highlight2);
+    color: var(--accent2);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .82em;
+    padding: .1em .4em;
+    border-radius: 2px;
+    font-weight: 600;
+  }
+  .kw.red { background: var(--highlight); color: var(--accent); }
+  .kw.green { background: var(--highlight3); color: var(--accent3); }
+
+  .formula {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--code-bg);
+    color: var(--code-fg);
+    padding: .6rem 1rem;
+    margin: .8rem 0;
+    font-size: .9rem;
+    border-radius: 2px;
+  }
+  pre.code {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--code-bg);
+    color: #e0e0d8;
+    padding: 1rem 1.2rem;
+    margin: 1rem 0;
+    font-size: .82rem;
+    line-height: 1.5;
+    border-radius: 2px;
+    overflow-x: auto;
+    border-left: 3px solid var(--code-fg);
+    white-space: pre;
+  }
+  pre.code .k { color: #66d9ef; }
+  pre.code .s { color: #a6e22e; }
+  pre.code .c { color: #75715e; font-style: italic; }
+  pre.code .t { color: #e6db74; }
+  pre.code .lbl { color: #f92672; font-weight: 600; }
+
+  .exam-box {
+    background: #fff8e1;
+    border: 1.5px solid var(--gold);
+    padding: .8rem 1.1rem;
+    margin: 1rem 0;
+    font-size: .9rem;
+  }
+  .exam-box::before {
+    content: '★ EXAM FOCUS — ';
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    color: var(--gold);
+    letter-spacing: .5px;
+  }
+
+  .problem {
+    background: #fff;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent);
+    padding: .9rem 1.1rem;
+    margin: 1rem 0;
+  }
+  .problem .ptitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: .3rem;
+  }
+  .solution {
+    background: var(--paper);
+    border-left: 3px solid var(--accent3);
+    padding: .7rem 1rem;
+    margin: .6rem 0 .2rem;
+  }
+  .solution .stitle {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .72rem;
+    font-weight: 700;
+    color: var(--accent3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: .3rem;
+  }
+
+  .steps { counter-reset: step; list-style: none; padding: 0; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: .8rem;
+    align-items: flex-start;
+    margin-bottom: .6rem;
+  }
+  .steps li::before {
+    content: counter(step);
+    min-width: 1.6rem;
+    height: 1.6rem;
+    background: var(--accent2);
+    color: white;
+    border-radius: 50%;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: .15rem;
+  }
+
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .compare-box {
+    border: 1px solid var(--rule);
+    padding: .9rem 1rem;
+  }
+  .compare-box h5 { margin-top: 0; }
+
+  .ascii-art {
+    font-family: 'JetBrains Mono', monospace;
+    background: #fafaf6;
+    border: 1px dashed var(--rule);
+    padding: .8rem 1rem;
+    font-size: .82rem;
+    line-height: 1.4;
+    overflow-x: auto;
+    white-space: pre;
+    margin: .8rem 0;
+  }
+
+  .footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: .8rem;
+    color: var(--muted);
+    border-top: 1px solid var(--rule);
+    margin-top: 3rem;
+  }
+
+  @media(max-width:640px){
+    .toc-cols { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .section-body { padding: 1rem; }
+  }
+
+  [id] { scroll-margin-top: 1rem; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ MASTHEAD ═══════════════════════ -->
+<div class="masthead">
+  <h1>Compiler <span>Design</span><br>Revision Notes</h1>
+  <div class="sub">Units 3 &amp; 4 · L-Attributed SDD · ICG · DAG · TAC · SSA · CFG · Code Optimization · Code Generation · Run-Time Environments</div>
+  <div class="badge-row">
+    <span class="badge">Unit 3: SDD · SDT · ICG · TAC · SSA · CFG</span>
+    <span class="badge blue">Unit 4: Optimization · Code Gen · RTE</span>
+    <span class="badge green">Full revision · 2+ worked problems / topic</span>
+  </div>
+</div>
+
+<!-- ═══════════════════════ TOC ═══════════════════════ -->
+<div class="toc-wrapper">
+<div class="toc-card">
+  <h2>Table of Contents</h2>
+  <div class="toc-cols">
+    <a href="#u3-sdd-recap"><span class="num">3.1</span>SDD Recap · S- vs L-Attributed</a>
+    <a href="#u3-l-attributed"><span class="num">3.2</span>L-Attributed SDD &amp; Examples</a>
+    <a href="#u3-syntax-tree"><span class="num">3.3</span>S-Attributed SDD for Syntax Trees</a>
+    <a href="#u3-icg-stmts"><span class="num">3.4</span>L-Attributed SDD for ICG (statements)</a>
+    <a href="#u3-sdt"><span class="num">3.5</span>Translation Schemes (SDT)</a>
+    <a href="#u3-sdd-to-sdt"><span class="num">3.6</span>SDD → SDT Conversion</a>
+    <a href="#u3-postfix-sdt"><span class="num">3.7</span>Postfix SDT &amp; LR Implementation</a>
+    <a href="#u3-icg-intro"><span class="num">3.8</span>Intermediate Code Generation</a>
+    <a href="#u3-dag"><span class="num">3.9</span>Directed Acyclic Graph (DAG)</a>
+    <a href="#u3-tac"><span class="num">3.10</span>Three-Address Code (TAC)</a>
+    <a href="#u3-tac-arrays"><span class="num">3.11</span>TAC for 1-D &amp; 2-D Arrays</a>
+    <a href="#u3-tac-ds"><span class="num">3.12</span>TAC Data Structures (Quad / Trip / Indir)</a>
+    <a href="#u3-ssa"><span class="num">3.13</span>Static Single-Assignment (SSA) &amp; φ</a>
+    <a href="#u3-cfg"><span class="num">3.14</span>CFG, Basic Blocks &amp; CFG → SSA</a>
+    <a href="#u4-opt-intro"><span class="num">4.1</span>Code Optimization — Intro &amp; Types</a>
+    <a href="#u4-mi-opts"><span class="num">4.2</span>Machine-Independent Optimizations</a>
+    <a href="#u4-loop-opts"><span class="num">4.3</span>Loop Optimizations</a>
+    <a href="#u4-local-block"><span class="num">4.4</span>Local Optimization on a Block</a>
+    <a href="#u4-local-dag"><span class="num">4.5</span>Local Optimization using DAG</a>
+    <a href="#u4-cfg-global"><span class="num">4.6</span>Global Optimization on the CFG</a>
+    <a href="#u4-next-use"><span class="num">4.7</span>Next-Use Information &amp; Algorithm</a>
+    <a href="#u4-live-var"><span class="num">4.8</span>Live-Variable Analysis</a>
+    <a href="#u4-cg-intro"><span class="num">4.9</span>Code Generation — Issues &amp; Tasks</a>
+    <a href="#u4-target-machine"><span class="num">4.10</span>Target Machine Model · Addressing Modes</a>
+    <a href="#u4-cg-procs"><span class="num">4.11</span>Code Generation for Procedures</a>
+    <a href="#u4-cg-algo"><span class="num">4.12</span>Code Generator Algorithm · Descriptors</a>
+    <a href="#u4-rte-intro"><span class="num">4.13</span>Run-Time Environments &amp; Storage</a>
+    <a href="#u4-activations"><span class="num">4.14</span>Activation Trees &amp; Records</a>
+    <a href="#u4-calling-seq"><span class="num">4.15</span>Calling / Return Sequences · Var-Length</a>
+    <a href="#u4-nonlocal"><span class="num">4.16</span>Access Links &amp; Displays</a>
+    <a href="#u4-graph-color"><span class="num">4.17</span>Register Allocation by Graph Colouring</a>
+    <a href="#quickref"><span class="num">★</span>Quick-Reference Cheat Sheet</a>
+  </div>
+</div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════ UNIT 3 ═══════════════════════ -->
+<div class="unit-divider">
+  <span class="unit-num">Unit 03</span>
+  <h2>SDD · SDT · Intermediate Code Generation · TAC · DAG · SSA · CFG</h2>
+</div>
+
+<!-- ─────────── 3.1 SDD Recap ─────────── -->
+<div class="section" id="u3-sdd-recap">
+<div class="section-header">
+  <span class="s-num">§ 3.1</span>
+  <h3>SDD Recap — Synthesized vs Inherited, S- vs L-Attributed</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+A <strong>Syntax-Directed Definition (SDD)</strong> is a generalisation of a context-free grammar in which each grammar symbol carries a set of <strong>attributes</strong>, and each production carries a set of <strong>semantic rules</strong> that compute attribute values. SDDs are the high-level specification of translation; semantic rules describe <em>what</em> to compute, not <em>when</em>.
+</div>
+
+<h4>Two Kinds of Attributes</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Attribute</th><th>Computed from</th><th>Direction in tree</th></tr></thead>
+<tbody>
+<tr><td><strong>Synthesized</strong></td><td>Children of the node</td><td>Bottom-up (leaves → root)</td></tr>
+<tr><td><strong>Inherited</strong></td><td>Parent and/or left-siblings</td><td>Top-down / left-to-right</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>S-Attributed Definition</h4>
+<p>An SDD with <strong>only synthesized attributes</strong>. Easy to implement on a bottom-up parser by keeping attribute values on the parser's value stack — at every reduction <span class="kw">A → α</span>, A's attributes are computed from α's attributes already on the stack.</p>
+
+<h4>L-Attributed Definition</h4>
+<p>An SDD is L-attributed if every inherited attribute of <span class="kw">X<sub>j</sub></span> in a production <span class="kw">A → X<sub>1</sub> X<sub>2</sub> … X<sub>n</sub></span> depends only on:</p>
+<ul>
+<li>The attributes of the symbols <strong>to the left</strong> of X<sub>j</sub>: X<sub>1</sub>, …, X<sub>j−1</sub> (this is what the L stands for), and</li>
+<li>The <strong>inherited</strong> attributes of A.</li>
+</ul>
+
+<div class="tip">
+<strong>Theorem.</strong> Every inherited attribute in an L-attributed definition can be computed by a <strong>pre-order (depth-first, left-to-right) traversal</strong> of the parse tree. This is the natural order of evaluation.
+</div>
+
+<div class="exam-box">
+Every <strong>S-attributed</strong> SDD is also <strong>L-attributed</strong> (synthesized attributes trivially satisfy the L-attributed restriction). The converse is not true.
+</div>
+
+<h4>Worked Example 1 — Classify the SDD</h4>
+<div class="problem">
+<div class="ptitle">Problem 1</div>
+<p>Classify the following SDD as S-attributed, L-attributed, or neither.</p>
+<pre class="code">A → B C   { A.s = B.s + C.s ;  C.i = B.s }
+B → b      { B.s = 1 }
+C → c      { C.s = C.i + 2 }</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<p><span class="kw">A.s</span> is synthesized (uses B.s, C.s — both children).<br>
+<span class="kw">C.i</span> is inherited; it depends only on <span class="kw">B.s</span>, which is the attribute of a <em>left-sibling</em> of C in the production <span class="kw">A → B C</span>.<br>
+There are no inherited attributes that depend on right-siblings or on synthesized attributes of the parent. ⇒ <strong>L-attributed</strong>, but not S-attributed (because of the inherited C.i).</p>
+</div>
+</div>
+
+<h4>Worked Example 2 — Why this SDD is NOT L-attributed</h4>
+<div class="problem">
+<div class="ptitle">Problem 2</div>
+<pre class="code">A → L M   { L.i = l(M.s) ;  M.i = m(L.s) ;  A.s = f(M.s) }
+A → Q R   { R.i = r(A.i) ;  Q.i = q(R.s) ;  A.s = f(Q.s) }</pre>
+<p>Is the SDD L-attributed? Justify.</p>
+<div class="solution">
+<div class="stitle">Solution</div>
+<p>Consider <span class="kw">L.i = l(M.s)</span> in <span class="kw">A → L M</span>. <strong>L</strong> is the left-most symbol; M is to its right. L's <em>inherited</em> attribute depends on M's <em>synthesized</em> attribute — i.e., on a <strong>right-sibling</strong>. This violates the L-attributed restriction.<br>
+Similarly <span class="kw">Q.i = q(R.s)</span> in <span class="kw">A → Q R</span> depends on a right-sibling's synthesized attribute. ⇒ The SDD is <strong>not L-attributed</strong>.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.2 L-Attributed examples ─────────── -->
+<div class="section" id="u3-l-attributed">
+<div class="section-header">
+  <span class="s-num">§ 3.2</span>
+  <h3>L-Attributed SDD — Worked Examples</h3>
+</div>
+<div class="section-body">
+
+<h4>Example A — Desk Calculator (left-recursive removed)</h4>
+<p>Grammar (after eliminating left recursion):</p>
+<div class="formula">E → T E'    E' → + T E'<sub>1</sub> | λ    T → F T'    T' → * F T'<sub>1</sub> | λ    F → num</div>
+<p>The left-sibling T's value must be inherited by E', so the SDD is L-attributed.</p>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Production</th><th>Semantic Rule</th></tr></thead>
+<tbody>
+<tr><td>E → T E'</td><td>E'.inhval = T.val ;  E.val = E'.val</td></tr>
+<tr><td>E' → + T E'<sub>1</sub></td><td>E'<sub>1</sub>.inhval = E'.inhval + T.val ;  E'.val = E'<sub>1</sub>.val</td></tr>
+<tr><td>E' → λ</td><td>E'.val = E'.inhval</td></tr>
+<tr><td>T → F T'</td><td>T'.inhval = F.val ;  T.val = T'.val</td></tr>
+<tr><td>T' → * F T'<sub>1</sub></td><td>T'<sub>1</sub>.inhval = T'.inhval × F.val ;  T'.val = T'<sub>1</sub>.val</td></tr>
+<tr><td>T' → λ</td><td>T'.val = T'.inhval</td></tr>
+<tr><td>F → num</td><td>F.val = num.lexval</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Evaluate for input  3 + 5 * 2</div>
+<div class="solution">
+<div class="stitle">Trace</div>
+<ol>
+<li>F = 3 ⇒ T'.inh = 3, T = 3.</li>
+<li>E'.inh = 3 (from T).</li>
+<li>+ branch: T = 5 × 2 = 10. E'<sub>1</sub>.inh = 3 + 10 = 13.</li>
+<li>E'<sub>1</sub> → λ: E'<sub>1</sub>.val = 13. ⇒ E'.val = 13. ⇒ <strong>E.val = 13</strong>.</li>
+</ol>
+</div>
+</div>
+
+<h4>Example B — Simple Type Declaration</h4>
+<p>Grammar: <span class="kw">D → T L,   T → int | float,   L → L<sub>1</sub>, id | id</span>.</p>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Production</th><th>Semantic Rule</th></tr></thead>
+<tbody>
+<tr><td>D → T L</td><td>L.inhType = T.type ;  L.inhWidth = T.width</td></tr>
+<tr><td>T → int</td><td>T.type = integer ;  T.width = 4</td></tr>
+<tr><td>T → float</td><td>T.type = float ;  T.width = 8</td></tr>
+<tr><td>L → L<sub>1</sub>, id</td><td>L<sub>1</sub>.inhType = L.inhType ; L<sub>1</sub>.inhWidth = L.inhWidth ;<br>update(id.entry, L.inhType, L.inhWidth)</td></tr>
+<tr><td>L → id</td><td>update(id.entry, L.inhType, L.inhWidth)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Evaluate for input  float a, b, c</div>
+<div class="solution">
+<div class="stitle">Trace</div>
+<ol>
+<li>T → float ⇒ type = float, width = 8.</li>
+<li>D → T L ⇒ L.inhType = float, L.inhWidth = 8.</li>
+<li>L → L<sub>1</sub>, c ⇒ propagate to L<sub>1</sub>; <span class="kw">update(c, float, 8)</span>.</li>
+<li>L<sub>1</sub> → L<sub>2</sub>, b ⇒ propagate; <span class="kw">update(b, float, 8)</span>.</li>
+<li>L<sub>2</sub> → a ⇒ <span class="kw">update(a, float, 8)</span>.</li>
+</ol>
+<p>Symbol table now has <strong>a, b, c → (float, 8)</strong> each.</p>
+</div>
+</div>
+
+<h4>Example C — Array Type Declaration</h4>
+<p>Grammar: <span class="kw">T → B C,   B → int | float,   C → [num] C<sub>1</sub> | λ</span>.</p>
+<p>The C non-terminal collects the dimensions and synthesises a <span class="kw">type</span> like <span class="kw">array(2, array(3, int))</span> for an input <span class="kw">int [2][3]</span>.</p>
+
+<div class="problem">
+<div class="ptitle">Problem 3 — Build the type for  int a[5][10]</div>
+<div class="solution">
+<div class="stitle">Trace</div>
+<ol>
+<li>B → int ⇒ B.type = integer, B.width = 4.</li>
+<li>T → B C ⇒ C.inhType = integer, C.inhWidth = 4.</li>
+<li>C → [5] C<sub>1</sub> with C<sub>1</sub> → [10] C<sub>2</sub>, C<sub>2</sub> → λ.</li>
+<li>C<sub>2</sub>.type = integer, C<sub>2</sub>.width = 4.</li>
+<li>C<sub>1</sub>.type = array(10, integer), C<sub>1</sub>.width = 10 × 4 = 40.</li>
+<li>C.type = array(5, array(10, integer)), C.width = 5 × 40 = 200.</li>
+<li>T.type = array(5, array(10, integer)),  T.width = 200 bytes.</li>
+</ol>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.3 S-Attributed for Syntax Trees ─────────── -->
+<div class="section" id="u3-syntax-tree">
+<div class="section-header">
+  <span class="s-num">§ 3.3</span>
+  <h3>S-Attributed SDD — Building a Syntax Tree</h3>
+</div>
+<div class="section-body">
+
+<p>A <strong>syntax tree</strong> condenses the parse tree by keeping only operators and operands. Two helpers are used:</p>
+<ul>
+<li><span class="kw">new Node(op, left, right)</span> — interior node for a binary operator.</li>
+<li><span class="kw">new Leaf(token, attr)</span> — leaf for an identifier or number.</li>
+</ul>
+
+<h4>SDD for Expressions</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Production</th><th>Semantic Rule</th></tr></thead>
+<tbody>
+<tr><td>E → E<sub>1</sub> + T</td><td>E.node = new Node('+', E<sub>1</sub>.node, T.node)</td></tr>
+<tr><td>E → E<sub>1</sub> − T</td><td>E.node = new Node('−', E<sub>1</sub>.node, T.node)</td></tr>
+<tr><td>E → T</td><td>E.node = T.node</td></tr>
+<tr><td>T → ( E )</td><td>T.node = E.node</td></tr>
+<tr><td>T → id</td><td>T.node = new Leaf(id, id.entry)</td></tr>
+<tr><td>T → num</td><td>T.node = new Leaf(num, num.lexval)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Build the syntax tree for  a − 4 + c</div>
+<div class="solution">
+<div class="stitle">Solution</div>
+<p>Reductions (bottom-up): id<sub>a</sub> → T → E ; num<sub>4</sub> → T ; build "−" node ; id<sub>c</sub> → T ; build "+" node.</p>
+<div class="ascii-art">              +
+             / \
+            -   c
+           / \
+          a   4</div>
+</div>
+</div>
+
+<h4>SDD for Statements</h4>
+<p>Extends with <span class="kw">if</span>, <span class="kw">while</span>, <span class="kw">Seq</span>, conditions and assignment expressions:</p>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Build the syntax tree for</div>
+<pre class="code">if ( x &gt; 10 ) { x = x + 1; }</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<div class="ascii-art">                if
+               /  \
+              &gt;    =
+             / \  / \
+            x  10 x  +
+                    / \
+                   x   1</div>
+<p>Constructed by the rules: <span class="kw">Cond → E<sub>1</sub> &gt; E<sub>2</sub></span> ⇒ new Node('&gt;', …) and <span class="kw">S → if(C) {Stmt}</span> ⇒ new Node(if, Cond.node, Stmt.node), with the body being an assignment expression.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.4 ICG for statements ─────────── -->
+<div class="section" id="u3-icg-stmts">
+<div class="section-header">
+  <span class="s-num">§ 3.4</span>
+  <h3>L-Attributed SDD — Intermediate Code Generation for Statements</h3>
+</div>
+<div class="section-body">
+
+<p>Each non-terminal carries up to four attributes: <span class="kw">code</span> (synthesized text of three-address code), <span class="kw">addr</span> (where the result lives), and inherited <span class="kw">true</span>/<span class="kw">false</span>/<span class="kw">next</span> labels for control-flow.</p>
+
+<h4>Arithmetic Expressions</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Production</th><th>Semantic Rule</th></tr></thead>
+<tbody>
+<tr><td>S → id = E ;</td><td>S.code = E.code || gen(id.lexval '=' E.addr)</td></tr>
+<tr><td>E → E<sub>1</sub> + E<sub>2</sub></td><td>E.addr = newTemp() ; E.code = E<sub>1</sub>.code || E<sub>2</sub>.code || gen(E.addr '=' E<sub>1</sub>.addr '+' E<sub>2</sub>.addr)</td></tr>
+<tr><td>E → −E<sub>1</sub></td><td>E.addr = newTemp() ; E.code = E<sub>1</sub>.code || gen(E.addr '= minus' E<sub>1</sub>.addr)</td></tr>
+<tr><td>E → ( E<sub>1</sub> )</td><td>E.addr = E<sub>1</sub>.addr ; E.code = E<sub>1</sub>.code</td></tr>
+<tr><td>E → id</td><td>E.addr = id.lexval ; E.code = ε</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Conditions &amp; Control Flow</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Construct</th><th>Code emitted (template)</th></tr></thead>
+<tbody>
+<tr><td>B → id<sub>1</sub> rel id<sub>2</sub></td><td>if id<sub>1</sub> rel.op id<sub>2</sub> goto B.true ; goto B.false</td></tr>
+<tr><td>S → if (B) S<sub>1</sub></td><td>B.true = newLabel ; B.false = S.next ; S<sub>1</sub>.next = S.next ;<br>S.code = B.code || label(B.true) || S<sub>1</sub>.code</td></tr>
+<tr><td>S → if(C) S<sub>1</sub> else S<sub>2</sub></td><td>C.true = L1 ; C.false = L2 ; S<sub>1</sub>.next = S.next ; S<sub>2</sub>.next = S.next ;<br>S.code = C.code || L1: || S<sub>1</sub>.code || goto S.next || L2: || S<sub>2</sub>.code</td></tr>
+<tr><td>S → while(C) S<sub>1</sub></td><td>begin = newLabel ; C.true = newLabel ; C.false = S.next ; S<sub>1</sub>.next = begin ;<br>S.code = begin: || C.code || C.true: || S<sub>1</sub>.code || goto begin</td></tr>
+<tr><td>S → do S<sub>1</sub> while(C)</td><td>C.true = newLabel ; C.false = S.next ; S<sub>1</sub>.next = NULL ;<br>S.code = C.true: || S<sub>1</sub>.code || C.code</td></tr>
+<tr><td>S → for(S<sub>1</sub>; C; S<sub>2</sub>) S<sub>3</sub></td><td>S<sub>1</sub>.code || S<sub>1</sub>.next: || C.code || C.true: || S<sub>3</sub>.code || S<sub>2</sub>.code || goto S<sub>1</sub>.next</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Boolean Expressions (short-circuit)</h4>
+<div class="tbl-wrap">
+<table>
+<tbody>
+<tr><td>B → B<sub>1</sub> || B<sub>2</sub></td><td>B<sub>1</sub>.true = B.true ; B<sub>1</sub>.false = newLabel ; B<sub>2</sub>.true = B.true ; B<sub>2</sub>.false = B.false ;<br>B.code = B<sub>1</sub>.code || label(B<sub>1</sub>.false) || B<sub>2</sub>.code</td></tr>
+<tr><td>B → B<sub>1</sub> &amp;&amp; B<sub>2</sub></td><td>B<sub>1</sub>.false = B.false ; B<sub>1</sub>.true = newLabel ; B<sub>2</sub>.true = B.true ; B<sub>2</sub>.false = B.false ;<br>B.code = B<sub>1</sub>.code || label(B<sub>1</sub>.true) || B<sub>2</sub>.code</td></tr>
+<tr><td>B → ! B<sub>1</sub></td><td>B<sub>1</sub>.true = B.false ; B<sub>1</sub>.false = B.true ; B.code = B<sub>1</sub>.code</td></tr>
+<tr><td>B → true / B → false</td><td>gen('goto' B.true) / gen('goto' B.false)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Generate IC for  if (x &gt; 10) { x = x + 1 }</div>
+<div class="solution">
+<div class="stitle">Solution</div>
+<pre class="code">      if x &gt; 10 goto L1
+      goto L2
+<span class="lbl">L1:</span>  t1 = x + 1
+      x = t1
+<span class="lbl">L2:</span>  // S.next</pre>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Generate IC for  while (a &lt; b &amp;&amp; c &gt; d) { a = a + 1 }</div>
+<div class="solution">
+<div class="stitle">Solution (short-circuit Boolean)</div>
+<pre class="code"><span class="lbl">begin:</span>
+      if a &lt; b goto L1     <span class="c">// B1.true (continue test)</span>
+      goto L_false
+<span class="lbl">L1:</span>  if c &gt; d goto L_true   <span class="c">// B2.true</span>
+      goto L_false
+<span class="lbl">L_true:</span>
+      t1 = a + 1
+      a = t1
+      goto begin
+<span class="lbl">L_false:</span>                       <span class="c">// S.next</span></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.5 SDT ─────────── -->
+<div class="section" id="u3-sdt">
+<div class="section-header">
+  <span class="s-num">§ 3.5</span>
+  <h3>Translation Schemes (SDT)</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+A <strong>Syntax-Directed Translation Scheme (SDT)</strong> is a context-free grammar in which <strong>semantic actions</strong> — written between <span class="kw">{ }</span> — are inserted on the RHS of productions. SDTs are <em>more implementation-oriented</em> than SDDs because they fix the <em>order</em> of evaluation. <strong>Yacc</strong> uses translation schemes.
+</div>
+
+<h4>Design Rules for SDTs</h4>
+<ul>
+<li>If the action uses only <strong>synthesized</strong> attributes, place it at the <strong>end</strong> of the production.</li>
+<li>For an <strong>L-attributed</strong> SDD, the <strong>inherited</strong> attribute of a symbol on the RHS must be computed in an action that appears <strong>before</strong> that symbol.</li>
+<li>A <strong>synthesized</strong> attribute on the LHS can only be computed when all attributes it references have been computed — usually placed at the end.</li>
+</ul>
+
+<h4>Problematic SDT — Why the Position Matters</h4>
+<p>The grammar with embedded actions is parsed first <em>ignoring</em> the actions. The actions become extra leaves in the parse tree; a <strong>pre-order traversal</strong> visits each leaf and runs its action.</p>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Trace the SDT for input 5 + 4 − 2</div>
+<pre class="code">E → T R
+R → + T { print('+'); } R<sub>1</sub>
+R → − T { print('−'); } R<sub>1</sub>
+R → ε
+T → F
+F → digit { print(digit.lexval); }</pre>
+<div class="solution">
+<div class="stitle">Output</div>
+<p>Pre-order on the parse tree of <span class="kw">5+4−2</span> visits the digits <em>before</em> the operator action attached after each <span class="kw">T</span>:</p>
+<pre class="code">5  4  +  2  −</pre>
+<p>That is the <strong>postfix</strong> of the original expression. Notice the action is placed <em>after</em> the <span class="kw">T</span>, not after the operator token — this is the trick that converts infix to postfix during parsing.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Infix-to-prefix SDT</div>
+<pre class="code">L → E n
+E → { print('+'); } E + T
+E → T
+T → { print('*'); } T * F
+T → F
+F → ( E )
+F → digit { print(digit.lexval); }</pre>
+<div class="solution">
+<div class="stitle">Output for  3 * 4 + 5</div>
+<p>Pre-order on the action-decorated tree prints the operator action <em>before</em> visiting the operand sub-trees, giving the prefix form: <strong>+ * 3 4 5</strong>.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.6 SDD to SDT ─────────── -->
+<div class="section" id="u3-sdd-to-sdt">
+<div class="section-header">
+  <span class="s-num">§ 3.6</span>
+  <h3>Converting an SDD to an SDT</h3>
+</div>
+<div class="section-body">
+
+<h4>Procedure</h4>
+<ol class="steps">
+<li>Place the action computing the <strong>inherited</strong> attributes of a symbol <em>before</em> that symbol on the RHS.</li>
+<li>Place the action computing the <strong>synthesized</strong> attributes of the LHS at the <em>end</em> of the production.</li>
+<li>Build the parse tree (ignoring actions); add the actions as extra leaves; perform a pre-order traversal to execute them.</li>
+</ol>
+
+<h4>Worked Conversion 1 — Multiplication</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Production</th><th>L-attributed SDD</th><th>SDT</th></tr></thead>
+<tbody>
+<tr><td>T → F T'</td><td>T'.inh = F.syn ; T.syn = T'.syn</td><td>T → F { T'.inh = F.syn ; } T' { T.syn = T'.syn ; }</td></tr>
+<tr><td>T' → * F T'<sub>1</sub></td><td>T'<sub>1</sub>.inh = T'.inh × F.syn ; T'.syn = T'<sub>1</sub>.syn</td><td>T' → * F { T'<sub>1</sub>.inh = T'.inh × F.syn ; } T'<sub>1</sub> { T'.syn = T'<sub>1</sub>.syn ; }</td></tr>
+<tr><td>T' → ε</td><td>T'.syn = T'.inh</td><td>T' → ε { T'.syn = T'.inh ; }</td></tr>
+<tr><td>F → digit</td><td>F.syn = digit.lexval</td><td>F → digit { F.syn = digit.lexval ; }</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Worked Conversion 2 — Type Declaration</h4>
+<div class="problem">
+<div class="ptitle">Problem 1 — Convert the type-decl SDD of §3.2 to an SDT</div>
+<div class="solution">
+<div class="stitle">SDT</div>
+<pre class="code">D → T { L.in = T.type ; } L
+T → int   { T.type = 'integer' ; }
+T → real  { T.type = 'real' ; }
+L → { L<sub>1</sub>.in = L.in ; } L<sub>1</sub> , id { addType(id.entry, L.in) ; }
+L → id    { addType(id.entry, L.in) ; }</pre>
+<p>Inherited attributes pushed down before the symbol; symbol-table actions placed at the end.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Convert the L-attributed SDD for  while  to an SDT</div>
+<div class="solution">
+<div class="stitle">SDT</div>
+<pre class="code">S → while ( { L1 = newLabel() ;
+              L2 = newLabel() ;
+              C.true  = L2 ;
+              C.false = S.next ;
+              S<sub>1</sub>.next = L1 ; }
+   C ) S<sub>1</sub>
+   { S.code = label(L1) || C.code || label(L2) || S<sub>1</sub>.code ||
+              gen('goto' L1) ; }</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.7 Postfix SDT & LR ─────────── -->
+<div class="section" id="u3-postfix-sdt">
+<div class="section-header">
+  <span class="s-num">§ 3.7</span>
+  <h3>Postfix SDT &amp; LR-Parser Implementation</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+A <strong>postfix SDT</strong> is one in which all actions are placed at the <em>end</em> of every production. Postfix SDTs correspond exactly to <strong>S-attributed</strong> SDDs and can be implemented during <strong>bottom-up parsing</strong> by extending the parser stack with a <em>value stack</em>.
+</div>
+
+<h4>Extended Parser Stack</h4>
+<p>For every <span class="kw">A → α</span> reduction, before the reduction the values of α already sit on the value stack at positions <span class="kw">s[top], s[top−1], …</span>. The action computes A's attribute and replaces those slots:</p>
+<pre class="code"><span class="c">// E → E1 + T</span>
+{ stack[top-2].val = stack[top-2].val + stack[top].val ; top = top - 2 ; }</pre>
+
+<h4>Implementing L-Attributed SDD on an LR Parser — Marker Non-Terminals</h4>
+<p>An LR parser only fires actions on a reduction. To execute an action <em>in the middle</em> of a production, introduce a fresh non-terminal <strong>M</strong> whose only production is <span class="kw">M → ε</span>; attach the embedded action to that ε-production:</p>
+<pre class="code">A → α { a } β        becomes        A → α M β
+                                     M → ε { a }</pre>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Postfix SDT desk calculator on a parser stack</div>
+<pre class="code">E → E1 + T  { stack[top-2].val += stack[top].val ; top -= 2 ; }
+E → T
+T → T1 * F  { stack[top-2].val *= stack[top].val ; top -= 2 ; }
+T → F
+F → ( E )   { stack[top-2].val = stack[top-1].val ; top -= 2 ; }
+F → digit</pre>
+<div class="solution">
+<div class="stitle">Why it works</div>
+<p>Every action involves only <strong>synthesized</strong> values that already lie on the stack at positions <span class="kw">top, top−1, top−2</span>. After computing the new value into the position of the LHS, the pointer is decremented to expose it as the new top.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — While-loop with markers</div>
+<pre class="code">S → while ( M C ) N S1
+M → ε  { L1 = newlabel() ;
+          L2 = newlabel() ;
+          C.true  = L2 ;
+          C.false = S.next ; }
+N → ε  { S1.next = L1 ; }
+S → while ( M C ) N S1   { S.code = L1 || C.code || L2 || S1.code ; }</pre>
+<div class="solution">
+<div class="stitle">Trace (high-level)</div>
+<ol>
+<li>Parser shifts <span class="kw">while (</span>; reduces <span class="kw">M → ε</span> ⇒ creates labels and inherited values, pushing them as M's record onto the parser/value stack.</li>
+<li>C is parsed; its inherited <span class="kw">C.true, C.false</span> were taken from M's slot.</li>
+<li>Parser shifts <span class="kw">)</span>; reduces <span class="kw">N → ε</span> ⇒ S<sub>1</sub>.next = M's L1 (read from <span class="kw">s[top-3]</span>).</li>
+<li>S<sub>1</sub> is parsed.</li>
+<li>Final reduction <span class="kw">S → while ( M C ) N S1</span> reads code/labels off the stack and emits the loop body.</li>
+</ol>
+</div>
+</div>
+
+<div class="exam-box">
+The marker-non-terminal trick changes the grammar slightly but does not change the language; every L-attributed SDT can be made into an LR-implementable postfix-style scheme this way.
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.8 ICG intro ─────────── -->
+<div class="section" id="u3-icg-intro">
+<div class="section-header">
+  <span class="s-num">§ 3.8</span>
+  <h3>Intermediate Code Generation — Overview</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Intermediate Code (IC)</strong> is the program representation that sits between the high-level source and the machine target. The <strong>Intermediate Code Generator</strong> takes an <em>annotated syntax tree</em> from the semantic analyser and produces IC for the optimiser/code generator.
+</div>
+
+<h4>Why an Intermediate Form?</h4>
+<ul>
+<li><strong>Retargeting:</strong> N front-ends + M back-ends require only N + M components rather than N × M.</li>
+<li>Enables <strong>machine-independent optimisations</strong>.</li>
+<li>Cleanly separates analysis (front end) from synthesis (back end).</li>
+</ul>
+
+<h4>Three Ways to Classify an IR</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Axis</th><th>Examples</th></tr></thead>
+<tbody>
+<tr><td><strong>High-level</strong> (close to source)</td><td>Syntax tree, DAG, Java bytecode</td></tr>
+<tr><td><strong>Low-level</strong> (close to machine)</td><td>Three-Address Code, SSA</td></tr>
+<tr><td><strong>Language-specific</strong></td><td>Java bytecode, Pascal P-code</td></tr>
+<tr><td><strong>Language-independent</strong></td><td>Three-address code</td></tr>
+<tr><td><strong>Graphical</strong></td><td>Syntax tree, DAG</td></tr>
+<tr><td><strong>Linear</strong></td><td>TAC (quad/trip), bytecode, postfix</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="exam-box">
+A <strong>good IR</strong> is fairly independent of source and target — this maximises retargetability. High-level IRs make source-level optimisations easy; low-level IRs help with register allocation and instruction selection.
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.9 DAG ─────────── -->
+<div class="section" id="u3-dag">
+<div class="section-header">
+  <span class="s-num">§ 3.9</span>
+  <h3>Directed Acyclic Graph (DAG)</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+A <strong>DAG</strong> is a syntax tree in which every <em>identical</em> subexpression is represented by a single shared node. Use it to identify <strong>common subexpressions</strong>, eliminate redundant computations, and find values that can be hoisted out of a block.
+</div>
+
+<h4>SDD to Build a DAG</h4>
+<p>Same SDD as for the syntax tree, but the constructors check first:</p>
+<pre class="code">if (an identical node already exists)
+    return that existing node ;
+else
+    create and return a new node ;</pre>
+<p>Assignments of the form <span class="kw">x := y</span> need <em>not</em> create a new node — they only relabel an existing one.</p>
+
+<h4>Applications</h4>
+<ul>
+<li>Detect <strong>common subexpressions</strong> at the block level.</li>
+<li>Reduce the number of computations — calculate once, reuse everywhere.</li>
+<li>Identify names whose value is computed <em>outside</em> the block but used inside.</li>
+<li>Identify names whose computed value is <em>live on exit</em> from the block.</li>
+</ul>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — DAG for ((x+y) − ((x+y)·(x−y))) + ((x+y)·(x−y))</div>
+<div class="solution">
+<div class="stitle">Solution</div>
+<p>Identify common subexpressions: <span class="kw">(x+y)</span>, <span class="kw">(x−y)</span>, and the product <span class="kw">(x+y)·(x−y)</span> all appear twice.</p>
+<div class="ascii-art">                 +
+                / \
+               -   *  <-- shared product node
+              /|   |\
+             + |   x y
+            / \|
+           x  y -
+              / \
+             x   y
+       (x+y) and (x-y) are each
+       single shared leaf-pair nodes.</div>
+<p>The DAG has nodes: <span class="kw">x, y, +(x,y), −(x,y), *(+,−), −(+, *), +(−(+, *), *)</span> — only <strong>7 distinct nodes</strong> instead of the syntax tree's many duplicates.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — DAG for  a + a · (b − c) + (b − c) · d</div>
+<div class="solution">
+<div class="stitle">Solution</div>
+<p>Common subexpression: <span class="kw">(b − c)</span> appears twice. Build it once and reuse.</p>
+<div class="ascii-art">              +
+             / \
+            +   *
+           / \  |\
+          a   * | d
+              |\|
+              a -
+                /\
+               b  c     <-- (b - c) is a single shared node</div>
+<p>Number of distinct interior nodes drops from 5 to 4 because the <span class="kw">−</span> node is shared.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.10 TAC ─────────── -->
+<div class="section" id="u3-tac">
+<div class="section-header">
+  <span class="s-num">§ 3.10</span>
+  <h3>Three-Address Code (TAC)</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Three-Address Code</strong> is a <em>linearised</em> representation of a syntax tree or DAG. Each instruction has at most <strong>one operator</strong> on the RHS and up to three "addresses" — names, constants, or compiler-generated temporaries.
+</div>
+
+<h4>TAC Statement Forms</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Statement</th><th>TAC Format</th></tr></thead>
+<tbody>
+<tr><td>Binary assignment</td><td><span class="kw">x = y op z</span></td></tr>
+<tr><td>Unary assignment</td><td><span class="kw">x = op y</span></td></tr>
+<tr><td>Copy</td><td><span class="kw">x = y</span></td></tr>
+<tr><td>Unconditional jump</td><td><span class="kw">goto L</span></td></tr>
+<tr><td>Conditional jump</td><td><span class="kw">if x goto L</span> &nbsp; / &nbsp; <span class="kw">ifFalse x goto L</span></td></tr>
+<tr><td>Compare-and-jump</td><td><span class="kw">if x relop y goto L</span></td></tr>
+<tr><td>Address / pointer</td><td><span class="kw">x = &amp;y</span> &nbsp; <span class="kw">z = *x</span> &nbsp; <span class="kw">*x = a</span></td></tr>
+<tr><td>Indexed copy</td><td><span class="kw">x[i] = y</span> &nbsp; / &nbsp; <span class="kw">y = x[i]</span></td></tr>
+<tr><td>Procedure call <span class="kw">foo(a,b,…)</span></td><td><span class="kw">param a ; param b ; … ; call foo, n</span></td></tr>
+<tr><td>Return</td><td><span class="kw">return y</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Generate TAC for x = foo(2·x + 3, y + 10, g(i), h(3, j))</div>
+<div class="solution">
+<div class="stitle">Solution</div>
+<pre class="code">t1 = 2 * x
+t2 = t1 + 3
+param t2
+t3 = y + 10
+param t3
+param i
+t4 = call g, 1
+param t4
+param 3
+param j
+t5 = call h, 2
+param t5
+t6 = call foo, 4
+x  = t6</pre>
+<p>Note the order: parameters are pushed in left-to-right order; nested calls evaluate inner first.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Generate TAC for the boolean</div>
+<pre class="code">alpha = (65 &lt;= c &amp;&amp; c &lt;= 90) || (97 &lt;= c &amp;&amp; c &lt;= 122)</pre>
+<div class="solution">
+<div class="stitle">Solution (short-circuit)</div>
+<pre class="code">      t1 = 65 &lt;= c
+      ifFalse t1 goto L1
+      t2 = c &lt;= 90
+      ifFalse t2 goto L1
+<span class="lbl">L0:</span>  alpha = true
+      goto next
+<span class="lbl">L1:</span>  t3 = 97 &lt;= c
+      ifFalse t3 goto L3
+      t4 = c &lt;= 122
+      ifFalse t4 goto L3
+      goto L0
+<span class="lbl">L3:</span>  alpha = false
+<span class="lbl">next:</span></pre>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 3 — Generate TAC for the switch</div>
+<pre class="code">x = i + 10;
+switch(x) {
+   case 1: x = x * i; break;
+   case 2: x = 5;
+   case 3: x = i;
+   default: x = 0;
+}</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<pre class="code">      t1 = i + 10
+      x  = t1
+      if x == 1 goto L1
+      goto L2
+<span class="lbl">L1:</span>  t2 = x * i
+      x  = t2
+      goto next            <span class="c">// break</span>
+<span class="lbl">L2:</span>  if x == 2 goto L3
+      goto L4
+<span class="lbl">L3:</span>  x = 5                <span class="c">// fall-through to case 3</span>
+<span class="lbl">L4:</span>  if x == 3 goto L5
+      goto L6
+<span class="lbl">L5:</span>  x = i
+      goto L6              <span class="c">// fall-through to default</span>
+<span class="lbl">L6:</span>  x = 0
+<span class="lbl">next:</span></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.11 TAC arrays ─────────── -->
+<div class="section" id="u3-tac-arrays">
+<div class="section-header">
+  <span class="s-num">§ 3.11</span>
+  <h3>TAC for 1-D &amp; 2-D Arrays</h3>
+</div>
+<div class="section-body">
+
+<h4>Address Calculation Formulas</h4>
+<div class="formula">1-D : addr(A[i]) = A + W · (i − LB)</div>
+<div class="formula">2-D row-major : addr(A[i][j]) = A + W · [ N · (i − Lr) + (j − Lc) ]</div>
+<div class="formula">2-D column-major : addr(A[i][j]) = A + W · [ (i − Lr) + M · (j − Lc) ]</div>
+<p>where W = element width, N = number of columns, M = number of rows, Lr = lower-row index, Lc = lower-column index.</p>
+
+<div class="exam-box">
+Default assumptions in slides: <strong>row-major</strong>, integer arrays, <strong>W = 4 bytes</strong>; if size is unspecified, treat the array as <span class="kw">m × n</span>.
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — TAC for the do-while</div>
+<pre class="code">do  i = i + 1; while (a[i] &lt; v);</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<pre class="code"><span class="lbl">L1:</span>  t1 = i + 1
+      i  = t1
+      t2 = 4 * i
+      t3 = a[t2]
+      if t3 &lt; v goto L1</pre>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — TAC for the nested 2-D loop</div>
+<pre class="code">for (i=1; i&lt;=10; i++)
+   for (j=1; j&lt;=10; j++)
+      C[i][j] = A[i][j] + B[i][j];     <span class="c">// 1-indexed, 10x10 float arrays (W=8)</span></pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<pre class="code">      i = 1
+<span class="lbl">L5:</span>  t1 = i &lt;= 10
+      if t1 goto L1
+      goto next
+<span class="lbl">L1:</span>  j = 1
+<span class="lbl">L4:</span>  t2 = j &lt;= 10
+      if t2 goto L2
+      goto L3                          <span class="c">// inc i</span>
+<span class="lbl">L2:</span>  t3  = i - 1                    <span class="c">// linearise A[i][j]</span>
+      t4  = 10 * t3
+      t5  = j - 1
+      t6  = t4 + t5
+      t7  = 8 * t6
+      t8  = A[t7]
+      t9  = i - 1                    <span class="c">// linearise B[i][j]</span>
+      t10 = 10 * t9
+      t11 = j - 1
+      t12 = t10 + t11
+      t13 = 8 * t12
+      t14 = B[t13]
+      t15 = t8 + t14
+      t16 = i - 1                    <span class="c">// linearise C[i][j]</span>
+      t17 = 10 * t16
+      t18 = j - 1
+      t19 = t17 + t18
+      t20 = 8 * t19
+      C[t20] = t15
+      t21 = j + 1
+      j = t21
+      goto L4
+<span class="lbl">L3:</span>  t22 = i + 1
+      i = t22
+      goto L5
+<span class="lbl">next:</span></pre>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 3 — TAC for  Product = Σ A[i] · B[i] (i = 1..20)</div>
+<div class="solution">
+<div class="stitle">Solution</div>
+<pre class="code">      Product = 0
+      i = 1
+<span class="lbl">L1:</span>  t1 = 4 * i
+      t2 = A[t1]
+      t3 = 4 * i
+      t4 = B[t3]
+      t5 = t2 * t4
+      t6 = Product + t5
+      Product = t6
+      t7 = i + 1
+      i = t7
+      if i &lt; 20 goto L1</pre>
+<p>(t1 and t3 are obvious common subexpressions — local optimisation in §4 will eliminate one.)</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.12 TAC Data Structures ─────────── -->
+<div class="section" id="u3-tac-ds">
+<div class="section-header">
+  <span class="s-num">§ 3.12</span>
+  <h3>Data Structures for TAC — Quadruples · Triples · Indirect Triples</h3>
+</div>
+<div class="section-body">
+
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Structure</th><th>Fields</th><th>Pros / Cons</th></tr></thead>
+<tbody>
+<tr><td><strong>Quadruple</strong></td><td>op, arg1, arg2, result</td><td>Easy code motion; all temporaries must be entered into the symbol table.</td></tr>
+<tr><td><strong>Triple</strong></td><td>op, arg1, arg2  (result implied by statement number)</td><td>No temporaries in symbol table; <em>code immobility</em> — moving a statement breaks references <span class="kw">(i)</span>.</td></tr>
+<tr><td><strong>Indirect Triple</strong></td><td>Triples + a separate ordering list of pointers <span class="kw">&lt;ptr&gt;</span></td><td>Allows reordering by changing the pointer list only — same space as quadruples in practice but optimisation-friendly.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h4>Operator Conventions Used in the Slides</h4>
+<ul>
+<li>Unary <span class="kw">x = −y</span> ⇒ op = "−", arg2 = NULL.</li>
+<li>Copy <span class="kw">x = y</span> ⇒ op = "=", arg2 = NULL.</li>
+<li><span class="kw">param a</span> ⇒ op = "param", arg2 = result = NULL.</li>
+<li><span class="kw">x = call f, n</span> ⇒ op = "call", arg1 = f, arg2 = n, result = x.</li>
+<li>Conditional <span class="kw">if x goto L</span> ⇒ op = "if", arg1 = x, arg2 = NULL, result = L.</li>
+<li>Array store <span class="kw">x[i] = y</span> ⇒ op = "[]=", arg1 = x, arg2 = i, result = y.</li>
+<li>Array load <span class="kw">x = y[i]</span> ⇒ op = "=[]", arg1 = y, arg2 = i, result = x.</li>
+</ul>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Quadruple, Triple &amp; Indirect-Triple for  a = b[i] + c[j]</div>
+<div class="solution">
+<div class="stitle">TAC</div>
+<pre class="code">t1 = 4 * i
+t2 = b[t1]
+t3 = 4 * j
+t4 = c[t3]
+t5 = t2 + t4
+a  = t5</pre>
+<div class="stitle">Quadruples</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>#</th><th>op</th><th>arg1</th><th>arg2</th><th>result</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>*</td><td>4</td><td>i</td><td>t1</td></tr>
+<tr><td>1</td><td>=[]</td><td>b</td><td>t1</td><td>t2</td></tr>
+<tr><td>2</td><td>*</td><td>4</td><td>j</td><td>t3</td></tr>
+<tr><td>3</td><td>=[]</td><td>c</td><td>t3</td><td>t4</td></tr>
+<tr><td>4</td><td>+</td><td>t2</td><td>t4</td><td>t5</td></tr>
+<tr><td>5</td><td>=</td><td>t5</td><td>—</td><td>a</td></tr>
+</tbody></table></div>
+<div class="stitle">Triples (refer by statement number)</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>#</th><th>op</th><th>arg1</th><th>arg2</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>*</td><td>4</td><td>i</td></tr>
+<tr><td>1</td><td>=[]</td><td>b</td><td>(0)</td></tr>
+<tr><td>2</td><td>*</td><td>4</td><td>j</td></tr>
+<tr><td>3</td><td>=[]</td><td>c</td><td>(2)</td></tr>
+<tr><td>4</td><td>+</td><td>(1)</td><td>(3)</td></tr>
+<tr><td>5</td><td>=</td><td>a</td><td>(4)</td></tr>
+</tbody></table></div>
+<div class="stitle">Indirect Triples</div>
+<p>Same triples as above, plus an ordering list <span class="kw">&lt;100&gt;, &lt;101&gt;, &lt;102&gt;, &lt;103&gt;, &lt;104&gt;, &lt;105&gt;</span> pointing to triple numbers 0–5. Reordering reorders the pointer list, leaving triples untouched.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Triples for the assignment</div>
+<pre class="code">t1 = -b
+t2 = t1 * d
+t3 = t1 + c
+t4 = -b
+t5 = t4 * d
+t6 = t3 + t5
+a  = t6</pre>
+<div class="solution">
+<div class="stitle">Triples</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>#</th><th>op</th><th>arg1</th><th>arg2</th></tr></thead>
+<tbody>
+<tr><td>0</td><td>uminus</td><td>b</td><td>—</td></tr>
+<tr><td>1</td><td>*</td><td>(0)</td><td>d</td></tr>
+<tr><td>2</td><td>+</td><td>(0)</td><td>c</td></tr>
+<tr><td>3</td><td>uminus</td><td>b</td><td>—</td></tr>
+<tr><td>4</td><td>*</td><td>(3)</td><td>d</td></tr>
+<tr><td>5</td><td>+</td><td>(2)</td><td>(4)</td></tr>
+<tr><td>6</td><td>=</td><td>a</td><td>(5)</td></tr>
+</tbody></table></div>
+<p>If the optimiser later eliminates <span class="kw">(3)</span> as a duplicate of <span class="kw">(0)</span>, references in <span class="kw">(4)</span> must change from <span class="kw">(3)</span> to <span class="kw">(0)</span> — illustrating the <strong>code-immobility</strong> drawback of plain triples.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.13 SSA ─────────── -->
+<div class="section" id="u3-ssa">
+<div class="section-header">
+  <span class="s-num">§ 3.13</span>
+  <h3>Static Single-Assignment (SSA) &amp; the φ-Function</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>SSA</strong> is an IR in which <em>every variable is assigned exactly once</em> but may be used many times. Each original variable is split into versions <span class="kw">x<sub>1</sub>, x<sub>2</sub>, …</span>, and special <strong>φ-functions</strong> are inserted at control-flow merge points to choose the correct version depending on which incoming edge was taken.
+</div>
+
+<h4>The φ-Function</h4>
+<ul>
+<li><span class="kw">x = φ(x<sub>1</sub>, x<sub>2</sub>, …, x<sub>k</sub>)</span> chooses among k incoming definitions.</li>
+<li>Number of arguments = number of incoming control-flow edges to that block.</li>
+<li>The argument selected corresponds to the path actually taken at run-time.</li>
+<li>φ is purely <em>notational</em>: real machines do not execute it; back-ends lower it back to copies.</li>
+</ul>
+
+<div class="tip">
+SSA makes data-flow optimisations like <strong>constant propagation</strong>, <strong>dead-code elimination</strong>, and <strong>value numbering</strong> dramatically simpler — there is exactly one definition per name, so def-use chains are explicit. Used by <strong>GCC, LLVM, HotSpot, SUIF</strong>.
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Convert to SSA</div>
+<pre class="code">x = n
+y = m
+if (x &lt; y) {
+    x = x + 1
+    y = y - 1
+} else {
+    y = x + 2
+}
+z = x * y
+return z</pre>
+<div class="solution">
+<div class="stitle">SSA Form</div>
+<pre class="code">x1 = n
+y1 = m
+if (x1 &lt; y1)
+    x2 = x1 + 1
+    y2 = y1 - 1
+else
+    y3 = x1 + 2
+<span class="c">// merge point</span>
+x3 = φ(x1, x2)
+y4 = φ(y2, y3)
+z1 = x3 * y4
+return z1</pre>
+<p>x is renamed because the if-branch redefines it; y has three versions and merges to <span class="kw">y4</span>.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — SSA for the loop</div>
+<pre class="code">x = 0;
+y = 0;
+while (x &lt; 10) {
+    y = y + x;
+    x = x + 1;
+}
+print(y);</pre>
+<div class="solution">
+<div class="stitle">SSA Form</div>
+<pre class="code">x1 = 0
+y1 = 0
+<span class="lbl">loop:</span>
+x2 = φ(x1, x3)        <span class="c">// from entry or back-edge</span>
+y2 = φ(y1, y3)
+if (x2 &lt; 10) {
+    y3 = y2 + x2
+    x3 = x2 + 1
+    goto loop
+}
+print(y2)</pre>
+<p>Loop headers always need φ for every variable that has a definition reachable on the back-edge.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 3 — Three-way merge (case statement)</div>
+<pre class="code">case (...) of
+    0: a := 1;
+    1: a := 2;
+    2: a := 3;
+end
+case (...) of
+    0: b := a;
+    1: c := a;
+    2: d := a;
+end</pre>
+<div class="solution">
+<div class="stitle">SSA at the merge after the first case</div>
+<pre class="code">a1 = 1     <span class="c">// case 0</span>
+a2 = 2     <span class="c">// case 1</span>
+a3 = 3     <span class="c">// case 2</span>
+a4 = φ(a1, a2, a3)   <span class="c">// 3-way merge</span>
+... b1 = a4 ; c1 = a4 ; d1 = a4 ; ...</pre>
+<p>The φ has exactly as many arguments as the number of incoming edges (3 here, one per case branch).</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 3.14 CFG ─────────── -->
+<div class="section" id="u3-cfg">
+<div class="section-header">
+  <span class="s-num">§ 3.14</span>
+  <h3>Control-Flow Graph · Basic Blocks · CFG → SSA</h3>
+</div>
+<div class="section-body">
+
+<h4>Basic Block</h4>
+<div class="def">
+A <strong>basic block</strong> is a maximal sequence of consecutive instructions such that control can enter only at the <em>first</em> instruction (the <strong>leader</strong>) and leave only at the <em>last</em> instruction. Every instruction belongs to exactly one basic block.
+</div>
+
+<h4>Rules for Identifying Leaders</h4>
+<ol>
+<li>The <strong>first</strong> three-address instruction is a leader.</li>
+<li>The <strong>target</strong> of a conditional or unconditional jump is a leader.</li>
+<li>The instruction <strong>immediately after</strong> a (conditional or unconditional) jump is a leader.</li>
+</ol>
+<p>A basic block runs from a leader up to (but not including) the next leader.</p>
+
+<h4>Constructing the CFG</h4>
+<ul>
+<li>Nodes = basic blocks (numbered B1, B2, …); add an <strong>ENTRY</strong> and <strong>EXIT</strong> super-node.</li>
+<li>Edge B → B' if (a) the last instruction of B jumps to the leader of B', or (b) B' textually follows B and B does not end in an unconditional jump.</li>
+<li>Useful for register allocation, instruction selection, machine-independent optimisation.</li>
+</ul>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Identify leaders &amp; basic blocks</div>
+<pre class="code">(1)  i = 1
+(2)  j = 1
+(3)  t1 = 10 * i
+(4)  t2 = t1 + j
+(5)  t3 = 8 * t2
+(6)  t4 = t3 - 88
+(7)  a[t4] = 0.0
+(8)  j = j + 1
+(9)  if j &lt;= 10 goto (3)
+(10) i = i + 1
+(11) if i &lt;= 10 goto (2)
+(12) i = 1
+(13) t5 = i - 1
+(14) t6 = 88 * t5
+(15) a[t6] = 1.0
+(16) i = i + 1
+(17) if i &lt;= 10 goto (13)</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<p><strong>Leaders:</strong> 1 (rule 1), 2 (target of (11)), 3 (target of (9)), 10 (after jump (9)), 12 (after jump (11)), 13 (target of (17)).</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Block</th><th>Instructions</th></tr></thead>
+<tbody>
+<tr><td>B1</td><td>(1)</td></tr>
+<tr><td>B2</td><td>(2)</td></tr>
+<tr><td>B3</td><td>(3) – (9)</td></tr>
+<tr><td>B4</td><td>(10) – (11)</td></tr>
+<tr><td>B5</td><td>(12)</td></tr>
+<tr><td>B6</td><td>(13) – (17)</td></tr>
+</tbody></table></div>
+<div class="ascii-art">ENTRY → B1 → B2 → B3 → B4 → B5 → B6 → EXIT
+                  ↑   ↓        ↑   ↓        ↑    ↓
+                  └─(j&lt;=10)┘   └─(i&lt;=10)┘   └─(i&lt;=10)┘</div>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Build the CFG and SSA-ify</div>
+<pre class="code">int add(n, k) {
+    s = 0;  a = 4;  i = 0;
+    if (k == 0)  b = 1;
+    else         b = 2;
+    while (i &lt; n) {
+        s = s + a * b;
+        i = i + 1;
+    }
+    return s;
+}</pre>
+<div class="solution">
+<div class="stitle">CFG (after lowering to TAC)</div>
+<pre class="code"><span class="lbl">B1:</span> s = 0
+     a = 4
+     i = 0
+     ifFalse k == 0 goto L1
+     b = 1
+     goto L2
+<span class="lbl">B2 (L1):</span> b = 2
+<span class="lbl">B3 (L2):</span>  ifFalse i &lt; n goto L3
+     t1 = a * b
+     t2 = s + t1
+     s  = t2
+     t3 = i + 1
+     i  = t3
+     goto L2
+<span class="lbl">B4 (L3):</span> return s</pre>
+<div class="stitle">SSA Form</div>
+<pre class="code">B1:  s1=0 ; a1=4 ; i1=0
+     if k == 0 goto B2_then else B2_else
+B2_then:  b1 = 1
+B2_else:  b2 = 2
+B3 (loop header):
+     b3 = φ(b1, b2)
+     i2 = φ(i1, i3)
+     s2 = φ(s1, s3)
+     if i2 &lt; n goto body else exit
+body:
+     t1 = a1 * b3
+     s3 = s2 + t1
+     i3 = i2 + 1
+     goto B3
+exit: return s2</pre>
+</div>
+</div>
+
+<div class="exam-box">
+Two question patterns: (1) <em>"Convert program → TAC → CFG"</em>, and (2) <em>"Convert program → SSA"</em>. The trick is to first rewrite all loops in the form of <span class="kw">if</span>+<span class="kw">goto</span> so that φ-placement is clear at every join.
+</div>
+
+</div>
+</div>
+
+<!-- ═══════════════════════ UNIT 4 ═══════════════════════ -->
+<div class="unit-divider">
+  <span class="unit-num">Unit 04</span>
+  <h2>Code Optimization · Code Generation · Run-Time Environments</h2>
+</div>
+
+<!-- ─────────── 4.1 Optimization intro ─────────── -->
+<div class="section" id="u4-opt-intro">
+<div class="section-header">
+  <span class="s-num">§ 4.1</span>
+  <h3>Code Optimization — Introduction &amp; Classification</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Code optimization</strong> is a program transformation that improves code by making it consume fewer resources (CPU, memory, energy) or run faster — i.e., the replacement of a sequence of instructions by a faster sequence that does the same thing.
+</div>
+
+<h4>Criteria for a Good Optimization</h4>
+<ul>
+<li>Must be <strong>semantics-preserving</strong>.</li>
+<li>Must <strong>speed up</strong> programs on average.</li>
+<li>Must be <strong>worth the effort</strong> — no dramatic slow-down of the compilation process.</li>
+</ul>
+
+<h4>Techniques Used</h4>
+<ul>
+<li><strong>Control-flow analysis</strong> — identifies loops in the CFG (loops are prime candidates for improvement).</li>
+<li><strong>Data-flow analysis</strong> — collects information about variable use across the program.</li>
+<li>Always remember: <em>the biggest performance wins usually come from improving the source algorithm, not the compiler.</em></li>
+</ul>
+
+<h4>Classification</h4>
+<div class="tbl-wrap">
+<table>
+<thead><tr><th>Axis</th><th>Sub-type</th><th>Input</th></tr></thead>
+<tbody>
+<tr><td rowspan="2"><strong>Machine independent</strong></td><td>Local — applied to a basic block</td><td rowspan="2">Intermediate code</td></tr>
+<tr><td>Global — applied to the whole CFG</td></tr>
+<tr><td><strong>Machine dependent</strong></td><td>Register allocation, instruction selection, peephole</td><td>Target code</td></tr>
+</tbody>
+</table>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.2 MI optimizations ─────────── -->
+<div class="section" id="u4-mi-opts">
+<div class="section-header">
+  <span class="s-num">§ 4.2</span>
+  <h3>Machine-Independent Optimizations</h3>
+</div>
+<div class="section-body">
+
+<h4>Constant Folding</h4>
+<p>Evaluate constant expressions at <em>compile time</em> instead of run time. Includes algebraic identities like <span class="kw">0·x = 0</span>, <span class="kw">1·x = x</span>, and string concatenations like <span class="kw">"dog"+"house" = "doghouse"</span>.</p>
+<pre class="code">i = 30 * 20 * 10        →   i = 6000
+x = 5 + 4 / 2           →   x = 7</pre>
+
+<h4>Constant Propagation</h4>
+<p>Substitute the value of a known constant variable into its uses. Often combined with constant folding and dead-code elimination.</p>
+<pre class="code">int a = 10; int b = 45 - a/2; return b * (200/a + 2);
+   → int a = 10; int b = 40;     return 40 * 22;
+   → return 880;</pre>
+
+<h4>Common Subexpression Elimination (CSE)</h4>
+<p>Replace identical re-computations of an expression with a single temporary, when none of the operands change between computations. Relies on data-flow analysis.</p>
+<pre class="code">a = b * c + g ;             t1 = b * c ;
+d = b * c * e ;             a = t1 + g ;
+                            d = t1 * e ;</pre>
+
+<h4>Copy Propagation</h4>
+<p>After a copy <span class="kw">u = v</span>, replace later uses of <span class="kw">u</span> by <span class="kw">v</span> wherever possible — typically a clean-up pass after CSE.</p>
+<pre class="code">y = x ; z = 3 + y ;     →   z = 3 + x ;</pre>
+
+<h4>Dead-Code Elimination (DCE)</h4>
+<p>Remove instructions whose results are never used, and any code that is unreachable.</p>
+
+<h4>Strength Reduction</h4>
+<p>Replace an expensive operation with a cheaper, equivalent one.</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Expensive</th><th>Cheaper</th></tr></thead>
+<tbody>
+<tr><td>x ^ 2</td><td>x * x</td></tr>
+<tr><td>x * 2</td><td>x + x  &nbsp;or&nbsp;  x &lt;&lt; 1</td></tr>
+<tr><td>x / 2</td><td>x * 0.5  &nbsp;or&nbsp;  x &gt;&gt; 1</td></tr>
+</tbody></table></div>
+
+<h4>Packing Temporaries</h4>
+<p>Replace several distinct temporaries by a single one when their lifetimes <em>do not overlap</em> (live ranges disjoint).</p>
+<pre class="code">t1 = a + a ;          t1 = a + a ;
+t2 = t1 + b ;     →   t1 = t1 + b ;
+c  = t2 * t2 ;        c  = t1 * t1 ;</pre>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Fold &amp; propagate</div>
+<pre class="code">x = 10
+a = (x * x / 2) + 1</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<p>Propagate <span class="kw">x = 10</span>: <span class="kw">a = (10 * 10 / 2) + 1</span>. Constant fold: <span class="kw">a = 50 + 1 = 51</span>.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Aggressive constant propagation + DCE</div>
+<pre class="code">int a = 30;
+int b = 9 - (a / 5);
+int c;
+c = b * 4;
+if (c &gt; 10) c = c - 10;
+return c * (60 / a);</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<ol>
+<li>Propagate a=30: <span class="kw">b = 9 - 6 = 3</span>; <span class="kw">c = 12</span>; condition <span class="kw">12 &gt; 10</span> is <em>true</em>; <span class="kw">c = 2</span>; <span class="kw">return 2 * 2 = 4</span>.</li>
+<li>DCE removes a, b, c after propagation.</li>
+<li>Final: <span class="kw">return 4;</span></li>
+</ol>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 3 — CSE on TAC</div>
+<pre class="code">t6 = 4 * i ;   x  = a[t6]
+t7 = 4 * i ;   t8 = 4 * j ;   t9 = a[t8]
+a[t7] = t9 ;   t10 = 4 * j ;   a[t10] = x ;   goto B2</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<p><span class="kw">4 * i</span> appears twice (t6, t7) and <span class="kw">4 * j</span> appears twice (t8, t10). Reuse:</p>
+<pre class="code">t6 = 4 * i ;   x  = a[t6]
+t8 = 4 * j ;   t9 = a[t8]
+a[t6] = t9 ;   a[t8] = x ;   goto B2</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.3 Loop Optimizations ─────────── -->
+<div class="section" id="u4-loop-opts">
+<div class="section-header">
+  <span class="s-num">§ 4.3</span>
+  <h3>Loop Optimizations</h3>
+</div>
+<div class="section-body">
+
+<p>Most execution time is spent in loops, so loops are the prime targets for optimisation. Four major techniques:</p>
+
+<h4>1. Loop-Invariant Detection &amp; Code Motion</h4>
+<p>A <strong>loop invariant</strong> is a computation whose value doesn't change during the loop. Move it <em>before</em> the loop (this is <strong>code motion</strong>).</p>
+<pre class="code">while (i &lt;= limit - 2)             t = limit - 2 ;
+   ...                       →     while (i &lt;= t)
+                                      ...</pre>
+<p>If the loop runs n times, n+1 evaluations of <span class="kw">limit-2</span> become <strong>1</strong>.</p>
+
+<h4>2. Loop Unrolling (Loop Unwinding)</h4>
+<p>Replicate the body to reduce iteration count and the number of branch / test instructions. Also exposes more instruction-level parallelism for the back-end.</p>
+<pre class="code">for (i=0; i&lt;100; i++) g();    →    for (i=0; i&lt;100; i+=2) { g(); g(); }</pre>
+<p><em>Caveat:</em> excessive unrolling bloats code and hurts the instruction cache.</p>
+
+<h4>3. Induction-Variable Detection &amp; Strength Reduction in Loops</h4>
+<p>An <strong>induction variable</strong> grows by a fixed amount per iteration. Replace the multiplication by addition.</p>
+<pre class="code"><span class="lbl">L:</span> i = i + 1                Initialize: t1 = 4 * i
+   t1 = 4 * i                <span class="lbl">L:</span> t1 = t1 + 4         <span class="c">// strength reduction</span>
+   t2 = a[t1]                   t2 = a[t1]
+   if t2 &lt; v goto L             if t2 &lt; v goto L</pre>
+
+<h4>4. Combined Example</h4>
+<pre class="code">for (i=0; i&lt;10; i+=2) {           x = -6 ;
+    x = i * 3 ;            →      for (i=0; i&lt;10; i+=2) {
+    a[i] = y - x ;                    x = x + 6 ;        <span class="c">// strength reduction</span>
+}                                      a[i] = y - x ;
+                                  }</pre>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Apply all four loop optimisations</div>
+<pre class="code">a = 5 ;
+for (i = 0 ; i &lt; 5 ; i++) {
+    x[i] = a * i ;
+}</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<ol>
+<li><span class="kw">a = 5</span> is loop-invariant — already outside.</li>
+<li>Strength-reduce <span class="kw">a*i</span> via induction variable: introduce <span class="kw">t = 0</span> before the loop, <span class="kw">t = t + 5</span> inside.</li>
+<li>Unroll by 5 (since 5 iterations are known at compile time): completely eliminate the branch.</li>
+</ol>
+<pre class="code">x[0] = 0 ; x[1] = 5 ; x[2] = 10 ; x[3] = 15 ; x[4] = 20 ;</pre>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Identify what is true / false</div>
+<pre class="code">for (i = 0 ; i &lt; n ; i++)
+   for (j = 0 ; j &lt; n ; j++)
+      if (i % 2) {
+          P[i][j] = 10*j + 5*i ;
+          Q[i][j] = 10 + 10*j ;
+      }</pre>
+<div class="solution">
+<div class="stitle">Analysis</div>
+<ul>
+<li><span class="kw">5*i</span> and <span class="kw">i%2</span> are <strong>loop invariants of the inner j-loop</strong> — hoist them. ✓</li>
+<li><span class="kw">10*j</span> appears twice in the body — <strong>CSE</strong> applies. ✓</li>
+<li><span class="kw">5*i</span> and <span class="kw">10*j</span> are induction-variable multiplications — <strong>strength reduction</strong> applies (use <span class="kw">+= 5</span> and <span class="kw">+= 10</span>). ✓</li>
+<li>Every assignment's result is later read; nothing is dead — <strong>DCE does not apply</strong>. ✗</li>
+</ul>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.4 Local block optimization ─────────── -->
+<div class="section" id="u4-local-block">
+<div class="section-header">
+  <span class="s-num">§ 4.4</span>
+  <h3>Local Optimization on a Single Basic Block</h3>
+</div>
+<div class="section-body">
+
+<p>Inside a single block we apply a fixed pipeline of transformations: <strong>strength reduction → constant propagation → CSE → copy propagation → dead-code elimination</strong>.</p>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Step-by-step optimise the block</div>
+<pre class="code">a = x ^ 2
+b = 3
+c = x
+d = c * c
+e = b * 2
+f = a + d
+g = e * f</pre>
+<div class="solution">
+<div class="stitle">Step trace</div>
+<pre class="code"><span class="c">// 1. Strength reduction</span>
+a = x * x ;  b = 3 ;  c = x ;  d = c * c ;  e = b &lt;&lt; 1 ;  f = a + d ;  g = e * f
+<span class="c">// 2. Constant propagation b=3, c=x</span>
+a = x * x ;  b = 3 ;  c = x ;  d = x * x ;  e = 3 &lt;&lt; 1 ;  f = a + d ;  g = e * f
+<span class="c">// 3. Constant fold e</span>
+a = x * x ;  b = 3 ;  c = x ;  d = x * x ;  e = 6 ;       f = a + d ;  g = 6 * f
+<span class="c">// 4. CSE: d is the same as a — replace d with a in f</span>
+a = x * x ;  b = 3 ;  c = x ;                              f = a + a ;  g = 6 * f
+<span class="c">// 5. Dead-code elimination — b, c, d, e never used after substitution</span>
+a = x * x ;  f = a + a ;  g = 6 * f</pre>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — DAG-driven local optimisation (block ends with d, c live)</div>
+<pre class="code">a = 10
+b = 4 * a
+c = i * j + b
+d = 15 * a * c
+e = i
+c = e * j + i * a</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<ol>
+<li>Build the DAG. The two computations of <span class="kw">i*j</span> in the first <span class="kw">c</span> and the second-c term <span class="kw">e*j</span> (with <span class="kw">e = i</span>) share a node. <span class="kw">i*a</span> shares a node too.</li>
+<li>Constant-propagate <span class="kw">a=10</span>: <span class="kw">b=40</span>, <span class="kw">15*a=150</span>, <span class="kw">i*a=i*10</span>.</li>
+<li>The first <span class="kw">c</span> is overwritten before exit — its computation is dead unless it feeds <span class="kw">d</span>. Since <span class="kw">d</span> uses the <em>old</em> c, keep that c around in a temporary.</li>
+<li>Emit only assignments to live values <span class="kw">c</span> and <span class="kw">d</span>.</li>
+</ol>
+<pre class="code">t2 = i * j
+c0 = t2 + 40             <span class="c">// old c, used by d</span>
+d  = 150 * c0
+t7 = i * 10
+c  = t2 + t7             <span class="c">// new c, live on exit</span></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.5 Local DAG ─────────── -->
+<div class="section" id="u4-local-dag">
+<div class="section-header">
+  <span class="s-num">§ 4.5</span>
+  <h3>Local Optimization Using a DAG</h3>
+</div>
+<div class="section-body">
+
+<h4>Algorithm</h4>
+<ol class="steps">
+<li>Build a DAG for the basic block: every interior node is an operator, leaves are initial values; identical sub-expressions share a node.</li>
+<li>Each node is labelled with the list of names whose value it currently holds. The latest name assigned is the "primary" label.</li>
+<li>Walk the DAG and re-emit code, skipping nodes whose value is dead on exit and reusing nodes for repeated sub-expressions.</li>
+</ol>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Build DAG &amp; re-emit</div>
+<pre class="code">a = b + c
+b = a - d
+c = b + c
+d = b</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<div class="ascii-art">           +   <- new c
+          / \
+         -   c0
+        / \    \
+       a0  d0   .
+       |
+       +    <- old a
+      / \
+     b0  c0</div>
+<p>The shared <span class="kw">c0</span> node is used in both the original <span class="kw">a = b+c</span> and the new <span class="kw">c = b+c</span>. The label list of the "−" node is {a, after assignment also d}; node b is now identified with the "−" node. Final code preserves the order of writes:</p>
+<pre class="code">a = b + c
+b = a - d
+c = b + c
+d = b           <span class="c">// or, after merging labels: d = a-d node</span></pre>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Inner loop of an array dot-product</div>
+<pre class="code"><span class="lbl">loop:</span>  t1 = 4 * i
+        t2 = a[t1]
+        t3 = 4 * i              <span class="c">// duplicate of t1</span>
+        t4 = b[t3]
+        t5 = t2 * t4
+        t6 = prod + t5
+        prod = t6
+        t7 = i + 1
+        i = t7
+        if i &lt;= 20 goto loop</pre>
+<div class="solution">
+<div class="stitle">DAG-driven optimisation</div>
+<p>The DAG identifies <span class="kw">t1 = t3</span> and <span class="kw">t6 = prod</span> after the assignment. Furthermore, <span class="kw">i = t7</span> can be folded by re-using the increment chain: <span class="kw">t1 += 4</span> per iteration (induction variable). Result:</p>
+<pre class="code">prod = 0 ; t1 = 4
+<span class="lbl">loop:</span>  t2  = a[t1]
+        t4  = b[t1]
+        t5  = t2 * t4
+        prod = prod + t5
+        t1  = t1 + 4
+        if t1 &lt;= 80 goto loop          <span class="c">// 20 * 4 bytes = 80</span></pre>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.6 Global CFG ─────────── -->
+<div class="section" id="u4-cfg-global">
+<div class="section-header">
+  <span class="s-num">§ 4.6</span>
+  <h3>Global Optimization on the CFG</h3>
+</div>
+<div class="section-body">
+
+<p>Global optimisation looks across blocks. Typical steps:</p>
+<ol class="steps">
+<li>Constant-propagate &amp; constant-fold.</li>
+<li>Identify and remove unreachable blocks (DCE).</li>
+<li>Detect loop invariants and hoist them.</li>
+<li>Apply CSE across blocks where data-flow analysis confirms operands haven't changed.</li>
+<li>Reduce strength of induction-variable multiplications.</li>
+<li>Final clean-up: copy propagation + DCE.</li>
+</ol>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Optimise the CFG (slide example)</div>
+<pre class="code"><span class="lbl">B1:</span> m = 1 ; limit = 10 ; i = 0
+     if m == 1 goto B2
+<span class="lbl">B2:</span> n = 2
+<span class="lbl">B3:</span> n = 0                              <span class="c">// (unreachable since m always == 1)</span>
+<span class="lbl">B4:</span> t1 = limit - n
+     if i &lt; t1 goto B5
+<span class="lbl">B5:</span> t2 = 2 * m ; x = t2
+     t3 = i + 1 ; i = t3 ; goto B4</pre>
+<div class="solution">
+<div class="stitle">Optimisation steps</div>
+<ol>
+<li>Constant-propagate <span class="kw">m=1</span>; <span class="kw">if m==1</span> always true ⇒ B3 unreachable, eliminate.</li>
+<li>Inline <span class="kw">n=2</span> into B1 then constant-fold <span class="kw">limit-n = 10-2 = 8</span>; eliminate B2 and statement <span class="kw">t1 = 8</span> (DCE).</li>
+<li>Inside loop B5, <span class="kw">2*m = 2</span> is constant — hoist to B1; later x is unused on exit, so eliminate.</li>
+<li>Drop the dead names <span class="kw">limit, m, n</span> in B1.</li>
+</ol>
+<pre class="code"><span class="lbl">B1:</span>  i = 0
+<span class="lbl">B4:</span>  if i &lt; 8 goto B5
+<span class="lbl">B5:</span>  i = i + 1 ; goto B4
+<span class="lbl">B6:</span>  // exit</pre>
+<p>If the back-end performs full <strong>loop unrolling</strong> (8 iterations known), the entire loop can be replaced by an empty block.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Optimise across blocks (homework from slides)</div>
+<pre class="code">for (i=0 ; i&lt;n ; i++)
+   for (j=0 ; j&lt;n ; j++)
+      if (i%2) {
+          P = 10*j + 5*i ;
+          Q = 10 + 10*j ;
+      }</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<ol>
+<li>Lower to TAC and build the CFG.</li>
+<li>Hoist <span class="kw">5*i</span> out of the inner j-loop; it's loop-invariant of the j-loop.</li>
+<li>Hoist <span class="kw">i%2</span> evaluation out of j-loop.</li>
+<li>Apply <strong>strength reduction</strong> on <span class="kw">10*j</span>: introduce <span class="kw">t = -10</span> before the j-loop and <span class="kw">t = t + 10</span> at every iteration.</li>
+<li>Apply CSE: <span class="kw">10*j</span> is used twice — replace both by <span class="kw">t</span>.</li>
+<li>Dead-code elimination on the outer <span class="kw">i%2 == 0</span> branch (the body is a no-op then; the entire i-iteration is wasted but cannot be removed because its iterations remain visible — only the inner body becomes empty).</li>
+</ol>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.7 Next-Use ─────────── -->
+<div class="section" id="u4-next-use">
+<div class="section-header">
+  <span class="s-num">§ 4.7</span>
+  <h3>Next-Use Information &amp; Algorithm</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Next-use information</strong> tells, for each use of a variable in a basic block, which following statement (if any) will use the same value next. It is needed for register allocation: once a value has no further use, its register can be freed and reassigned.
+</div>
+
+<h4>Assumptions</h4>
+<ul>
+<li>All <strong>named variables</strong> are <em>live on exit</em> — they will be stored back to memory.</li>
+<li>All <strong>temporaries</strong> are <em>dead on exit</em>.</li>
+</ul>
+
+<h4>Algorithm (Two-Pass, per Basic Block)</h4>
+<ol class="steps">
+<li>Scan forward, find the end of the block. For every variable X used in the block create symbol-table fields <span class="kw">X.live = FALSE</span> and <span class="kw">X.next_use = NONE</span>.</li>
+<li>Scan <strong>backward</strong>; for each tuple <span class="kw">(i): x = y op z</span>:
+   <ul>
+   <li>Copy x, y, z's current symbol-table <em>live</em> / <em>next-use</em> fields into the <em>tuple's</em> instruction-info area. (This is what we report for that statement.)</li>
+   <li>Then update the symbol table: set <span class="kw">x.live = FALSE</span>, <span class="kw">x.next_use = NONE</span> (x is being defined here, killing earlier values), and set <span class="kw">y.live = TRUE</span>, <span class="kw">y.next_use = i</span>; same for z.</li>
+   </ul>
+</li>
+</ol>
+<p>For each instruction, <em>after</em> processing, the table reports the live/next-use state for the operands <em>at the point just before that instruction executes</em>.</p>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Apply the algorithm to the block</div>
+<pre class="code">(1)  x = y + z
+(2)  z = x * 5
+(3)  y = z - 7
+(4)  x = z + y</pre>
+<div class="solution">
+<div class="stitle">Backward trace (final instruction-info)</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Stmt</th><th>x.live / next</th><th>y.live / next</th><th>z.live / next</th></tr></thead>
+<tbody>
+<tr><td>(1) x = y+z</td><td>T / 2</td><td>F / —</td><td>F / —</td></tr>
+<tr><td>(2) z = x*5</td><td>F / —</td><td>F / —</td><td>T / 3</td></tr>
+<tr><td>(3) y = z-7</td><td>F / —</td><td>T / 4</td><td>T / 4</td></tr>
+<tr><td>(4) x = z+y</td><td>F / —</td><td>F / —</td><td>F / —</td></tr>
+</tbody></table></div>
+<p>(All three named vars are live on exit per the assumption — that's why x at (4) shows F/— for the result side: this is its <em>before</em>-execution state. The algorithm initialises live=F to model "no use seen yet from the right", and the very first backward step at (4) marks z and y live.)</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Algorithm on  a, u, v, d</div>
+<pre class="code">(1)  a = a - b
+(2)  u = a - c
+(3)  v = t + u
+(4)  d = v + u</pre>
+<div class="solution">
+<div class="stitle">Final state per instruction</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Stmt</th><th>a</th><th>b</th><th>c</th><th>d</th><th>t</th><th>u</th><th>v</th></tr></thead>
+<tbody>
+<tr><td>(1) a = a-b</td><td>T/1</td><td>T/1</td><td>F/—</td><td>F/—</td><td>F/—</td><td>F/—</td><td>F/—</td></tr>
+<tr><td>(2) u = a-c</td><td>T/2</td><td>F/—</td><td>T/2</td><td>F/—</td><td>F/—</td><td>F/—</td><td>F/—</td></tr>
+<tr><td>(3) v = t+u</td><td>F/—</td><td>F/—</td><td>F/—</td><td>F/—</td><td>T/3</td><td>T/3</td><td>F/—</td></tr>
+<tr><td>(4) d = v+u</td><td>F/—</td><td>F/—</td><td>F/—</td><td>F/—</td><td>F/—</td><td>T/4</td><td>T/4</td></tr>
+</tbody></table></div>
+<p>This drives register allocation: at (3) we know <span class="kw">a</span>, <span class="kw">c</span> are dead — their registers can be reclaimed.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.8 Live Variable Analysis ─────────── -->
+<div class="section" id="u4-live-var">
+<div class="section-header">
+  <span class="s-num">§ 4.8</span>
+  <h3>Live-Variable Analysis (Data-Flow)</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+A variable <span class="kw">x</span> is <strong>live</strong> at a program point <span class="kw">p</span> if there exists a path starting at <span class="kw">p</span> along which the value of <span class="kw">x</span> is used <em>before being redefined</em>. Otherwise x is <strong>dead</strong> at p. Liveness is associated with <strong>edges</strong> of the CFG, not nodes.
+</div>
+
+<h4>Applications</h4>
+<ul>
+<li><strong>Register allocation</strong> — a register can be reused for another variable as soon as its current variable is dead.</li>
+<li><strong>Dead-code elimination</strong> — if x is not live after assignment <span class="kw">x = …</span>, the assignment is redundant.</li>
+</ul>
+
+<h4>Data-Flow Values per Block</h4>
+<ul>
+<li><strong>use[B]</strong>: variables that are read in B before being defined.</li>
+<li><strong>def[B]</strong>: variables that are defined in B before being read.</li>
+<li><strong>IN[B]</strong>: live on entry to B.</li>
+<li><strong>OUT[B]</strong>: live on exit from B.</li>
+</ul>
+
+<h4>Backward Data-Flow Equations</h4>
+<div class="formula">OUT[B] = ⋃<sub>S ∈ successors(B)</sub> IN[S]</div>
+<div class="formula">IN[B] = use[B] ∪ ( OUT[B] − def[B] )</div>
+
+<h4>Algorithm</h4>
+<ol class="steps">
+<li>Compute use[B] and def[B] for every block.</li>
+<li>Initialise IN[B] = ∅ and OUT[B] = ∅ for every block.</li>
+<li>Iterate the equations (typically in reverse-postorder of the CFG) until nothing changes — the fixed point.</li>
+</ol>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Compute IN/OUT for a 3-block diamond</div>
+<pre class="code"><span class="lbl">B1:</span>  a = 1
+      b = 2
+      if a &lt; b goto B3
+<span class="lbl">B2:</span>  c = a + b           <span class="c">// then-branch fall-through</span>
+<span class="lbl">B3:</span>  d = c
+      print(d)</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Block</th><th>use</th><th>def</th><th>OUT</th><th>IN</th></tr></thead>
+<tbody>
+<tr><td>B3</td><td>{c}</td><td>{d}</td><td>∅</td><td>{c}</td></tr>
+<tr><td>B2</td><td>{a, b}</td><td>{c}</td><td>{c}</td><td>{a, b}</td></tr>
+<tr><td>B1</td><td>{}</td><td>{a, b}</td><td>{a, b} ∪ {c} = {a, b, c}</td><td>{c}</td></tr>
+</tbody></table></div>
+<p>So <span class="kw">c</span> is live on entry to B1 — meaning it had to be defined before this code (e.g., by the caller). If c is in fact uninitialised, this is a warning.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Liveness around a loop</div>
+<pre class="code"><span class="lbl">B1:</span>  i = 0 ; s = 0
+<span class="lbl">B2:</span>  if i &gt;= n goto B4
+<span class="lbl">B3:</span>  s = s + i ; i = i + 1 ; goto B2
+<span class="lbl">B4:</span>  return s</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Block</th><th>use</th><th>def</th><th>OUT (fixed point)</th><th>IN</th></tr></thead>
+<tbody>
+<tr><td>B4</td><td>{s}</td><td>{}</td><td>∅</td><td>{s}</td></tr>
+<tr><td>B3</td><td>{s, i}</td><td>{s, i}</td><td>{s, i, n}</td><td>{s, i, n}</td></tr>
+<tr><td>B2</td><td>{i, n}</td><td>{}</td><td>{s, i, n}</td><td>{s, i, n}</td></tr>
+<tr><td>B1</td><td>{}</td><td>{i, s}</td><td>{s, i, n}</td><td>{n}</td></tr>
+</tbody></table></div>
+<p><span class="kw">n</span> is live on entry — it must be a parameter. The fixed point requires one extra iteration because the back-edge B3 → B2 brings <span class="kw">s, i, n</span> back into B2's OUT, then into B3's OUT.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.9 Code Gen Intro ─────────── -->
+<div class="section" id="u4-cg-intro">
+<div class="section-header">
+  <span class="s-num">§ 4.9</span>
+  <h3>Code Generation — Issues &amp; Three Primary Tasks</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+The <strong>Code Generator</strong> is the final phase. Input: the IR from the front-end + symbol table. Output: a <em>semantically equivalent</em> target program (absolute, relocatable, or assembly). The most important criterion is <strong>correctness</strong>; quality (speed, size, energy) is the next priority.
+</div>
+
+<h4>Why Code Generation Is Hard</h4>
+<ul>
+<li>Producing an <strong>optimal</strong> target program for a given source program is <strong>undecidable</strong>.</li>
+<li>Sub-problems like <strong>register allocation</strong> and <strong>instruction ordering</strong> are <strong>NP-complete</strong>.</li>
+</ul>
+
+<h4>Three Primary Tasks</h4>
+<ol class="steps">
+<li><strong>Instruction selection</strong> — choose target machine instructions to implement IR statements.</li>
+<li><strong>Register allocation &amp; assignment</strong> — decide which values live in which registers.</li>
+<li><strong>Instruction ordering</strong> — schedule the instructions for execution.</li>
+</ol>
+
+<h4>Five Design Issues</h4>
+<ol>
+<li><strong>Input to the code generator</strong> — IR (TAC, bytecode, syntax tree, DAG) plus symbol table; assumes the front-end has done lexical, syntactic and type checking and inserted any coercions.</li>
+<li><strong>Target program</strong> — absolute, relocatable, or assembly; choice depends on flexibility vs immediacy.</li>
+<li><strong>Instruction selection complexity</strong> depends on:
+   <ul>
+   <li>(a) Level of the IR — high-level IRs need template expansion; low-level IRs map almost 1-to-1.</li>
+   <li>(b) Nature of the ISA — uniformity of data-types and completeness of the instruction set.</li>
+   <li>(c) Desired code quality — naive selection produces redundant loads/stores.</li>
+   </ul>
+</li>
+<li><strong>Register allocation</strong> — register-pair constraints (some ops use even/odd register pairs for multiplication and division), variable register-usage conventions, etc. Optimal allocation is NP-complete.</li>
+<li><strong>Evaluation order</strong> — order of evaluation affects register pressure; picking a best order is also NP-complete in general.</li>
+</ol>
+
+<h4>Target-Machine Architectures</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Class</th><th>Characteristics</th></tr></thead>
+<tbody>
+<tr><td>RISC</td><td>Many registers; 3-address instructions; simple addressing modes; simple ISA. Examples: ARM, MIPS, SPARC, PowerPC.</td></tr>
+<tr><td>CISC</td><td>Few registers; 2-address; many addressing modes; variable-length, multi-cycle instructions. Examples: x86, VAX, 68000.</td></tr>
+<tr><td>Stack-machine</td><td>Push / pop on a stack, top elements implicitly registers. Used by JVM &amp; CLR with JIT.</td></tr>
+</tbody></table></div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.10 Target Machine ─────────── -->
+<div class="section" id="u4-target-machine">
+<div class="section-header">
+  <span class="s-num">§ 4.10</span>
+  <h3>Hypothetical Target Machine · Addressing Modes</h3>
+</div>
+<div class="section-body">
+
+<p>The slides use a hypothetical 3-address machine: byte-addressable, integers only, with general-purpose registers <span class="kw">R0, R1, …, R<sub>n-1</sub></span>.</p>
+
+<h4>Instruction Set (the only ones you'll use)</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Form</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><span class="kw">LD reg, mem</span></td><td>Load from memory to register.</td></tr>
+<tr><td><span class="kw">ST mem, reg</span></td><td>Store register to memory.</td></tr>
+<tr><td><span class="kw">MOV reg1, reg2</span></td><td>Register-to-register copy.</td></tr>
+<tr><td><span class="kw">ADD/SUB/MUL/DIV dest, src1, src2</span></td><td>3-address arithmetic.</td></tr>
+<tr><td><span class="kw">BR L</span></td><td>Unconditional branch.</td></tr>
+<tr><td><span class="kw">B&lt;cond&gt; R, L</span></td><td>Conditional branch — cond ∈ {LTZ, GTZ, EZ, LTEZ, GTEZ}. Branches if R compares to zero.</td></tr>
+</tbody></table></div>
+
+<h4>Four Addressing Modes</h4>
+<ol>
+<li><strong>Direct:</strong> <span class="kw">ADD R1, a</span> — a is a memory variable.</li>
+<li><strong>Indexed:</strong> <span class="kw">MOV R2, R1(a)</span> — R2 ← contents(R1 + a). Used for arrays: <span class="kw">x = a[i]</span>.</li>
+<li><strong>Indirect:</strong> <span class="kw">MOV R2, 0(R1)</span> — R2 ← contents(0 + contents(R1)). Used for pointer dereference: <span class="kw">x = *p</span>.</li>
+<li><strong>Immediate:</strong> <span class="kw">LD R1, #100</span> — operand is the literal in the instruction.</li>
+</ol>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Generate target code for  a[i] = c</div>
+<div class="solution">
+<div class="stitle">TAC + target</div>
+<pre class="code">TAC                          Target
+t1 = 4 * i                   LD  R1, i
+a[t1] = c                    MUL R1, R1, #4
+                             LD  R2, c
+                             ST  R1(a), R2     <span class="c">// content(R1+a) ← R2</span></pre>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Target code for  F = 1; while (N &gt; 0) { F = F*N; N = N-1; }</div>
+<div class="solution">
+<div class="stitle">TAC + target</div>
+<pre class="code">TAC                          Target
+F = 1                        LD R1, #1               <span class="c">// R1 holds F</span>
+<span class="lbl">L1:</span> if (N &lt;= 0) goto L2     LD R2, N                <span class="c">// R2 holds N</span>
+F = F * N                    <span class="lbl">L1:</span> BLTEZ R2, L2
+N = N - 1                    MUL R1, R1, R2
+goto L1                      SUB R2, R2, #1
+<span class="lbl">L2:</span>                          BR L1
+                             <span class="lbl">L2:</span> ST F, R1
+                             ST N, R2</pre>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 3 — Target code for  i=0; s=0; while (i &lt; n) { s = s+i; i = i+1; }</div>
+<div class="solution">
+<div class="stitle">Target</div>
+<pre class="code">      LD  R1, #0                      <span class="c">// R1 = i</span>
+      MOV R2, R1                      <span class="c">// R2 = s</span>
+      LD  R3, n
+<span class="lbl">L1:</span>  SUB R4, R3, R1                  <span class="c">// R4 = n - i</span>
+      BEZ R4, L2
+      ADD R2, R2, R1                  <span class="c">// s = s + i</span>
+      ADD R1, R1, #1                  <span class="c">// i = i + 1</span>
+      BR  L1
+<span class="lbl">L2:</span>  ST i, R1
+      ST s, R2</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.11 CG Procedures ─────────── -->
+<div class="section" id="u4-cg-procs">
+<div class="section-header">
+  <span class="s-num">§ 4.11</span>
+  <h3>Code Generation for Procedures (Static Allocation)</h3>
+</div>
+<div class="section-body">
+
+<p>With <strong>static allocation</strong>, the activation record of every procedure lives at a compiler-determined memory address. A procedure call is a branch + a memorised return address; a return is a branch through that saved address.</p>
+
+<h4>Memory Layout (Slide Convention)</h4>
+<ul>
+<li>CPU registers occupy <strong>0 bytes</strong> in the encoded instruction.</li>
+<li>Opcodes, immediate constants, memory addresses, memory operands each occupy <strong>4 bytes</strong> in the encoded instruction.</li>
+<li>The first slot of an activation record stores the return address.</li>
+</ul>
+
+<h4>Generic Calling Sequence</h4>
+<pre class="code">caller :  ST &lt;callee_AR&gt;, &lt;return_addr&gt;        <span class="c">// 8 bytes</span>
+          BR &lt;callee_code&gt;                     <span class="c">// 4 bytes</span>
+callee :  ...
+          BR *&lt;callee_AR&gt;                      <span class="c">// indirect return</span></pre>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Slide example: c() and p()</div>
+<p>Code areas: c at 100, p at 200. AR for c at 300, AR for p at 364. Each <span class="kw">action</span> takes 20 bytes.</p>
+<div class="solution">
+<div class="stitle">Target code</div>
+<pre class="code"><span class="c">// c()</span>
+100: ACTION                             <span class="c">// 20 bytes</span>
+120: ACTION
+140: ST 364, 160                        <span class="c">// save return addr 160 into p's AR</span>
+152: BR 200                             <span class="c">// call p()</span>
+160: ACTION
+180: HALT
+<span class="c">// p()</span>
+200: ACTION
+220: BR *364                            <span class="c">// indirect return through p's AR</span></pre>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Generate target code with static allocation</div>
+<p>Procedures p() at 100 and q() at 300. ARs at 400 and 600. <span class="kw">m, n, x</span> are addresses.</p>
+<pre class="code">p()  : m = 5 ; n = m * 2 ; call q ; halt
+q()  : x = 2 * x ; return</pre>
+<div class="solution">
+<div class="stitle">Target code</div>
+<pre class="code"><span class="c">// p()</span>
+100: LD  R1, #5                                <span class="c">// 8 bytes</span>
+108: ST  m, R1                                 <span class="c">// 8</span>
+116: MUL R1, R1, #2                            <span class="c">// 8</span>
+124: ST  n, R1                                 <span class="c">// 8</span>
+132: ST  600, 152                              <span class="c">// save 152 into q's AR</span>
+144: BR  300                                   <span class="c">// call q()</span>
+152: HALT
+<span class="c">// q()</span>
+300: LD  R1, x
+308: MUL R1, R1, #2
+316: BR  *600                                  <span class="c">// indirect return</span></pre>
+</div>
+</div>
+
+<div class="exam-box">
+Counting bytes: every operand/address/immediate occupies 4 bytes; the opcode another 4. So <span class="kw">LD R1, #5</span> = 4 (op) + 0 (R1) + 4 (#5) = 8 bytes; <span class="kw">MUL R1, R1, #2</span> = 4 + 0 + 0 + 4 = 8 bytes. Use this to compute return-address offsets exactly.
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.12 CG Algo ─────────── -->
+<div class="section" id="u4-cg-algo">
+<div class="section-header">
+  <span class="s-num">§ 4.12</span>
+  <h3>Code-Generator Algorithm — Register &amp; Address Descriptors</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+The algorithm processes one TAC statement at a time and uses two tables:
+<ul>
+<li><strong>Register descriptor</strong> — for each register, which variable(s) are currently held in it. Initially empty.</li>
+<li><strong>Address descriptor</strong> — for each variable, the set of locations (register, memory, stack) that currently hold its value.</li>
+</ul>
+</div>
+
+<h4>getReg(I) — Choose a Register</h4>
+<ol>
+<li>If a register is empty, return it.</li>
+<li>Else if some occupied register R holds value <span class="kw">y</span>, R holds <em>only</em> y, and y has <strong>no next use</strong>, return R (free without spill).</li>
+<li>Else find an occupied register R; <strong>spill</strong> by emitting <span class="kw">ST M, R</span> for each address M in y's address descriptor, then return R.</li>
+<li>Else (no register can be obtained) operate directly on memory.</li>
+</ol>
+
+<h4>Per-Statement Bookkeeping</h4>
+<p>For instruction <span class="kw">x = y op z</span>:</p>
+<ol class="steps">
+<li>Use getReg to obtain R<sub>x</sub>, R<sub>y</sub>, R<sub>z</sub>.</li>
+<li>Emit LDs for y (and z) if not already in their registers.</li>
+<li>Emit <span class="kw">OP R<sub>x</sub>, R<sub>y</sub>, R<sub>z</sub></span>.</li>
+<li>Update register descriptor: R<sub>x</sub> now holds x and only x. Update address descriptor: x's location is R<sub>x</sub>; remove x from any other register's descriptor.</li>
+<li>If y or z has no next use and is not live on exit, mark its register as free.</li>
+</ol>
+<p>At block exit, emit <span class="kw">ST M, R</span> for every variable that is live on exit and held only in register R.</p>
+
+<h4>Spilling</h4>
+<p>When all registers hold useful values and a new register is needed, the system selects a register whose value is needed <em>furthest in the future</em>, stores it back to memory, and reuses the register. The stored value is reloaded later.</p>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Trace allocator for the block (only a, d live on exit)</div>
+<pre class="code">t = a - b
+u = a - c
+v = t + u
+a = d
+d = v + u</pre>
+<p>Three registers (R1, R2, R3) available. t, u, v are temporaries (dead on exit). Slide solution:</p>
+<div class="solution">
+<div class="stitle">Generated code &amp; descriptor trace</div>
+<pre class="code">LD  R1, a                  <span class="c">// R1: a            a in R1, mem</span>
+LD  R2, b                  <span class="c">// R2: b</span>
+SUB R2, R1, R2             <span class="c">// R2: t (b is dead)</span>
+LD  R3, c                  <span class="c">// R3: c</span>
+SUB R1, R1, R3             <span class="c">// R1: u (a's reg now u; c dead)</span>
+ADD R3, R2, R1             <span class="c">// R3: v</span>
+LD  R2, d                  <span class="c">// R2: d, a (a := d makes them alias)</span>
+ADD R1, R3, R1             <span class="c">// R1: d (= v+u)</span>
+<span class="lbl">exit:</span>
+ST a, R2                   <span class="c">// commit a</span>
+ST d, R1                   <span class="c">// commit d</span></pre>
+<p>Notice no spill was required: register descriptors track that <span class="kw">b</span>, <span class="kw">c</span>, the temporaries <span class="kw">t</span>, <span class="kw">u</span>, <span class="kw">v</span> become dead exactly when their registers are needed for later operands.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Spilling required: minimum registers</div>
+<pre class="code">a=15 ; b=25 ; c=35 ;
+d = a + b ;
+e = c + d ;
+f = c + e ;
+b = c + e ;
+e = b + f ;
+d = 15 + e ;
+return d + f ;</pre>
+<div class="solution">
+<div class="stitle">Solution</div>
+<p>Track live ranges; at each step we need at most three values simultaneously alive (e.g., <span class="kw">c</span>, <span class="kw">d</span>, <span class="kw">e</span> overlap; later <span class="kw">b</span>, <span class="kw">f</span>, <span class="kw">e</span>; finally <span class="kw">d</span>, <span class="kw">f</span>). <strong>3 registers</strong> are sufficient (and necessary):</p>
+<pre class="code">LD  R1, a
+LD  R2, b
+ADD R1, R1, R2          <span class="c">// R1 = d</span>
+LD  R2, c               <span class="c">// R2 = c</span>
+ADD R1, R2, R1          <span class="c">// R1 = e</span>
+ADD R1, R2, R1          <span class="c">// R1 = f</span>
+ADD R3, R2, R1          <span class="c">// R3 = b</span>
+ADD R2, R3, R1          <span class="c">// R2 = e (b+f)</span>
+ADD R2, R2, #15         <span class="c">// R2 = d (15+e)</span>
+ADD R1, R2, R1          <span class="c">// R1 = d+f</span></pre>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 3 — Minimum registers for  (a-10) * ( ((b*c)/6) + d )</div>
+<div class="solution">
+<div class="stitle">Solution</div>
+<pre class="code">LD  R1, b
+LD  R2, c
+MUL R1, R1, R2          <span class="c">// R1 = b*c</span>
+DIV R1, R1, #6          <span class="c">// R1 = t2</span>
+LD  R2, d
+ADD R1, R1, R2          <span class="c">// R1 = t3</span>
+LD  R2, a
+SUB R2, R2, #10         <span class="c">// R2 = t4</span>
+MUL R2, R2, R1          <span class="c">// R2 = result</span></pre>
+<p>Maximum simultaneous live values is 2 ⇒ <strong>X = 2 registers</strong>.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.13 RTE intro ─────────── -->
+<div class="section" id="u4-rte-intro">
+<div class="section-header">
+  <span class="s-num">§ 4.13</span>
+  <h3>Run-Time Environments &amp; Storage Organisation</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+A <strong>run-time environment</strong> is the set of data structures the compiler and OS maintain to implement high-level abstractions — names &amp; scopes, data types, procedures &amp; parameters, and flow-of-control — at execution time. In short: <em>everything you need to execute a program</em>.
+</div>
+
+<h4>Memory Layout of an Executable</h4>
+<div class="ascii-art">  +---------------+   ← low address
+  | Code (text)   |   target machine code (fixed at compile time)
+  +---------------+
+  | Static data   |   global constants &amp; static variables
+  +---------------+
+  | Heap          |   dynamic allocations (malloc / new) — grows ↑
+  | ...           |
+  | (free)        |
+  | ...           |
+  | Stack         |   activation records — grows ↓
+  +---------------+   ← high address</div>
+
+<h4>Static vs Dynamic Allocation</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Static</th><th>Dynamic</th></tr></thead>
+<tbody>
+<tr><td>Bindings made at compile time, never change.</td><td>Bindings made at run time.</td></tr>
+<tr><td>Same location every invocation; values retained across activations.</td><td>Stack: per-call activation records. Heap: programmer-controlled or GC.</td></tr>
+<tr><td>All sizes must be known at compile time.</td><td>Sizes can depend on parameters / input.</td></tr>
+<tr><td>No recursion possible.</td><td>Recursion natural via stack.</td></tr>
+</tbody></table></div>
+
+<h4>Stack vs Heap Memory</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Stack</th><th>Heap</th></tr></thead>
+<tbody>
+<tr><td>Linear; LIFO; never fragmented.</td><td>Hierarchical; allocate / free in any order; fragments.</td></tr>
+<tr><td>Local variables only; auto-cleanup on return.</td><td>Global access; explicit free / GC.</td></tr>
+<tr><td>Variables can't be resized.</td><td>Variables can be resized (e.g., realloc).</td></tr>
+<tr><td>Compiler-issued allocate/deallocate (push/pop activation records).</td><td>Programmer or runtime-issued allocate/deallocate.</td></tr>
+</tbody></table></div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.14 Activation tree/record ─────────── -->
+<div class="section" id="u4-activations">
+<div class="section-header">
+  <span class="s-num">§ 4.14</span>
+  <h3>Activation Trees &amp; Activation Records</h3>
+</div>
+<div class="section-body">
+
+<h4>Activation, Activation Tree</h4>
+<ul>
+<li>An <strong>activation</strong> = one execution of a procedure.</li>
+<li>An <strong>activation tree</strong> represents all the activations during a particular run; the root is <span class="kw">main</span>'s activation.</li>
+<li>Properties: each node = one activation; node a is the parent of b iff control flowed from a to b; nodes ordered left-to-right by lifetime; one child must finish before the next starts.</li>
+<li>The tree depends on input; the static analogue is the <strong>call graph</strong>.</li>
+</ul>
+
+<h4>Stack–Tree Correspondence</h4>
+<ul>
+<li>Sequence of procedure <em>calls</em> ⇔ <strong>pre-order</strong> traversal.</li>
+<li>Sequence of <em>returns</em> ⇔ <strong>post-order</strong> traversal.</li>
+<li>Flow of control as a whole ⇔ <strong>depth-first</strong> traversal.</li>
+<li>While control is at node N, the live (open) activations are exactly N and its ancestors; their activation records are exactly the ones on the run-time stack at this moment.</li>
+</ul>
+
+<h4>Activation Record (Stack Frame) — General Layout</h4>
+<div class="ascii-art">  +-----------------------+
+  | Actual parameters     |
+  +-----------------------+
+  | Returned value        |
+  +-----------------------+
+  | Control link          |  → caller's AR
+  +-----------------------+
+  | Access link           |  → enclosing scope's AR (for nested procs)
+  +-----------------------+
+  | Saved machine status  |  PC, registers
+  +-----------------------+
+  | Local data            |
+  +-----------------------+
+  | Temporaries           |
+  +-----------------------+</div>
+
+<h4>Calling-Sequence Layout Principles</h4>
+<ol>
+<li>Values communicated between caller and callee at the <strong>beginning</strong> of the callee's AR — close to the caller's AR.</li>
+<li><strong>Fixed-length</strong> items (control link, access link, machine status) in the middle so the same code can save/restore them.</li>
+<li>Items whose size isn't known until run-time at the <strong>end</strong> of the AR.</li>
+<li>The <span class="kw">top_sp</span> register points to the end of the fixed-length region — variable-length data lives "above" top_sp.</li>
+</ol>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Activation tree for the recursive Fibonacci  Fib(3)</div>
+<pre class="code">int main() { Fib(3); }
+int Fib(int n) {
+    if (n &lt;= 1) return n;
+    return Fib(n-1) + Fib(n-2);
+}</pre>
+<div class="solution">
+<div class="stitle">Activation tree</div>
+<div class="ascii-art">             main
+              |
+            Fib(3)
+            /    \
+       Fib(2)   Fib(1)
+       /    \
+   Fib(1)  Fib(0)</div>
+<p>Pre-order: main → F(3) → F(2) → F(1) → F(0) → F(1). Post-order = order of returns. Depth-first = order of execution. Maximum stack depth = 3 (main, F(3), F(2), F(1)).</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Activation tree with library calls</div>
+<pre class="code">main() {
+    printf("Enter your name: ");
+    scanf("%s", username);
+    show_data(username);
+    printf("Press any key…");
+}
+int show_data(char *user) {
+    printf("Your name is %s", user);
+    return 0;
+}</pre>
+<div class="solution">
+<div class="stitle">Activation tree</div>
+<div class="ascii-art">                main
+            /    |    |     \
+        printf scanf show_data printf
+                       |
+                     printf</div>
+<p>The four children of main are processed left-to-right; each must end before the next begins. <span class="kw">show_data</span> internally calls <span class="kw">printf</span> — a grandchild of main.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.15 Calling/Return ─────────── -->
+<div class="section" id="u4-calling-seq">
+<div class="section-header">
+  <span class="s-num">§ 4.15</span>
+  <h3>Calling / Return Sequences · Variable-Length Data</h3>
+</div>
+<div class="section-body">
+
+<h4>Calling Sequence — Caller / Callee Division</h4>
+<ol class="steps">
+<li><strong>Caller</strong> evaluates the actual parameters and stores them at the start of the callee's AR.</li>
+<li><strong>Caller</strong> stores the return address into the callee's AR.</li>
+<li><strong>Caller</strong> stores the old value of <span class="kw">top_sp</span> into the callee's <em>control link</em> field, then increments <span class="kw">top_sp</span> past the caller's locals/temporaries and the callee's parameters/status fields.</li>
+<li><strong>Callee</strong> saves register values and other status info.</li>
+<li><strong>Callee</strong> initialises its local data and begins execution.</li>
+</ol>
+
+<h4>Return Sequence</h4>
+<ol class="steps">
+<li>Callee places the return value next to the parameters (close to the caller).</li>
+<li>Callee restores <span class="kw">top_sp</span> and registers from the saved machine-status area, then branches to the return address.</li>
+<li>Caller knows where the return value sits relative to <em>its</em> top_sp and may use it.</li>
+</ol>
+
+<h4>Variable-Length Data on the Stack</h4>
+<p>For arrays whose length depends on a parameter (e.g., VLAs in C), the compiler stores only a <strong>pointer</strong> in the AR; the actual array is laid out <strong>above</strong> the fixed part of the AR. Access uses two pointers:</p>
+<ul>
+<li><span class="kw">top_sp</span> — end of the current AR's fixed-length region; gives O(1) access to locals via fixed offsets.</li>
+<li><span class="kw">top</span> — actual top of stack; the next AR begins here.</li>
+</ul>
+<p>On return, top_sp is restored from the saved control link; <span class="kw">top = top_sp − (size of fixed fields)</span>.</p>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Compute return-address offset for a recursive call</div>
+<p>Suppose <span class="kw">int fact(n)</span> contains exactly two <span class="kw">action</span> blocks of 20 bytes each before the recursive call <span class="kw">fact(n-1)</span> at offset 40 in fact's code, then a 20-byte action after the call. The call+save sequence is <span class="kw">ST AR, ret_addr ; BR fact</span> — 8 bytes each.</p>
+<div class="solution">
+<div class="stitle">Layout</div>
+<pre class="code">offset 0:  ACTION                  (20)
+       20: ACTION                  (20)
+       40: ST &lt;AR&gt;, 56              (8) — save return addr 56
+       48: BR &lt;fact_entry&gt;          (8)
+       56: ACTION                  (20) — return point
+       76: BR *&lt;AR&gt;                  (4)</pre>
+<p>The literal "56" is the address of the instruction <em>just after</em> the BR — that's the return point.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Why VLAs need top vs top_sp</div>
+<p>Consider <span class="kw">void p(int n) { int a[n]; q(); }</span>.</p>
+<div class="solution">
+<div class="stitle">Discussion</div>
+<p>p's AR contains <em>just a pointer</em> to <span class="kw">a</span>. The actual array sits above p's fixed fields, between p's AR and q's AR. <span class="kw">top_sp</span> points to end of p's fixed area — local references like <span class="kw">a, n, return-value</span> are at constant negative offsets from top_sp regardless of n. <span class="kw">top</span> points to where q's AR will start — it equals top_sp + sizeof(local fixed data) + n × 4. When q is called, <span class="kw">top_sp</span> is moved to the new fixed-area end; on q's return, top_sp is reloaded from q's control link, and <span class="kw">top</span> is recomputed from the fixed-area size of q.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.16 Access Links / Displays ─────────── -->
+<div class="section" id="u4-nonlocal">
+<div class="section-header">
+  <span class="s-num">§ 4.16</span>
+  <h3>Access to Non-Local Data — Access Links &amp; Displays</h3>
+</div>
+<div class="section-body">
+
+<h4>Nesting Depth</h4>
+<ul>
+<li>Procedures <em>not nested</em> within others have nesting depth <strong>1</strong>. (All C functions have depth 1.)</li>
+<li>If procedure p is defined immediately inside a procedure at depth i, then p has depth <strong>i + 1</strong>.</li>
+</ul>
+
+<h4>Why Non-Local Access Is Hard</h4>
+<p>If a procedure <span class="kw">p</span> at depth n<sub>p</sub> uses a name <span class="kw">x</span> declared in an enclosing procedure <span class="kw">q</span> at depth n<sub>q</sub> &lt; n<sub>p</sub>, then <em>which</em> activation of q is the right one is a <strong>run-time decision</strong> (q or p might be recursive). The compiler needs additional info: <strong>access links</strong> or a <strong>display</strong>.</p>
+
+<h4>Access Links</h4>
+<p>Each AR has an <strong>access link</strong>: a pointer to the most recent AR of the immediately-enclosing procedure. Following access links forms a chain through ARs at progressively lower nesting depths — the dynamic embodiment of the static scope chain.</p>
+
+<h4>Setting the Access Link When q Calls p</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Case</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td>n<sub>q</sub> &lt; n<sub>p</sub> (p nested immediately in q)</td><td>p.access_link = pointer to current AR of q.</td></tr>
+<tr><td>n<sub>q</sub> ≥ n<sub>p</sub></td><td>Both q and p are nested inside some common r at depth n<sub>p</sub> − 1. Follow q's access link <span class="kw">n<sub>q</sub> − n<sub>p</sub> + 1</span> times to reach r's AR; that becomes p.access_link.</td></tr>
+<tr><td>n<sub>q</sub> = n<sub>p</sub> (sibling)</td><td>p.access_link = q.access_link.</td></tr>
+</tbody></table></div>
+
+<p><strong>Procedures as parameters.</strong> The caller, which knows the static context of the procedure being passed, stores the <em>correct access link</em> alongside the procedure pointer; the callee uses both as a closure when it eventually invokes the procedure parameter.</p>
+
+<h4>Displays — Faster Lookup</h4>
+<p>A <strong>display</strong> is an array <span class="kw">d</span> indexed by nesting depth: <span class="kw">d[i]</span> always points to the <em>highest</em> AR currently on the stack for any procedure of depth i. Looking up a non-local at depth i is O(1): one indirection through <span class="kw">d[i]</span>.</p>
+
+<p>Maintenance: when a procedure of depth i is entered, save the previous <span class="kw">d[i]</span> in the new AR and overwrite <span class="kw">d[i]</span> with a pointer to the new AR. On return, restore <span class="kw">d[i]</span>.</p>
+
+<h4>Trade-Off</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th></th><th>Access Links</th><th>Displays</th></tr></thead>
+<tbody>
+<tr><td>Lookup cost</td><td>Variable — proportional to depth difference; long chains are costly.</td><td>O(1) constant.</td></tr>
+<tr><td>Maintenance cost</td><td>Variable — recomputed at every call.</td><td>Constant per call/return (just save and restore one pointer).</td></tr>
+</tbody></table></div>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Compute access-link chain for a Pascal-style program</div>
+<p>Procedures: <span class="kw">sort</span> (depth 1) contains <span class="kw">readarray</span>, <span class="kw">exchange</span>, <span class="kw">quicksort</span> (all depth 2). <span class="kw">quicksort</span> contains <span class="kw">partition</span> (depth 3). At one moment the run-time stack is: sort, quicksort(1,9), exchange. Show the access links.</p>
+<div class="solution">
+<div class="stitle">Solution</div>
+<ul>
+<li>sort.access_link = ⊥ (depth 1, nothing encloses it).</li>
+<li>quicksort.access_link = pointer to sort's AR.</li>
+<li>exchange.access_link = pointer to sort's AR (sibling rule: same depth as quicksort, so they share the access link).</li>
+</ul>
+<p>If exchange now references a variable declared in <span class="kw">sort</span>, the compiler emits <span class="kw">load access_link ; load offset_of_x</span> — exactly one indirection.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Display rebuild on partition's call</div>
+<p>Just before <span class="kw">partition</span> is called from <span class="kw">quicksort</span>: stack contains sort, quicksort. Display: <span class="kw">d[1] = sort, d[2] = quicksort</span>.</p>
+<div class="solution">
+<div class="stitle">Solution</div>
+<ol>
+<li>partition has depth 3. Save the <em>old</em> <span class="kw">d[3]</span> (which is ⊥) into partition's AR.</li>
+<li>Push partition's AR; set <span class="kw">d[3]</span> = pointer to partition's AR.</li>
+<li>Inside partition, accessing a variable of sort is a single load through <span class="kw">d[1]</span>; accessing a variable of quicksort is a single load through <span class="kw">d[2]</span>.</li>
+<li>On return, restore <span class="kw">d[3]</span> from the saved field in partition's AR (back to ⊥) and pop the AR.</li>
+</ol>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── 4.17 Graph coloring ─────────── -->
+<div class="section" id="u4-graph-color">
+<div class="section-header">
+  <span class="s-num">§ 4.17</span>
+  <h3>Register Allocation by Graph Colouring</h3>
+</div>
+<div class="section-body">
+
+<div class="def">
+<strong>Idea.</strong> Build an <strong>interference graph</strong> where each node is a variable and each edge connects variables that are <em>simultaneously live</em>. Allocating <em>k</em> registers is equivalent to <strong>k-colouring</strong> the graph — adjacent nodes must get different colours. Determining if a graph is k-colourable is NP-hard in general, but greedy heuristics (Kempe's, Chaitin's) work well in practice.
+</div>
+
+<h4>Pipeline</h4>
+<ol class="steps">
+<li>Run <strong>liveness analysis</strong> on the CFG to obtain a live range for every variable.</li>
+<li>Build the interference graph: edge (x, y) iff x and y are alive at the same program point.</li>
+<li>Try to colour with k = number of available registers. If any node ends up uncolourable, <strong>spill</strong> a candidate (insert loads/stores), recompute, and retry.</li>
+</ol>
+
+<h4>Kempe-style Greedy</h4>
+<ul>
+<li>Find a node with degree &lt; k. Push it on a stack and remove it from the graph (its neighbours can keep it from getting any of their colours).</li>
+<li>Repeat until the graph is empty (success) or no such node exists (potential spill — pick a node, mark for spill, remove it, continue).</li>
+<li>Pop the stack and assign each node a colour different from its already-coloured neighbours.</li>
+</ul>
+
+<div class="problem">
+<div class="ptitle">Problem 1 — Build interference graph &amp; colour with 2 registers</div>
+<p>Live ranges:<br>
+<span class="kw">a:</span> [1, 5]&nbsp;&nbsp; <span class="kw">b:</span> [2, 4]&nbsp;&nbsp; <span class="kw">c:</span> [3, 6]&nbsp;&nbsp; <span class="kw">d:</span> [5, 7]</p>
+<div class="solution">
+<div class="stitle">Solution</div>
+<p>Pairs that overlap: a-b (2-4), a-c (3-5), b-c (3-4), c-d (5-6). a-d touch only at point 5 (a's last, d's first) — typically not interfering. So edges: a–b, a–c, b–c, c–d.</p>
+<div class="ascii-art">     a───b
+      \ /
+       c───d</div>
+<p><strong>Triangle</strong> a-b-c — needs at least 3 colours. With only k=2 registers, the graph is <strong>not 2-colourable</strong>; one of {a, b, c} must be spilled.</p>
+<p>Spill <span class="kw">b</span> (smallest live range) ⇒ remaining graph a-c-d is a path → 2-colourable: <span class="kw">a=R1, c=R2, d=R1</span>. b is spilled to memory; loaded into a free register only when needed.</p>
+</div>
+</div>
+
+<div class="problem">
+<div class="ptitle">Problem 2 — Re-do the next-use block of §4.7 with 2 registers</div>
+<pre class="code">(1) x = y + z
+(2) z = x * 5
+(3) y = z - 7
+(4) x = z + y</pre>
+<div class="solution">
+<div class="stitle">Interference graph</div>
+<p>From §4.7's table:<br>
+At (1) y, z live;  at (2) x, z live;  at (3) z, y live;  at (4) z, y live.</p>
+<p>Pairs: (y, z) at (1) &amp; (3); (x, z) at (2). Edges: y-z, x-z. <strong>No edge x-y</strong> — they never overlap.</p>
+<div class="ascii-art">    x───z───y</div>
+<p>This is a path; 2-colourable. <span class="kw">x = R1, y = R1, z = R2</span> works — x and y share R1 because their live ranges are disjoint. No spill, just 2 registers needed.</p>
+</div>
+</div>
+
+</div>
+</div>
+
+<!-- ─────────── Quick Reference ─────────── -->
+<div class="section" id="quickref">
+<div class="section-header">
+  <span class="s-num">§ ★</span>
+  <h3>Quick-Reference Cheat Sheet</h3>
+</div>
+<div class="section-body">
+
+<h4>SDD / SDT One-Liners</h4>
+<ul>
+<li><strong>S-attributed</strong>: only synthesized → bottom-up evaluation, postfix SDT.</li>
+<li><strong>L-attributed</strong>: synthesized + inherited that depend on <em>left</em>-siblings or parent only → pre-order traversal.</li>
+<li>Convert SDD → SDT: inherited rules go <em>before</em> the symbol; synthesized rules go at the <em>end</em>.</li>
+<li>Implement L-attributed on LR via <strong>marker non-terminals</strong> <span class="kw">M → ε</span>.</li>
+</ul>
+
+<h4>Intermediate Code Generation</h4>
+<ul>
+<li>Forms: syntax tree, DAG, TAC (quad/trip/indir), SSA, bytecode.</li>
+<li>Address calc: 1-D <span class="kw">A + W·(i−LB)</span>; 2-D row-major <span class="kw">A + W·[N·(i−Lr)+(j−Lc)]</span>.</li>
+<li>Quadruples: easy reorder, but temporaries clutter symbol table.<br>
+Triples: compact, but <em>code-immobile</em>.<br>
+Indirect triples: best of both (extra pointer list).</li>
+<li>SSA: φ-functions at every CFG join with multiple defs of the same variable.</li>
+</ul>
+
+<h4>Optimization Toolbox</h4>
+<ul>
+<li>Block-local: strength reduction → constant propagation/folding → CSE → copy propagation → DCE.</li>
+<li>Loop: invariant detection &amp; code motion · induction-variable strength reduction · unrolling.</li>
+<li>Global: data-flow analysis on the CFG; eliminate unreachable blocks.</li>
+</ul>
+
+<h4>Data-Flow Analyses Summary</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Analysis</th><th>Direction</th><th>Equation</th></tr></thead>
+<tbody>
+<tr><td>Live variables</td><td>Backward</td><td>OUT[B] = ⋃ IN[succ];   IN[B] = use ∪ (OUT − def)</td></tr>
+<tr><td>Reaching defs</td><td>Forward</td><td>IN[B] = ⋃ OUT[pred];   OUT[B] = gen ∪ (IN − kill)</td></tr>
+<tr><td>Available expressions</td><td>Forward</td><td>IN[B] = ⋂ OUT[pred];   OUT[B] = e_gen ∪ (IN − e_kill)</td></tr>
+</tbody></table></div>
+
+<h4>Code Generation</h4>
+<ul>
+<li>Three primary tasks: instruction selection, register allocation, instruction ordering.</li>
+<li>Optimal target code is undecidable; register allocation is NP-complete.</li>
+<li>Hypothetical machine (slides): LD/ST/MOV; ADD/SUB/MUL/DIV (3-addr); BR/B&lt;cond&gt;.</li>
+<li>Addressing modes: direct, indexed (<span class="kw">R(a)</span>), indirect (<span class="kw">0(R)</span>), immediate (<span class="kw">#k</span>).</li>
+<li>Slide byte-counting convention: opcode/imm/addr/operand each 4 bytes; registers 0 bytes.</li>
+</ul>
+
+<h4>Register Allocator (Descriptors)</h4>
+<ul>
+<li>Register descriptor: which variable(s) live in each register.</li>
+<li>Address descriptor: where each variable's value can be found (register set + memory).</li>
+<li>getReg() — try empty register → free a register holding a dead-only variable → spill the furthest-future register.</li>
+<li>At block exit, ST every live-on-exit variable held only in a register.</li>
+</ul>
+
+<h4>Run-Time Environments</h4>
+<ul>
+<li>Memory layout: Code | Static | Heap → ↑ ↓ ← Stack (downward-growing).</li>
+<li>Activation record fields: actual params · return value · control link · access link · saved status · locals · temporaries.</li>
+<li>Activation tree ⇄ run-time stack: pre-order calls, post-order returns, depth-first overall flow.</li>
+<li>Non-local data: <strong>access links</strong> (variable cost, simple) or <strong>display</strong> (constant cost, indexed by nesting depth).</li>
+<li>Nesting depth: outermost = 1; nested directly inside depth-i procedure = i+1.</li>
+</ul>
+
+<h4>Register Allocation by Graph Colouring</h4>
+<ul>
+<li>Nodes = variables, edges = "simultaneously live" interference, colours = registers.</li>
+<li>k-colouring is NP-hard; Kempe's algorithm and Chaitin's algorithm work in practice.</li>
+<li>Spill = move a variable out of a register to memory when no colour is available.</li>
+</ul>
+
+<div class="exam-box">
+The two most common 10-mark questions in CD Unit 3-4 papers are: <strong>(1)</strong> "Convert C-snippet → TAC → CFG → SSA, then optimise" and <strong>(2)</strong> "Generate target code for this block with k registers using register and address descriptors". Practise both end-to-end.
+</div>
+
+</div>
+</div>
+
+</div><!-- /.container -->
+
+<div class="footer">
+  Compiler Design · UE22CS342BB2 · Units 3 &amp; 4 — Revision Notes built from <em>UNIT3_CD_MERGE_2026.pdf</em> and <em>UNIT4_CD_MERGE_2026.pdf</em> by Prof. Preet Kanwal &amp; Prof. Prakash C O.
+</div>
+
+</body>
+</html>
