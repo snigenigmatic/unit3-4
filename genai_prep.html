@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenAI Practice Exam Sets</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf8f3;
+    --ink: #1a1612;
+    --ink-muted: #4a4540;
+    --ink-faint: #7a7570;
+    --rule: #d9d4cc;
+    --accent: #2d5a8e;
+    --accent-light: #e8f0f9;
+    --gold: #b5892a;
+    --gold-light: #fdf6e3;
+    --red-mark: #8b2635;
+    --red-light: #fdf0f2;
+    --green-mark: #1a5c2a;
+    --green-light: #f0f7f1;
+    --purple: #4a2d7a;
+    --purple-light: #f3f0f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  header {
+    background: var(--ink);
+    color: #f5f0e8;
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    border-bottom: 4px solid var(--gold);
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+  }
+  header p {
+    font-size: 0.92rem;
+    color: #b0a898;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.78rem;
+    color: #c8c0b0;
+    letter-spacing: 0.04em;
+  }
+
+  .tabs {
+    display: flex;
+    background: #f0ede6;
+    border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+    gap: 0;
+    overflow-x: auto;
+  }
+  .tab-btn {
+    padding: 0.9rem 1.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.88rem;
+    color: var(--ink-faint);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .set-page {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  .set-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+  }
+  .set-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--ink);
+  }
+  .set-meta {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem 0 1.2rem;
+  }
+  .section-tag {
+    font-size: 0.7rem;
+    font-family: 'Source Serif 4', serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .tag-desc { background: var(--purple-light); color: var(--purple); }
+  .tag-mcq2 { background: var(--gold-light); color: #7a5a10; }
+  .tag-mcq1 { background: var(--accent-light); color: var(--accent); }
+
+  .section-rule { flex: 1; height: 1px; background: var(--rule); }
+
+  .section-marks {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .question-block {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.4rem 1.6rem;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .q-number {
+    position: absolute;
+    top: 1.2rem;
+    left: -1.2rem;
+    background: var(--ink);
+    color: #f5f0e8;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: 'Source Serif 4', serif;
+  }
+  .q-type-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+  }
+  .type-theory { background: var(--purple-light); color: var(--purple); }
+  .type-numerical { background: var(--gold-light); color: #7a5a10; }
+  .type-scenario { background: var(--red-light); color: var(--red-mark); }
+
+  .q-text { font-size: 0.95rem; color: var(--ink); line-height: 1.75; }
+  .q-sub { font-size: 0.85rem; color: var(--ink-muted); margin-top: 0.6rem; font-style: italic; }
+
+  .mcq-block {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.2rem 1.5rem;
+    margin-bottom: 0.8rem;
+    position: relative;
+  }
+  .mcq-q { font-size: 0.93rem; color: var(--ink); margin-bottom: 0.7rem; line-height: 1.65; }
+  .mcq-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.35rem 1.5rem;
+  }
+  .mcq-opt {
+    font-size: 0.85rem;
+    color: var(--ink-muted);
+    padding: 3px 0;
+    display: flex;
+    gap: 6px;
+  }
+  .opt-label { font-weight: 600; color: var(--ink-faint); min-width: 18px; }
+
+  .answer-key {
+    margin-top: 0.5rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.78rem;
+    color: var(--accent);
+    border: none;
+    background: none;
+    padding: 4px 0;
+    font-family: 'Source Serif 4', serif;
+    letter-spacing: 0.02em;
+  }
+  .answer-key:hover { text-decoration: underline; }
+  .answer-reveal {
+    display: none;
+    margin-top: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: var(--green-light);
+    border-left: 3px solid var(--green-mark);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.83rem;
+    color: var(--green-mark);
+    font-weight: 600;
+  }
+  .answer-reveal.open { display: block; }
+  .ans-hint { font-weight: 400; color: #2d6b3a; margin-top: 2px; }
+
+  .desc-answer-reveal {
+    display: none;
+    margin-top: 0.8rem;
+    padding: 0.9rem 1.1rem;
+    background: var(--green-light);
+    border-left: 3px solid var(--green-mark);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.83rem;
+    color: var(--ink-muted);
+    line-height: 1.7;
+  }
+  .desc-answer-reveal.open { display: block; }
+  .desc-answer-reveal strong { color: var(--green-mark); }
+
+  .mcq-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.7rem;
+  }
+  @media (max-width: 620px) {
+    .mcq-list { grid-template-columns: 1fr; }
+    .mcq-options { grid-template-columns: 1fr; }
+    .set-header { flex-direction: column; gap: 0.5rem; }
+    .tabs { padding: 0 1rem; }
+    .set-page { padding: 2rem 1rem 3rem; }
+  }
+
+  .grid-mcq {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    font-size: 0.88rem;
+  }
+  .grid-mcq .mcq-q { margin-bottom: 0.5rem; font-size: 0.88rem; }
+  .grid-mcq .mcq-options { gap: 0.2rem 1rem; }
+  .grid-mcq .mcq-opt { font-size: 0.8rem; }
+
+  .answer-btn-row { display: flex; justify-content: flex-end; margin-top: 0.5rem; }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--rule);
+    background: #f5f2ec;
+  }
+
+  .marks-pill {
+    display: inline-block;
+    background: var(--ink);
+    color: #f5f0e8;
+    font-size: 0.72rem;
+    padding: 2px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+
+  .note-box {
+    background: var(--gold-light);
+    border: 1px solid #e0c87a;
+    border-radius: 6px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    color: #5a4510;
+    line-height: 1.6;
+  }
+  .note-box strong { color: #3a2e08; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Generative AI &amp; Applications</h1>
+  <p>Practice Examination — 4 Full Sets</p>
+  <div class="badge-row">
+    <span class="badge">4 × 4-Mark Descriptive</span>
+    <span class="badge">4 × 2-Mark MCQ</span>
+    <span class="badge">16 × 1-Mark MCQ</span>
+    <span class="badge">Total: 40 Marks per Set</span>
+  </div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" onclick="switchTab(0)">Set 1</button>
+  <button class="tab-btn" onclick="switchTab(1)">Set 2</button>
+  <button class="tab-btn" onclick="switchTab(2)">Set 3</button>
+  <button class="tab-btn" onclick="switchTab(3)">Set 4</button>
+</div>
+
+<!-- ═══════════════ SET 1 ═══════════════ -->
+<div class="tab-content active" id="tab0">
+<div class="set-page">
+  <div class="set-header">
+    <div class="set-title">Practice Set — I</div>
+    <div class="set-meta">Topics: Stable Diffusion · BLIP · CLIP<br>Agentic Workflows · RAG · Evaluation · LoRA</div>
+  </div>
+
+  <div class="note-box"><strong>Instructions:</strong> Answer all questions. Descriptive answers should demonstrate depth of understanding. For numericals, show all working steps clearly. Click <em>"Show Answer"</em> to reveal hints after attempting.</div>
+
+  <!-- SECTION A -->
+  <div class="section-header">
+    <span class="section-tag tag-desc">Section A — Descriptive</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">4 marks each · 16 marks total</span>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">1</div>
+    <span class="q-type-badge type-theory">Theoretical</span>
+    <p class="q-text">Explain the three-stage pretraining strategy of BLIP — Image-Text Contrastive (ITC), Image-Text Matching (ITM), and Image-Text Generation (ITG). How does BLIP's bootstrapped pretraining handle noisy web image-text data? <span class="marks-pill">4M</span></p>
+    <p class="q-sub">Hint: Cover the goal and mechanism of each stage, and explain the self-improving loop.</p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>ITC:</strong> Maximizes cosine similarity between correct image-text pairs and minimizes similarity between mismatched pairs (contrastive loss in shared embedding space). <br>
+      <strong>ITM:</strong> Binary classification — given image-text pair, predict match or non-match. Helps fine-grained alignment. <br>
+      <strong>ITG:</strong> Auto-regressive caption generation from image using causal language modeling. <br>
+      <strong>Bootstrapping:</strong> BLIP's captioner generates pseudo-labels for noisy web data → filter module removes mismatched pairs using ITM → cleaner data is used to retrain iteratively, improving quality each round.
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">2</div>
+    <span class="q-type-badge type-numerical">Numerical</span>
+    <p class="q-text">A weight matrix W is given below. Using 4-bit quantization (b = 4), quantize the matrix, dequantize it, and compute the MAE (Mean Absolute Error). <span class="marks-pill">4M</span></p>
+    <p class="q-sub" style="margin-top:0.5rem; font-style:normal; background:#f9f7f2; padding: 8px 12px; border-radius:4px; border-left: 2px solid #d0c8b8;">
+      W = [[2.0, −1.0], [0.0, −2.0]] &nbsp;|&nbsp; b = 4 bits &nbsp;|&nbsp; k₁ = 1.5, b_norm = 0.75
+    </p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Step 1:</strong> min = −2.0, max = 2.0 &nbsp;&nbsp;
+      <strong>Step 2:</strong> δ = (2.0 − (−2.0)) / (2⁴ − 1) = 4.0 / 15 ≈ 0.2667 <br>
+      <strong>Step 3 – Quantize:</strong> Q = round((W − min) / δ)<br>
+      (2.0−(−2))/0.2667 ≈ 15 → Q=15; (−1.0+2)/0.2667 ≈ 3.75 → Q=4; (0+2)/0.2667 ≈ 7.5 → Q=8; (−2+2)/0.2667 = 0 → Q=0 <br>
+      <strong>Step 4 – Dequantize:</strong> Ŵ = Q × δ + min<br>
+      15×0.2667−2=2.0; 4×0.2667−2=−0.933; 8×0.2667−2=0.133; 0×0.2667−2=−2.0<br>
+      <strong>Errors:</strong> |2.0−2.0|=0; |−1.0−(−0.933)|=0.067; |0−0.133|=0.133; |−2.0−(−2.0)|=0<br>
+      <strong>MAE</strong> = (0 + 0.067 + 0.133 + 0) / 4 = <strong>0.05</strong>
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">3</div>
+    <span class="q-type-badge type-scenario">Scenario</span>
+    <p class="q-text">You are building a customer support chatbot for an insurance company. The naive RAG system frequently retrieves irrelevant clauses and generates incorrect answers. Explain how <strong>Hybrid Search</strong> (BM25 + Dense) and <strong>Re-ranking with Cross-Encoders</strong> would solve this problem, with concrete steps. <span class="marks-pill">4M</span></p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Problem:</strong> Naive keyword search (BM25) retrieves by exact terms — misses semantically similar clauses phrased differently. Pure dense search may miss exact policy terms.<br>
+      <strong>Hybrid Search:</strong> Score = α·BM25(q,d) + (1−α)·CosineSim(q,d). BM25 handles precise policy terms; dense retrieval captures paraphrased queries. Combine for both precision and recall.<br>
+      <strong>Re-ranking:</strong> Initial top-k docs pass through a Cross-Encoder (processes query + document together via BERT-like model) → assigns fine-grained relevance scores → reorders results so most relevant clause appears first.<br>
+      <strong>Impact:</strong> LLM receives accurate, domain-relevant clauses → reduced hallucination, higher factual grounding in insurance-specific responses.
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">4</div>
+    <span class="q-type-badge type-theory">Theoretical</span>
+    <p class="q-text">Write the LoRA weight update formula and explain each term. If the weight matrix has d = 512, k = 512 and rank r = 4, calculate the number of trainable parameters in LoRA and compare it with full fine-tuning. What is the percentage reduction? <span class="marks-pill">4M</span></p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Formula:</strong> W' = W + ΔW = W + (α/r) · BA, where W = frozen pretrained weight (d×k), B (d×r) and A (r×k) are trainable low-rank matrices, α = scaling factor, r = rank.<br>
+      <strong>LoRA params:</strong> r(d + k) = 4(512 + 512) = <strong>4,096</strong><br>
+      <strong>Full fine-tuning params:</strong> d × k = 512 × 512 = <strong>262,144</strong><br>
+      <strong>Reduction:</strong> (1 − 4096/262144) × 100 ≈ <strong>98.4% fewer parameters</strong><br>
+      This allows training on consumer GPUs, faster iterations, and multiple task-specific adapters stored cheaply alongside one frozen base model.
+    </div>
+  </div>
+
+  <!-- SECTION B -->
+  <div class="section-header">
+    <span class="section-tag tag-mcq2">Section B — 2-Mark MCQ</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">2 marks each · 8 marks total</span>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B1</div>
+    <p class="mcq-q">Which loss function does CLIP use for training its image and text encoders?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt"><span class="opt-label">A.</span> Binary Cross-Entropy</div>
+      <div class="mcq-opt"><span class="opt-label">B.</span> InfoNCE (Noise Contrastive Estimation) Loss</div>
+      <div class="mcq-opt"><span class="opt-label">C.</span> Mean Squared Error</div>
+      <div class="mcq-opt"><span class="opt-label">D.</span> Hinge Loss</div>
+    </div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: B</strong><p class="ans-hint">InfoNCE maximizes similarity of positive pairs and minimizes similarity of negative pairs in the shared embedding space. Temperature parameter τ controls the sharpness.</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B2</div>
+    <p class="mcq-q">In Stable Diffusion, the latent space is approximately how much smaller than the original pixel space for a 512×512 image?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt"><span class="opt-label">A.</span> 4 times smaller</div>
+      <div class="mcq-opt"><span class="opt-label">B.</span> 16 times smaller</div>
+      <div class="mcq-opt"><span class="opt-label">C.</span> 48 times smaller</div>
+      <div class="mcq-opt"><span class="opt-label">D.</span> 64 times smaller</div>
+    </div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: C</strong><p class="ans-hint">Stable Diffusion's latent space is 4×64×64 vs. 3×512×512 pixel space. The VAE compresses by a factor of 48, drastically speeding up diffusion operations.</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B3</div>
+    <p class="mcq-q">In BM25, the parameter <em>b</em> (document length normalization) has what effect when set to 0?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt"><span class="opt-label">A.</span> Full length normalization (like TF-IDF)</div>
+      <div class="mcq-opt"><span class="opt-label">B.</span> No length normalization applied</div>
+      <div class="mcq-opt"><span class="opt-label">C.</span> Maximum term frequency saturation</div>
+      <div class="mcq-opt"><span class="opt-label">D.</span> Document is excluded from ranking</div>
+    </div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: B</strong><p class="ans-hint">When b=0, document length has no effect on the score. When b=1, full normalization is applied. Default is 0.75, balancing the two extremes.</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B4</div>
+    <p class="mcq-q">Which of the following is a Parameter-Efficient Fine-Tuning (PEFT) method?</p>
+    <div class="mcq-options">
+      <div class="mcq-opt"><span class="opt-label">A.</span> Full fine-tuning (updating all weights)</div>
+      <div class="mcq-opt"><span class="opt-label">B.</span> Pretraining on large corpora</div>
+      <div class="mcq-opt"><span class="opt-label">C.</span> LoRA (Low-Rank Adaptation)</div>
+      <div class="mcq-opt"><span class="opt-label">D.</span> BPE Tokenization</div>
+    </div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: C</strong><p class="ans-hint">LoRA freezes the pretrained model and trains only small low-rank matrices A and B, drastically reducing trainable parameters while maintaining near full fine-tuning quality.</p></div>
+  </div>
+
+  <!-- SECTION C -->
+  <div class="section-header">
+    <span class="section-tag tag-mcq1">Section C — 1-Mark MCQ</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">1 mark each · 16 marks total</span>
+  </div>
+
+  <div class="mcq-list">
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C1.</strong> What does VAE stand for in Stable Diffusion?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Variable Autoencoder</div><div class="mcq-opt"><span class="opt-label">B.</span>Variational Autoencoder</div><div class="mcq-opt"><span class="opt-label">C.</span>Visual Attention Encoder</div><div class="mcq-opt"><span class="opt-label">D.</span>Vector Autoencoder</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>B</strong> — Variational Autoencoder (encoder compresses, decoder reconstructs).</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C2.</strong> In an AI agent, which component acts as the central "brain" for reasoning?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Memory Module</div><div class="mcq-opt"><span class="opt-label">B.</span>Tool Interface</div><div class="mcq-opt"><span class="opt-label">C.</span>Large Language Model (LLM)</div><div class="mcq-opt"><span class="opt-label">D.</span>Environment</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>C</strong> — The LLM acts as the reasoning engine (brain) for understanding and generating responses.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C3.</strong> CLIP was developed by which company?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Google</div><div class="mcq-opt"><span class="opt-label">B.</span>Meta</div><div class="mcq-opt"><span class="opt-label">C.</span>OpenAI</div><div class="mcq-opt"><span class="opt-label">D.</span>Salesforce</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>C</strong> — CLIP (Contrastive Language-Image Pre-training) was developed by OpenAI. BLIP by Salesforce.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C4.</strong> What is the default value of k₁ in BM25?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>0.75</div><div class="mcq-opt"><span class="opt-label">B.</span>1.0</div><div class="mcq-opt"><span class="opt-label">C.</span>1.5</div><div class="mcq-opt"><span class="opt-label">D.</span>2.0</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>C</strong> — k₁ = 1.5 by default (term frequency saturation). b = 0.75 by default (length normalization).</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C5.</strong> QLoRA uses what bit precision format for the frozen base model?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>8-bit (INT8)</div><div class="mcq-opt"><span class="opt-label">B.</span>16-bit (FP16)</div><div class="mcq-opt"><span class="opt-label">C.</span>4-bit (NF4)</div><div class="mcq-opt"><span class="opt-label">D.</span>32-bit (FP32)</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>C</strong> — QLoRA stores the base model in 4-bit NF4 (NormalFloat 4) format to drastically reduce VRAM usage.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C6.</strong> Whisper converts audio into which representation before processing?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Raw waveform</div><div class="mcq-opt"><span class="opt-label">B.</span>MFCC features</div><div class="mcq-opt"><span class="opt-label">C.</span>Log-Mel spectrogram</div><div class="mcq-opt"><span class="opt-label">D.</span>Fourier transform</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>C</strong> — Audio is resampled to 16kHz, split into 30-second segments, then converted to log-Mel spectrogram.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C7.</strong> Which model uses Hybrid Fusion and cross-modal attention at multiple stages?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>CLIP</div><div class="mcq-opt"><span class="opt-label">B.</span>AVEC</div><div class="mcq-opt"><span class="opt-label">C.</span>Flamingo (DeepMind)</div><div class="mcq-opt"><span class="opt-label">D.</span>ImageBind</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>C</strong> — Flamingo uses hybrid fusion, with cross-modal attention mechanisms at multiple stages of the architecture.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C8.</strong> What does MCP (Model Context Protocol) provide in agentic systems?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Multi-Channel Processing</div><div class="mcq-opt"><span class="opt-label">B.</span>A standard interface for agents to access external tools and APIs</div><div class="mcq-opt"><span class="opt-label">C.</span>Memory Control Pipeline</div><div class="mcq-opt"><span class="opt-label">D.</span>Model Compression Protocol</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>B</strong> — MCP is a standard that enables agents to interact with external tools, APIs, and data sources through a unified interface.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C9.</strong> BLIP was trained on how many image-text pairs?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>40 million</div><div class="mcq-opt"><span class="opt-label">B.</span>129 million</div><div class="mcq-opt"><span class="opt-label">C.</span>400 million</div><div class="mcq-opt"><span class="opt-label">D.</span>600 million</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>B</strong> — BLIP used 129 million image-text pairs. CLIP used 400 million pairs (both from publicly available sources).</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C10.</strong> Which metric for image captioning measures how closely the generated text matches ground truth n-grams?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Perplexity</div><div class="mcq-opt"><span class="opt-label">B.</span>BERTScore</div><div class="mcq-opt"><span class="opt-label">C.</span>BLEU</div><div class="mcq-opt"><span class="opt-label">D.</span>Recall@k</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>C</strong> — BLEU (Bilingual Evaluation Understudy) measures n-gram precision of generated text against reference text.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C11.</strong> "Hallucination" in LLMs refers to which of the following?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Model crashes due to OOM</div><div class="mcq-opt"><span class="opt-label">B.</span>Model generates factually incorrect or fabricated content</div><div class="mcq-opt"><span class="opt-label">C.</span>Model produces extremely long outputs</div><div class="mcq-opt"><span class="opt-label">D.</span>Model refuses to answer questions</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>B</strong> — Hallucination = confidently generating plausible but factually wrong or unsupported content.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C12.</strong> In the ReAct agentic pattern, what does "ReAct" stand for?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Retrieve and Act</div><div class="mcq-opt"><span class="opt-label">B.</span>Reason and Act</div><div class="mcq-opt"><span class="opt-label">C.</span>React and Compress</div><div class="mcq-opt"><span class="opt-label">D.</span>Retrieve and Compute</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>B</strong> — ReAct = Reason + Act. The agent alternates between reasoning about the next step and taking an action, then observing the result.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C13.</strong> Which of the following is NOT a limitation of basic (naive) RAG?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Tendency to hallucinate</div><div class="mcq-opt"><span class="opt-label">B.</span>Lack of domain specificity</div><div class="mcq-opt"><span class="opt-label">C.</span>Inherently scalable to large corpora</div><div class="mcq-opt"><span class="opt-label">D.</span>Loss of conversational context in multi-turn</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>C</strong> — Scalability is actually a challenge (not strength) of naive RAG. It struggles with large knowledge bases efficiently.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C14.</strong> In LangGraph, agentic workflows are represented as:</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Linear prompt chains</div><div class="mcq-opt"><span class="opt-label">B.</span>Recursive trees</div><div class="mcq-opt"><span class="opt-label">C.</span>Graphs (nodes + edges) supporting loops</div><div class="mcq-opt"><span class="opt-label">D.</span>Sequential queues</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>C</strong> — LangGraph extends LangChain with graph-based orchestration, enabling cycles, loops, and persistent state management.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C15.</strong> In InfoNCE Loss for CLIP, the temperature parameter τ (tau) controls what?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>The model's learning rate</div><div class="mcq-opt"><span class="opt-label">B.</span>Sharpness of the similarity score distribution</div><div class="mcq-opt"><span class="opt-label">C.</span>The batch size during training</div><div class="mcq-opt"><span class="opt-label">D.</span>Number of negative pairs sampled</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>B</strong> — Smaller τ = more confident/sharp predictions. Larger τ = softer probability distribution over pairs.</div>
+    </div>
+    <div class="grid-mcq">
+      <p class="mcq-q"><strong>C16.</strong> Which numerical precision format uses 8 bits to represent integer values?</p>
+      <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>FP32 (32-bit float)</div><div class="mcq-opt"><span class="opt-label">B.</span>FP16 (16-bit float)</div><div class="mcq-opt"><span class="opt-label">C.</span>BFloat16</div><div class="mcq-opt"><span class="opt-label">D.</span>INT8 (8-bit integer)</div></div>
+      <div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div>
+      <div class="answer-reveal"><strong>D</strong> — INT8 uses 8 bits (values from −128 to 127 signed). Used for inference on edge/mobile devices with 75% memory savings vs FP32.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ SET 2 ═══════════════ -->
+<div class="tab-content" id="tab1">
+<div class="set-page">
+  <div class="set-header">
+    <div class="set-title">Practice Set — II</div>
+    <div class="set-meta">Topics: Multimodal Fusion · BM25 Numericals<br>Multi-Hop RAG · Self-RAG · MoE · Quantization</div>
+  </div>
+  <div class="note-box"><strong>Instructions:</strong> Attempt all questions. For numericals, full working must be shown. Click "Show Answer" after attempting for hints.</div>
+
+  <div class="section-header">
+    <span class="section-tag tag-desc">Section A — Descriptive</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">4 marks each · 16 marks total</span>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">1</div>
+    <span class="q-type-badge type-theory">Theoretical</span>
+    <p class="q-text">Compare Early Fusion, Late Fusion, and Hybrid Fusion strategies in multimodal AI models. For each, name a real model that uses it, describe the mechanism, and identify the best use case. <span class="marks-pill">4M</span></p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Early Fusion:</strong> Raw features from all modalities are combined before processing. Example: CLIP (joint embedding), ImageBind. Best for tasks requiring tight feature integration (image captioning, video understanding).<br>
+      <strong>Late Fusion:</strong> Each modality processed independently → outputs combined at decision level via averaging/voting. Example: VQA 1.0, HUME. Best for independent modality insights (sentiment analysis, multimodal emotion).<br>
+      <strong>Hybrid Fusion:</strong> Combines early + late fusion, integrating at multiple levels. Example: Flamingo (DeepMind), GPT-4V. Best for complex tasks needing both feature-level and decision-level reasoning (autonomous driving, video QA).
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">2</div>
+    <span class="q-type-badge type-numerical">Numerical</span>
+    <p class="q-text">Given the corpus below and query Q = "neural network training", compute BM25 scores for each document. Use k₁ = 1.5, b = 0.75. Rank the documents. <span class="marks-pill">4M</span></p>
+    <p class="q-sub" style="font-style:normal; background:#f9f7f2; padding:10px 12px; border-radius:4px; border-left:2px solid #d0c8b8; margin-top:0.5rem;">
+      D1: "neural network training is essential"&nbsp;(4 tokens)<br>
+      D2: "training data for deep neural models"&nbsp;(6 tokens)<br>
+      D3: "network architecture design"&nbsp;(3 tokens)<br>
+      avgD = 4.33 | N = 3
+    </p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Term frequencies:</strong> "neural": D1=1,D2=1,D3=0 | "network": D1=1,D2=0,D3=1 | "training": D1=1,D2=1,D3=0<br>
+      <strong>IDF("neural"):</strong> log₁₀((3−2+0.5)/(2+0.5)) = log₁₀(0.6) ≈ −0.222 → use |IDF| approach; typically log((N−nₜ+0.5)/(nₜ+0.5)) → |log(0.5/2.5)| = log(5) ≈ 1.61 (ln-based)<br>
+      <strong>Length norm factor:</strong> D1: 4/4.33=0.924; D2: 6/4.33=1.386; D3: 3/4.33=0.693<br>
+      <strong>BM25 score direction:</strong> D1 matches all 3 query terms → highest score. D2 matches "neural" and "training" → second. D3 matches only "network" → lowest.<br>
+      <strong>Final Ranking:</strong> D1 &gt; D2 &gt; D3 (full working: apply BM25 formula for each term in each document and sum)
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">3</div>
+    <span class="q-type-badge type-scenario">Scenario</span>
+    <p class="q-text">A medical AI system is asked: "What are the current treatment protocols for HER2-positive breast cancer in patients with prior taxane therapy?" Show step-by-step how <strong>Multi-Hop Retrieval</strong> solves this query where a single-hop naive RAG would fail. <span class="marks-pill">4M</span></p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Naive RAG failure:</strong> Single retrieval fetches general breast cancer docs, missing the specificity of HER2-positive + prior taxane resistance.<br>
+      <strong>Hop 1:</strong> Query "HER2-positive breast cancer treatment" → retrieves general HER2+ treatment guidelines (trastuzumab, pertuzumab).<br>
+      <strong>Hop 2:</strong> From Hop 1, extract entity "prior taxane therapy" → reformulate query to "second-line treatment for taxane-resistant HER2+ breast cancer" → retrieves T-DM1 (ado-trastuzumab emtansine), tucatinib protocols.<br>
+      <strong>Hop 3 (if needed):</strong> Cross-reference retrieved drug protocols with clinical trial data for latest FDA approvals.<br>
+      <strong>Final Answer:</strong> Synthesized multi-document answer with specific, authoritative treatment paths — far more accurate than single retrieval.
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">4</div>
+    <span class="q-type-badge type-theory">Theoretical</span>
+    <p class="q-text">Explain Self-RAG (Self-Reflection Mechanism). What is the role of the "critique module" and "reflection tokens"? How does Self-RAG differ from FLARE (Flexible Retrieval Augmented Response Generation)? <span class="marks-pill">4M</span></p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Self-RAG Workflow:</strong> (1) LLM generates an initial answer. (2) Critique module uses special "reflection tokens" to evaluate — Is the content supported by evidence? Is it relevant? Is it useful? (3) If critique fails, model revises the answer.<br>
+      <strong>Reflection tokens:</strong> Special tokens like [IsRel], [IsSup], [IsUse] that the model uses to self-assess its output against retrieved documents — no external verifier needed.<br>
+      <strong>FLARE (Flexible Retrieval):</strong> Instead of pre-retrieving everything, FLARE detects knowledge gaps during generation and triggers additional retrieval dynamically. The model decides when it needs more info mid-generation.<br>
+      <strong>Key difference:</strong> Self-RAG = post-generation self-critique and revision. FLARE = adaptive retrieval during generation when model detects uncertainty.
+    </div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-tag tag-mcq2">Section B — 2-Mark MCQ</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">2 marks each · 8 marks total</span>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B1</div>
+    <p class="mcq-q">Which agentic workflow framework is best suited for stateful, cyclic workflows with loops and persistent state — particularly for production-grade agent systems?</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>LangChain</div><div class="mcq-opt"><span class="opt-label">B.</span>LangGraph</div><div class="mcq-opt"><span class="opt-label">C.</span>CrewAI</div><div class="mcq-opt"><span class="opt-label">D.</span>AutoGPT</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: B</strong><p class="ans-hint">LangGraph extends LangChain with graph-based orchestration (nodes + edges), supporting loops, retries, branching, and persistent state — designed for production agentic workflows.</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B2</div>
+    <p class="mcq-q">In Stable Diffusion's Image-to-Image, if denoising strength is set to 0, what happens?</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Maximum noise is added; image becomes completely random</div><div class="mcq-opt"><span class="opt-label">B.</span>No noise is added; the original image is returned unchanged</div><div class="mcq-opt"><span class="opt-label">C.</span>The image is only conditioned by text prompt</div><div class="mcq-opt"><span class="opt-label">D.</span>Diffusion process stops after 1 step</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: B</strong><p class="ans-hint">Denoising strength 0 = no noise added = no changes. Strength 1 = maximum noise = completely random tensor, ignoring input image content.</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B3</div>
+    <p class="mcq-q">Which chunking strategy splits text based on meaning and topic using NLP models rather than fixed character/token counts?</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Fixed-length chunking</div><div class="mcq-opt"><span class="opt-label">B.</span>Semantic chunking</div><div class="mcq-opt"><span class="opt-label">C.</span>Window-based chunking</div><div class="mcq-opt"><span class="opt-label">D.</span>Overlap-based chunking</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: B</strong><p class="ans-hint">Semantic chunking uses NLP models to identify topic/meaning boundaries, preserving conceptual coherence within each chunk rather than splitting arbitrarily by length.</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B4</div>
+    <p class="mcq-q">Which technique in QLoRA further compresses the quantization scaling constants themselves, saving additional memory?</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>NF4 Quantization</div><div class="mcq-opt"><span class="opt-label">B.</span>Paged Optimizer</div><div class="mcq-opt"><span class="opt-label">C.</span>Double Quantization</div><div class="mcq-opt"><span class="opt-label">D.</span>Adapter Layers</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: C</strong><p class="ans-hint">Double Quantization = quantizing the quantization constants themselves (the scaling factors). Saves an additional ~0.37 bits per parameter on average.</p></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-tag tag-mcq1">Section C — 1-Mark MCQ</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">1 mark each · 16 marks total</span>
+  </div>
+
+  <div class="mcq-list">
+    <div class="grid-mcq"><p class="mcq-q"><strong>C1.</strong> Whisper uses which core architecture?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>CNN</div><div class="mcq-opt"><span class="opt-label">B.</span>RNN + Attention</div><div class="mcq-opt"><span class="opt-label">C.</span>Encoder-Decoder Transformer</div><div class="mcq-opt"><span class="opt-label">D.</span>GAN</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — Encoder processes audio (log-Mel spectrogram), Decoder generates text token-by-token.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C2.</strong> BLIP's image encoder is based on which model?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>ResNet</div><div class="mcq-opt"><span class="opt-label">B.</span>Vision Transformer (ViT)</div><div class="mcq-opt"><span class="opt-label">C.</span>EfficientNet</div><div class="mcq-opt"><span class="opt-label">D.</span>VGG-16</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — BLIP uses a ViT (Vision Transformer) as the image encoder, representing images as sequences of patches.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C3.</strong> Which agentic design pattern routes a query to the right specialist agent?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>ReAct</div><div class="mcq-opt"><span class="opt-label">B.</span>Reflection/Self-Critique</div><div class="mcq-opt"><span class="opt-label">C.</span>Router Pattern</div><div class="mcq-opt"><span class="opt-label">D.</span>Planning Pattern</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — The Router Pattern classifies the input and directs it to the most appropriate handler/agent (e.g., medical query → healthcare agent).</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C4.</strong> "ITC" in BLIP pretraining stands for:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Image-Text Classification</div><div class="mcq-opt"><span class="opt-label">B.</span>Image-Text Contrastive</div><div class="mcq-opt"><span class="opt-label">C.</span>Image-Text Captioning</div><div class="mcq-opt"><span class="opt-label">D.</span>Image-Text Compression</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — ITC = Image-Text Contrastive learning. Aligns matched image-text pairs closely, pushes mismatched pairs apart.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C5.</strong> In QLoRA, "NF4" stands for:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Normal Float 4</div><div class="mcq-opt"><span class="opt-label">B.</span>Neural Function 4</div><div class="mcq-opt"><span class="opt-label">C.</span>NormalFloat 4-bit</div><div class="mcq-opt"><span class="opt-label">D.</span>None of the above</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — NF4 = 4-bit NormalFloat. A distribution-aware 4-bit format designed for neural network weights, better than standard INT4.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C6.</strong> Forward diffusion in Stable Diffusion performs what operation?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Removes noise from latent images</div><div class="mcq-opt"><span class="opt-label">B.</span>Progressively adds noise to training images</div><div class="mcq-opt"><span class="opt-label">C.</span>Compresses images to latent space</div><div class="mcq-opt"><span class="opt-label">D.</span>Decodes latent tensors to pixel space</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Forward diffusion gradually adds noise until the image becomes indistinguishable random noise. Reverse diffusion undoes this.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C7.</strong> Which LLM vulnerability involves editing the system prompt to override model behavior?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Data poisoning</div><div class="mcq-opt"><span class="opt-label">B.</span>Prompt injection</div><div class="mcq-opt"><span class="opt-label">C.</span>Model theft</div><div class="mcq-opt"><span class="opt-label">D.</span>Overreliance</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Prompt injection = attacker manipulates the system prompt to override instructions and cause unintended model behavior.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C8.</strong> ROUGE metric is primarily used to evaluate which NLP task?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Image quality</div><div class="mcq-opt"><span class="opt-label">B.</span>Text summarization quality</div><div class="mcq-opt"><span class="opt-label">C.</span>Speech recognition</div><div class="mcq-opt"><span class="opt-label">D.</span>Model bias detection</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — ROUGE (Recall-Oriented Understudy for Gisting Evaluation) measures overlap between generated summaries and reference summaries.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C9.</strong> In MoE, what is the gating network responsible for?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Training all experts equally</div><div class="mcq-opt"><span class="opt-label">B.</span>Dynamically routing inputs to the most relevant experts</div><div class="mcq-opt"><span class="opt-label">C.</span>Merging expert outputs with equal weights</div><div class="mcq-opt"><span class="opt-label">D.</span>Freezing base model parameters</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — The gating network (router) uses softmax to assign probabilities and selects Top-K experts for each input token.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C10.</strong> What is the key difference between pretraining and fine-tuning?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Pretraining uses labeled data; fine-tuning uses unlabeled</div><div class="mcq-opt"><span class="opt-label">B.</span>Pretraining is task-specific; fine-tuning is general</div><div class="mcq-opt"><span class="opt-label">C.</span>Pretraining learns general language patterns; fine-tuning specializes for specific tasks</div><div class="mcq-opt"><span class="opt-label">D.</span>No meaningful difference</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — Pretraining learns broad language understanding from massive unlabeled data. Fine-tuning adapts the pretrained model for a specific task.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C11.</strong> Which PyTorch module enables Automatic Mixed Precision training?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>tf.keras.mixed_precision</div><div class="mcq-opt"><span class="opt-label">B.</span>torch.cuda.amp</div><div class="mcq-opt"><span class="opt-label">C.</span>sklearn.preprocessing</div><div class="mcq-opt"><span class="opt-label">D.</span>keras.optimizers</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — torch.cuda.amp provides Automatic Mixed Precision (AMP), combining FP16 compute with FP32 master weights to save memory and speed up training.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C12.</strong> CLIP is trained on how many image-text pairs?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>40 million</div><div class="mcq-opt"><span class="opt-label">B.</span>129 million</div><div class="mcq-opt"><span class="opt-label">C.</span>400 million</div><div class="mcq-opt"><span class="opt-label">D.</span>1 billion</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — CLIP trained on 400 million image-text pairs from the internet. BLIP used 129 million. Whisper trained on ~680,000 hours of audio.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C13.</strong> "Context distillation" in Advanced RAG refers to:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Fetching more documents from the corpus</div><div class="mcq-opt"><span class="opt-label">B.</span>Summarizing/condensing retrieved docs to focus on key info</div><div class="mcq-opt"><span class="opt-label">C.</span>Generating more output tokens</div><div class="mcq-opt"><span class="opt-label">D.</span>Increasing chunk size for better context</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Context distillation extracts key insights from retrieved documents, reducing noise so the LLM receives cleaner, more pertinent context.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C14.</strong> How many experts does Mixtral 8x7B activate per token?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>1</div><div class="mcq-opt"><span class="opt-label">B.</span>2</div><div class="mcq-opt"><span class="opt-label">C.</span>4</div><div class="mcq-opt"><span class="opt-label">D.</span>8</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Only 2 of 8 experts are activated per token. This sparse activation gives efficient inference comparable to a 12B model rather than full 56B.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C15.</strong> Which PEFT method prepends trainable parameters to every transformer layer (not just input)?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>LoRA</div><div class="mcq-opt"><span class="opt-label">B.</span>Standard Prompt Tuning</div><div class="mcq-opt"><span class="opt-label">C.</span>Prefix Tuning</div><div class="mcq-opt"><span class="opt-label">D.</span>Full Fine-tuning</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — Prefix Tuning prepends trainable parameters to Keys and Values in attention at every transformer layer, giving deeper control than input-only prompt tuning.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C16.</strong> In the agentic loop, what does "observation" refer to?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Planning the next action step</div><div class="mcq-opt"><span class="opt-label">B.</span>Analyzing the results of a taken action</div><div class="mcq-opt"><span class="opt-label">C.</span>Retrieving documents from knowledge base</div><div class="mcq-opt"><span class="opt-label">D.</span>Generating the final output to user</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Observation = agent checks what happened after taking an action (did the search return relevant results? did the API call succeed?), then uses that to inform the next step.</div></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ SET 3 ═══════════════ -->
+<div class="tab-content" id="tab2">
+<div class="set-page">
+  <div class="set-header">
+    <div class="set-title">Practice Set — III</div>
+    <div class="set-meta">Topics: Orchestrator-Worker · LoRA Numericals<br>LLM Harms · Whisper · Generation Enhancement</div>
+  </div>
+  <div class="note-box"><strong>Instructions:</strong> Attempt all questions. Full explanations required for 4-mark answers. Click "Show Answer" for hints after attempting.</div>
+
+  <div class="section-header">
+    <span class="section-tag tag-desc">Section A — Descriptive</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">4 marks each · 16 marks total</span>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">1</div>
+    <span class="q-type-badge type-theory">Theoretical</span>
+    <p class="q-text">Explain the <strong>Orchestrator-Worker design pattern</strong> in agentic AI. Design a multi-agent market research system using this pattern with 4 worker agents. State the role of each agent and how the orchestrator combines their outputs. <span class="marks-pill">4M</span></p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Pattern:</strong> One Orchestrator agent receives the high-level goal, decomposes it, assigns subtasks to Worker agents, collects results, and assembles the final output.<br>
+      <strong>Example — Market Research System (Task: "Analyze the EV market for investment opportunities"):</strong><br>
+      • Worker 1 (Data Retriever): Fetches recent news, reports, and financial data on EV companies.<br>
+      • Worker 2 (Sentiment Analyst): Analyzes consumer sentiment from reviews, social media.<br>
+      • Worker 3 (Competitor Analyst): Profiles key players (Tesla, BYD, Rivian) — products, revenue, market share.<br>
+      • Worker 4 (Report Writer): Synthesizes findings into a structured investment brief.<br>
+      <strong>Orchestrator:</strong> Sends tasks in parallel, waits for all worker outputs, cross-checks consistency, and generates the final consolidated report. Enables parallel processing for faster results.
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">2</div>
+    <span class="q-type-badge type-numerical">Numerical</span>
+    <p class="q-text">Given weight matrix W, LoRA matrices A and B, rank r = 2, scaling factor α = 6, compute the final updated weight matrix W'. Show all steps. <span class="marks-pill">4M</span></p>
+    <p class="q-sub" style="font-style:normal; background:#f9f7f2; padding:10px 12px; border-radius:4px; border-left:2px solid #d0c8b8; margin-top:0.5rem;">
+      W = [[1.0, -0.5], [0.5, 2.0]]<br>
+      A = [[0.2, 0.1], [0.3, 0.4]] (2×2)&nbsp; B = [[0.1, 0.2], [-0.1, 0.3]] (2×2)<br>
+      ΔW = (α/r) × B×A &nbsp;|&nbsp; W' = W + ΔW
+    </p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Step 1 — Compute U = B × A:</strong><br>
+      U[0][0] = 0.1×0.2 + 0.2×0.3 = 0.02+0.06 = 0.08<br>
+      U[0][1] = 0.1×0.1 + 0.2×0.4 = 0.01+0.08 = 0.09<br>
+      U[1][0] = −0.1×0.2 + 0.3×0.3 = −0.02+0.09 = 0.07<br>
+      U[1][1] = −0.1×0.1 + 0.3×0.4 = −0.01+0.12 = 0.11<br>
+      <strong>Step 2 — Scale: α/r = 6/2 = 3</strong><br>
+      ΔW = 3 × [[0.08, 0.09],[0.07, 0.11]] = [[0.24, 0.27],[0.21, 0.33]]<br>
+      <strong>Step 3 — W' = W + ΔW:</strong><br>
+      W'[0][0]=1.0+0.24=<strong>1.24</strong>; W'[0][1]=−0.5+0.27=<strong>−0.23</strong>;<br>
+      W'[1][0]=0.5+0.21=<strong>0.71</strong>; W'[1][1]=2.0+0.33=<strong>2.33</strong>
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">3</div>
+    <span class="q-type-badge type-scenario">Scenario</span>
+    <p class="q-text">A startup is deploying a GenAI chatbot for legal document Q&A. Identify and describe <strong>three specific harms</strong> that could arise from this deployment. For each harm, provide the mitigation strategy as per the LLM harm categories. <span class="marks-pill">4M</span></p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Harm 1 — Hallucination in Legal Advice:</strong> The LLM may generate plausible-sounding but incorrect legal citations or statutes (e.g., citing a non-existent court ruling). Mitigation: Ground generation on retrieved legal databases (RAG); implement NLI verification to check factual consistency; add disclaimer that responses are not legal counsel.<br>
+      <strong>Harm 2 — Privacy Violations:</strong> If user-submitted documents contain personal information (PII), the model may memorize and leak this in other sessions. Mitigation: Data anonymization before ingestion; differential privacy techniques; strict data retention policies and GDPR compliance.<br>
+      <strong>Harm 3 — Copyright Infringement:</strong> The model may reproduce substantial portions of licensed legal texts, treatises, or case databases verbatim. Mitigation: Output filtering for text similarity to known copyrighted sources; restrict retrieval to licensed/owned document stores; apply content moderation pre-delivery.
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">4</div>
+    <span class="q-type-badge type-theory">Theoretical</span>
+    <p class="q-text">Describe the complete architecture and operational pipeline of OpenAI's Whisper ASR model. How does it use <strong>special tokens</strong> to achieve multitask capability in a single model? What are its three key limitations? <span class="marks-pill">4M</span></p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Architecture:</strong> Encoder-Decoder Transformer. Pipeline: Audio → resample to 16kHz → split into 30-second segments → log-Mel spectrogram → Encoder (extracts acoustic features via attention) → Decoder (generates text token-by-token using encoded representation).<br>
+      <strong>Special Tokens:</strong> Whisper uses special control tokens prepended to the decoder input to specify the task: e.g., [TRANSCRIBE] for speech-to-text in the same language, [TRANSLATE] for translation to English, and language detection tokens. This allows a single model to perform multiple tasks without retraining — just changing the starting tokens steers the output.<br>
+      <strong>Limitations:</strong> (1) May hallucinate text, especially in noisy/unclear audio. (2) Does not support speaker diarization (cannot identify who is speaking). (3) Real-time performance is limited, particularly with the large model variants; performance varies on low-resource languages.
+    </div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-tag tag-mcq2">Section B — 2-Mark MCQ</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">2 marks each · 8 marks total</span>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B1</div>
+    <p class="mcq-q">In Stable Diffusion, a CFG (Classifier-Free Guidance) scale of 0 means:</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Maximum text prompt adherence</div><div class="mcq-opt"><span class="opt-label">B.</span>Unconditioned generation — the text prompt is completely ignored</div><div class="mcq-opt"><span class="opt-label">C.</span>Only class labels are used for guidance</div><div class="mcq-opt"><span class="opt-label">D.</span>Image generation is halted</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: B</strong><p class="ans-hint">CFG scale 0 = unconditioned (prompt ignored). Higher scale = stronger adherence to prompt. Typical values: 7–15 for balanced results.</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B2</div>
+    <p class="mcq-q">In the Hybrid Retrieval formula Score = α·BM25 + (1−α)·DenseSim, what does α = 0.5 signify?</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Only BM25 keyword scores are used</div><div class="mcq-opt"><span class="opt-label">B.</span>Only dense semantic similarity is used</div><div class="mcq-opt"><span class="opt-label">C.</span>Equal contribution from both BM25 and dense retrieval</div><div class="mcq-opt"><span class="opt-label">D.</span>Dense retrieval is disabled entirely</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: C</strong><p class="ans-hint">α = 0.5 means equal weighting: 50% BM25 (keyword precision) + 50% dense retrieval (semantic recall). Adjust α based on query type.</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B3</div>
+    <p class="mcq-q">LLAVA (Large Language and Vision Assistant) uses which type of encoder for processing images?</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>ResNet-50</div><div class="mcq-opt"><span class="opt-label">B.</span>BERT encoder</div><div class="mcq-opt"><span class="opt-label">C.</span>Vision Transformer (ViT) or similar advanced visual encoder</div><div class="mcq-opt"><span class="opt-label">D.</span>Standard CNN</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: C</strong><p class="ans-hint">LLAVA uses a ViT (or similar advanced model) as its vision encoder to convert images into feature maps, then integrates via cross-attention with a large language model backbone (like LLaMA or GPT).</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B4</div>
+    <p class="mcq-q">What is "catastrophic forgetting" in the context of LLM fine-tuning?</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Model generating harmful/toxic content unexpectedly</div><div class="mcq-opt"><span class="opt-label">B.</span>Model losing previously learned general knowledge when fine-tuned on new task data</div><div class="mcq-opt"><span class="opt-label">C.</span>Model failing to retrieve documents from the knowledge base</div><div class="mcq-opt"><span class="opt-label">D.</span>Model overfitting due to excessively large training batches</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: B</strong><p class="ans-hint">Catastrophic forgetting = when fine-tuning on task-specific data overwrites general knowledge. PEFT methods like LoRA mitigate this by freezing base weights.</p></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-tag tag-mcq1">Section C — 1-Mark MCQ</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">1 mark each · 16 marks total</span>
+  </div>
+
+  <div class="mcq-list">
+    <div class="grid-mcq"><p class="mcq-q"><strong>C1.</strong> The noise predictor in Stable Diffusion uses which model architecture?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>ResNet</div><div class="mcq-opt"><span class="opt-label">B.</span>U-Net</div><div class="mcq-opt"><span class="opt-label">C.</span>ViT</div><div class="mcq-opt"><span class="opt-label">D.</span>BERT</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — The noise predictor in Stable Diffusion is a U-Net model that estimates how much noise was added at each step.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C2.</strong> Recall@k measures which of the following?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>How quickly a model generates responses</div><div class="mcq-opt"><span class="opt-label">B.</span>How often the correct item appears in the top-k retrieval results</div><div class="mcq-opt"><span class="opt-label">C.</span>Total accuracy of classification model</div><div class="mcq-opt"><span class="opt-label">D.</span>Memory usage of LLM</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Recall@k = fraction of queries where the correct result appears in the top-k retrieved items. Used to evaluate retrieval systems and CLIP-based image search.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C3.</strong> In a multi-agent system, the Planner Agent is responsible for:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Retrieving documents from databases</div><div class="mcq-opt"><span class="opt-label">B.</span>Generating the final user-facing response</div><div class="mcq-opt"><span class="opt-label">C.</span>Breaking a high-level task into subtasks and routing</div><div class="mcq-opt"><span class="opt-label">D.</span>Validating factual accuracy of outputs</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — The Planner Agent decomposes the goal and determines the sequence of subtasks and which agents or tools to involve.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C4.</strong> Adding synonyms or related terms to a user query to improve retrieval is called:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Context distillation</div><div class="mcq-opt"><span class="opt-label">B.</span>Re-ranking</div><div class="mcq-opt"><span class="opt-label">C.</span>Query expansion</div><div class="mcq-opt"><span class="opt-label">D.</span>Hierarchical chunking</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — Query expansion = enriching the query with synonyms, related terms, or paraphrases to retrieve semantically similar documents that may use different wording.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C5.</strong> Whisper uses which training paradigm?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Reinforcement learning with human feedback</div><div class="mcq-opt"><span class="opt-label">B.</span>Fully supervised learning on clean data</div><div class="mcq-opt"><span class="opt-label">C.</span>Weakly supervised learning on diverse web audio data</div><div class="mcq-opt"><span class="opt-label">D.</span>Purely unsupervised pretraining</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — Whisper uses weakly supervised learning — ~680k hours of real-world audio, which may have noisy/imperfect labels, providing robustness across accents and noise.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C6.</strong> How many parameters does the SDXL model have in total?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>0.98 billion</div><div class="mcq-opt"><span class="opt-label">B.</span>3 billion</div><div class="mcq-opt"><span class="opt-label">C.</span>6.6 billion</div><div class="mcq-opt"><span class="opt-label">D.</span>10 billion</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — SDXL has 6.6B parameters (vs 0.98B for SD v1.5). SDXL U-Net is 3× larger and uses 1024×1024 default resolution.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C7.</strong> In LoRA, "r" (rank) represents:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Learning rate for adapter training</div><div class="mcq-opt"><span class="opt-label">B.</span>The rank (inner dimension) of the low-rank decomposition matrices A and B</div><div class="mcq-opt"><span class="opt-label">C.</span>Number of transformer layers modified</div><div class="mcq-opt"><span class="opt-label">D.</span>Regularization coefficient</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — r is the rank of the low-rank matrices. Smaller r → fewer parameters trained → more efficient but possibly less expressive. Typical values: 4–64.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C8.</strong> The Paged Optimizer in QLoRA is designed to:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Speed up tokenization of input sequences</div><div class="mcq-opt"><span class="opt-label">B.</span>Prevent out-of-GPU-memory errors by moving data between CPU and GPU</div><div class="mcq-opt"><span class="opt-label">C.</span>Further compress model weights during quantization</div><div class="mcq-opt"><span class="opt-label">D.</span>Automatically adjust the learning rate schedule</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Paged optimizer uses NVIDIA's unified memory to page optimizer states between GPU and CPU RAM, preventing OOM errors on small GPUs during training.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C9.</strong> CLIP achieves zero-shot classification by:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Training a separate classification head per class</div><div class="mcq-opt"><span class="opt-label">B.</span>Computing cosine similarity between image embedding and class-label text embeddings</div><div class="mcq-opt"><span class="opt-label">C.</span>Fine-tuning on task-specific labeled datasets</div><div class="mcq-opt"><span class="opt-label">D.</span>Using a random forest classifier on top of embeddings</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — CLIP encodes class names as text (e.g., "a photo of a cat"), then picks the class with the highest cosine similarity to the image embedding — no task-specific training needed.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C10.</strong> RLHF stands for:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Reinforcement Learning with Human Feedback</div><div class="mcq-opt"><span class="opt-label">B.</span>Retrieval Learning for Helpful Functions</div><div class="mcq-opt"><span class="opt-label">C.</span>Recursive Language for High Fidelity</div><div class="mcq-opt"><span class="opt-label">D.</span>Robust Learning for Hallucination Filtering</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>A</strong> — RLHF is used to align LLM outputs with human preferences. Human evaluators rate responses, training a reward model used in PPO-based fine-tuning.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C11.</strong> In LangChain, a "chain" refers to:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>A blockchain-based AI security layer</div><div class="mcq-opt"><span class="opt-label">B.</span>A sequential pipeline of LLM calls and operations</div><div class="mcq-opt"><span class="opt-label">C.</span>A type of long-term memory module</div><div class="mcq-opt"><span class="opt-label">D.</span>A graph structure connecting multiple agents</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — A LangChain "chain" is a modular, sequential pipeline of components (prompt templates, LLM calls, output parsers) that can be composed for complex NLP workflows.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C12.</strong> "Data poisoning" in LLM security refers to:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Stealing the model's weights from storage</div><div class="mcq-opt"><span class="opt-label">B.</span>Publishing malicious content online to create backdoors in LLM training data</div><div class="mcq-opt"><span class="opt-label">C.</span>Directly modifying the system prompt at inference time</div><div class="mcq-opt"><span class="opt-label">D.</span>Exploiting unsecured API plugin interfaces</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Data poisoning = bad actor plants malicious content online knowing LLMs are trained on web scrapes, creating hidden backdoors that can be triggered later.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C13.</strong> DeepEval LLM evaluation framework was developed by:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>TruEra</div><div class="mcq-opt"><span class="opt-label">B.</span>OpenAI</div><div class="mcq-opt"><span class="opt-label">C.</span>Confident AI</div><div class="mcq-opt"><span class="opt-label">D.</span>Anthropic</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — DeepEval is developed by Confident AI. TruLens is by TruEra. Both are open-source LLM evaluation frameworks.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C14.</strong> Multi-hop retrieval in Advanced RAG primarily solves:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Slow inference speed on edge devices</div><div class="mcq-opt"><span class="opt-label">B.</span>Queries requiring multi-step reasoning across multiple documents</div><div class="mcq-opt"><span class="opt-label">C.</span>Tokenization errors in domain-specific text</div><div class="mcq-opt"><span class="opt-label">D.</span>Reducing the size of the underlying language model</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Multi-hop retrieval connects facts across multiple documents iteratively, enabling reasoning chains needed for complex questions (e.g., "Capital of the country where 2008 Olympics were held?").</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C15.</strong> Which chunking method uses a sliding window to maintain rolling context across chunks?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Fixed-length chunking</div><div class="mcq-opt"><span class="opt-label">B.</span>Semantic chunking</div><div class="mcq-opt"><span class="opt-label">C.</span>Window-based chunking</div><div class="mcq-opt"><span class="opt-label">D.</span>Hierarchical chunking</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — Window-based chunking moves a fixed-size window over the document, keeping a rolling context window that includes previous content (useful for chatbots and long conversations).</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C16.</strong> In the GenAI Project Lifecycle, the primary goal of the "Scope" phase is:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Selecting a base model from HuggingFace</div><div class="mcq-opt"><span class="opt-label">B.</span>Clearly defining the problem statement and task the LLM must perform</div><div class="mcq-opt"><span class="opt-label">C.</span>Evaluating model performance on benchmarks</div><div class="mcq-opt"><span class="opt-label">D.</span>Deploying the model to cloud infrastructure</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Scope = define the problem. More specific task definition → less compute and data needed for fine-tuning. This phase determines all downstream design choices.</div></div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════ SET 4 ═══════════════ -->
+<div class="tab-content" id="tab3">
+<div class="set-page">
+  <div class="set-header">
+    <div class="set-title">Practice Set — IV</div>
+    <div class="set-meta">Topics: BM25 Formula · Quantization Numericals<br>Memory-Augmented RAG · MoE · Soft Prompts · Evaluation</div>
+  </div>
+  <div class="note-box"><strong>Instructions:</strong> Attempt all questions. Answers without working steps will receive partial marks. Click "Show Answer" after attempting.</div>
+
+  <div class="section-header">
+    <span class="section-tag tag-desc">Section A — Descriptive</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">4 marks each · 16 marks total</span>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">1</div>
+    <span class="q-type-badge type-theory">Theoretical</span>
+    <p class="q-text">Write and explain the complete BM25 scoring formula. Define each term: f(t, D), IDF(t), k₁, b, avgD. Explain what happens to the score when (a) b = 0 and (b) b = 1. How does BM25 differ from TF-IDF? <span class="marks-pill">4M</span></p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Formula:</strong> BM25(q,d) = Σ IDF(tᵢ) × [f(tᵢ,d) × (k₁+1)] / [f(tᵢ,d) + k₁×(1−b + b×|d|/avgD)]<br>
+      <strong>Terms:</strong> f(t,D) = term frequency of term t in document D; IDF(t) = log((N−nₜ+0.5)/(nₜ+0.5)) (how rare the term is); k₁ = term saturation (default 1.5); b = length normalization (default 0.75); avgD = average document length in corpus; |d| = length of current document.<br>
+      <strong>b=0:</strong> No length normalization — long documents are not penalized. Favors longer documents.<br>
+      <strong>b=1:</strong> Full normalization — document length fully factored in, exactly like TF-IDF normalization.<br>
+      <strong>vs TF-IDF:</strong> BM25 adds saturation via k₁ (term frequency impact levels off after a point) and tunable length normalization via b. TF-IDF linearly increases with TF; BM25 saturates.
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">2</div>
+    <span class="q-type-badge type-numerical">Numerical</span>
+    <p class="q-text">Quantize the following weight matrix using 4-bit (b=4) quantization. Then dequantize and compute the element-wise quantization error and MAE. <span class="marks-pill">4M</span></p>
+    <p class="q-sub" style="font-style:normal; background:#f9f7f2; padding:10px 12px; border-radius:4px; border-left:2px solid #d0c8b8; margin-top:0.5rem;">
+      W = [[3.0, −1.5], [0.5, −3.0]] &nbsp;|&nbsp; b = 4 bits
+    </p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Step 1:</strong> min = −3.0, max = 3.0<br>
+      <strong>Step 2:</strong> δ = (3.0 − (−3.0)) / (2⁴ − 1) = 6.0 / 15 = 0.4<br>
+      <strong>Step 3 – Quantize</strong> Q = round((W − (−3)) / 0.4):<br>
+      (3.0+3)/0.4 = 15 → Q=15 &nbsp;|&nbsp; (−1.5+3)/0.4 = 3.75 → Q=4<br>
+      (0.5+3)/0.4 = 8.75 → Q=9 &nbsp;|&nbsp; (−3+3)/0.4 = 0 → Q=0<br>
+      <strong>Step 4 – Dequantize</strong> Ŵ = Q×0.4 + (−3):<br>
+      15×0.4−3 = 3.0; 4×0.4−3 = −1.4; 9×0.4−3 = 0.6; 0×0.4−3 = −3.0<br>
+      <strong>Step 5 – Errors</strong> |W − Ŵ|:<br>
+      |3.0−3.0|=0; |−1.5−(−1.4)|=0.1; |0.5−0.6|=0.1; |−3.0−(−3.0)|=0<br>
+      <strong>MAE</strong> = (0 + 0.1 + 0.1 + 0) / 4 = <strong>0.05</strong>
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">3</div>
+    <span class="q-type-badge type-scenario">Scenario</span>
+    <p class="q-text">A research team wants to build an enterprise knowledge assistant that must maintain context across long multi-turn conversations spanning weeks. Design a <strong>Memory-Augmented RAG system</strong>. Describe the types of memory, storage mechanisms, and retrieval strategies you would use, and how they interact. <span class="marks-pill">4M</span></p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>Memory Types:</strong><br>
+      • Short-Term Memory: Current conversation window stored in-context (LLM context buffer for recent exchanges).<br>
+      • Long-Term Memory: Vector database (FAISS/Pinecone/Weaviate) stores embeddings of past conversations, decisions, and retrieved documents indexed by recency and relevance.<br>
+      • Knowledge Graph (optional): Entities and relationships (user → project → documents) stored as a graph for structured recall.<br>
+      <strong>Storage Mechanisms:</strong> Embed past interactions → store with timestamp + user metadata in vector DB. Periodic summarization: compress old turns into summary vectors.<br>
+      <strong>Retrieval Strategies:</strong> (1) For each new query, embed it → similarity search in long-term memory → inject top-k relevant past interactions into context. (2) Query expansion based on session history. (3) Re-ranking retrieved memories by recency and semantic relevance.<br>
+      <strong>Interaction Flow:</strong> New query → Short-term context + retrieved long-term memories → RAG retrieval from knowledge base → LLM generation grounded in full context → response stored back to long-term memory.
+    </div>
+  </div>
+
+  <div class="question-block" style="margin-left:1.5rem;">
+    <div class="q-number">4</div>
+    <span class="q-type-badge type-theory">Theoretical</span>
+    <p class="q-text">Explain the concept of Mixture of Experts (MoE) in LLMs. How does <strong>sparse activation</strong> work? Why does Mixtral 8x7B have approximately 47B effective parameters during inference rather than 56B (8×7B)? What are two challenges of MoE in production? <span class="marks-pill">4M</span></p>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer Guide</button>
+    <div class="desc-answer-reveal">
+      <strong>MoE Concept:</strong> Instead of one large dense feedforward network, the model uses N expert FFN subnetworks. A gating network (router) selects Top-K experts for each input token, activating only those for computation.<br>
+      <strong>Sparse Activation:</strong> At any given token, only K of N experts are active (e.g., 2 of 8 in Mixtral). The rest contribute nothing. This gives a model with more total parameters but a much lower compute cost per forward pass.<br>
+      <strong>47B not 56B:</strong> In MoE architectures, only the FFN layers are replaced by expert layers. The other layers (attention, embeddings, norms) are shared and counted once. Mixtral's shared parameters + 2 active experts contribute ~47B effective compute, not the full 56B.<br>
+      <strong>Challenges:</strong> (1) High memory requirement: All 47B parameters must be loaded in VRAM even though only ~12B are active — limits deployment on small hardware. (2) Expert load imbalance: Some experts may be over-used while others are under-utilized — requires auxiliary loss functions for balanced routing during training.
+    </div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-tag tag-mcq2">Section B — 2-Mark MCQ</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">2 marks each · 8 marks total</span>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B1</div>
+    <p class="mcq-q">Which evaluation framework (by TruEra) specializes in explaining and evaluating LLM applications with a focus on transparency, interpretability, and feedback loops?</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>DeepEval (Confident AI)</div><div class="mcq-opt"><span class="opt-label">B.</span>TruLens (TruEra)</div><div class="mcq-opt"><span class="opt-label">C.</span>HELM (Stanford)</div><div class="mcq-opt"><span class="opt-label">D.</span>LangChain Evaluation</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: B</strong><p class="ans-hint">TruLens by TruEra focuses on transparency, interpretability, instrumentation of production systems, and feedback loops. DeepEval focuses on behavior-driven test suites and reliability metrics.</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B2</div>
+    <p class="mcq-q">In BLIP's architecture, what is the role of Cross-Attention in the Multimodal Transformer?</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Processes text independently of image</div><div class="mcq-opt"><span class="opt-label">B.</span>Processes image patches using self-attention only</div><div class="mcq-opt"><span class="opt-label">C.</span>Learns and fuses interactions between image and text embeddings</div><div class="mcq-opt"><span class="opt-label">D.</span>Tokenizes the input captions</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: C</strong><p class="ans-hint">Cross-attention allows text to "attend" to relevant image regions and vice versa, creating a joint multimodal representation essential for tasks like VQA and captioning.</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B3</div>
+    <p class="mcq-q">In P-Tuning v2 (enhanced prompt tuning), where are trainable "deep prompts" inserted?</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Only at the input embedding layer</div><div class="mcq-opt"><span class="opt-label">B.</span>Only at the final output layer</div><div class="mcq-opt"><span class="opt-label">C.</span>At every layer of the transformer model</div><div class="mcq-opt"><span class="opt-label">D.</span>In the attention key-value matrices only</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: C</strong><p class="ans-hint">P-Tuning v2 inserts trainable prompts at every transformer layer (unlike basic prompt tuning which only modifies the input). This achieves performance comparable to full fine-tuning even on smaller models.</p></div>
+  </div>
+
+  <div class="mcq-block">
+    <div class="q-number" style="background: var(--gold); color: #1a1200;">B4</div>
+    <p class="mcq-q">The BLEU score's "brevity penalty" specifically penalizes what type of generated output?</p>
+    <div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Generated sentences that are too long</div><div class="mcq-opt"><span class="opt-label">B.</span>Generated sentences that are too short (shorter than reference)</div><div class="mcq-opt"><span class="opt-label">C.</span>Grammatically incorrect sentences</div><div class="mcq-opt"><span class="opt-label">D.</span>Off-topic or irrelevant generated content</div></div>
+    <button class="answer-key" onclick="toggleAnswer(this)">▸ Show Answer</button>
+    <div class="answer-reveal"><strong>Answer: B</strong><p class="ans-hint">Brevity penalty = BP = min(1, exp(1 − r/c)) where c = predicted length, r = target length. Penalizes short predictions that could game precision by having all words match a short prefix.</p></div>
+  </div>
+
+  <div class="section-header">
+    <span class="section-tag tag-mcq1">Section C — 1-Mark MCQ</span>
+    <div class="section-rule"></div>
+    <span class="section-marks">1 mark each · 16 marks total</span>
+  </div>
+
+  <div class="mcq-list">
+    <div class="grid-mcq"><p class="mcq-q"><strong>C1.</strong> In the SDXL pipeline, what is the specific role of the "refiner model"?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Sets global composition and structure</div><div class="mcq-opt"><span class="opt-label">B.</span>Adds finer details and textures to the base model output</div><div class="mcq-opt"><span class="opt-label">C.</span>Tokenizes the text prompt</div><div class="mcq-opt"><span class="opt-label">D.</span>Decodes latent space to pixel space</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — The base SDXL model sets global composition; the refiner model (run second) adds fine-grained details and high-frequency features.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C2.</strong> Which AI agent component stores and retrieves information from past interactions?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Planning Module</div><div class="mcq-opt"><span class="opt-label">B.</span>Tool Interface</div><div class="mcq-opt"><span class="opt-label">C.</span>Memory Module</div><div class="mcq-opt"><span class="opt-label">D.</span>LLM Backbone</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — The Memory Module maintains short-term (current context) and long-term (persistent vector DB) information across interactions.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C3.</strong> "Jailbreaking" an LLM refers to:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Stealing the model's weights from the server</div><div class="mcq-opt"><span class="opt-label">B.</span>Using crafted prompts to bypass safety guardrails and generate harmful content</div><div class="mcq-opt"><span class="opt-label">C.</span>Injecting malicious data into the training corpus</div><div class="mcq-opt"><span class="opt-label">D.</span>Corrupting tokenizer output to cause errors</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Jailbreaking = using specifically designed prompts to trick an LLM into bypassing its safety guardrails and producing harmful/restricted outputs.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C4.</strong> In the RAG pipeline, "context distillation" means:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Adding more documents to the corpus</div><div class="mcq-opt"><span class="opt-label">B.</span>Condensing retrieved documents to highlight the most relevant passages</div><div class="mcq-opt"><span class="opt-label">C.</span>Expanding the query using synonyms</div><div class="mcq-opt"><span class="opt-label">D.</span>Splitting documents into smaller chunks</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Context distillation = summarizing/condensing retrieved documents so the LLM receives only the most relevant, noise-free context for generation.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C5.</strong> BERT uses which pretraining objective?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Auto-regressive (next token prediction)</div><div class="mcq-opt"><span class="opt-label">B.</span>Masked Language Modeling (MLM) + Next Sentence Prediction</div><div class="mcq-opt"><span class="opt-label">C.</span>Contrastive learning with image-text pairs</div><div class="mcq-opt"><span class="opt-label">D.</span>Reinforcement learning from human preferences</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — BERT uses MLM (predict randomly masked tokens) and NSP (predict if sentence B follows sentence A). GPT uses auto-regressive left-to-right prediction.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C6.</strong> Which of the following is NOT a form of quantization?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Post-Training Quantization (PTQ)</div><div class="mcq-opt"><span class="opt-label">B.</span>Quantization-Aware Training (QAT)</div><div class="mcq-opt"><span class="opt-label">C.</span>Dynamic Quantization</div><div class="mcq-opt"><span class="opt-label">D.</span>Gradient Normalization</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>D</strong> — Gradient Normalization is a training technique, not a quantization method. The three types of quantization are PTQ, QAT, and Dynamic Quantization.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C7.</strong> The bfloat16 (BFloat16) format was developed by:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>OpenAI</div><div class="mcq-opt"><span class="opt-label">B.</span>Meta (Facebook AI)</div><div class="mcq-opt"><span class="opt-label">C.</span>Google (Brain Team)</div><div class="mcq-opt"><span class="opt-label">D.</span>Microsoft Research</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — BFloat16 = Brain Float 16, developed by Google Brain. It retains FP32's exponent range (8 bits) but reduces mantissa precision to 7 bits, preventing overflow/underflow during training.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C8.</strong> CLIP uses which optimizer during training?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>SGD with momentum</div><div class="mcq-opt"><span class="opt-label">B.</span>RMSProp</div><div class="mcq-opt"><span class="opt-label">C.</span>AdamW (with weight decay)</div><div class="mcq-opt"><span class="opt-label">D.</span>Adagrad</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — CLIP uses AdamW optimizer for effective learning, with embeddings normalized to ensure stable cosine similarity computation during contrastive training.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C9.</strong> FLARE (Flexible Retrieval Augmented Response Generation) is characterized by:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Post-generation self-critique using reflection tokens</div><div class="mcq-opt"><span class="opt-label">B.</span>Detecting knowledge gaps during generation and triggering retrieval dynamically</div><div class="mcq-opt"><span class="opt-label">C.</span>Routing queries to specialized agents</div><div class="mcq-opt"><span class="opt-label">D.</span>Orchestrating multiple worker agents in parallel</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — FLARE allows the LLM to detect when it lacks knowledge mid-generation and dynamically triggers additional retrieval rather than generating from uncertain memory.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C10.</strong> AutoGen is an open-source multi-agent framework developed by:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Google DeepMind</div><div class="mcq-opt"><span class="opt-label">B.</span>Meta AI Research</div><div class="mcq-opt"><span class="opt-label">C.</span>Microsoft Research</div><div class="mcq-opt"><span class="opt-label">D.</span>Anthropic</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — AutoGen is by Microsoft. It's strong for multi-agent conversation workflows, role-based agents, and research-oriented agent systems with code execution.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C11.</strong> The Planning Module in an AI agent is responsible for:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Storing and recalling prior user interactions</div><div class="mcq-opt"><span class="opt-label">B.</span>Making direct API calls to external services</div><div class="mcq-opt"><span class="opt-label">C.</span>Breaking complex goals into ordered subtasks</div><div class="mcq-opt"><span class="opt-label">D.</span>Generating final natural language responses</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — The Planning Module decomposes the goal into step-by-step subtasks and determines the order and dependencies between them.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C12.</strong> Which tokenization method handles rare/unseen words by splitting into frequent subword units?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Character-level tokenization</div><div class="mcq-opt"><span class="opt-label">B.</span>Word-level tokenization</div><div class="mcq-opt"><span class="opt-label">C.</span>Byte Pair Encoding (BPE)</div><div class="mcq-opt"><span class="opt-label">D.</span>Sentence-level tokenization</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — BPE iteratively merges the most frequent character pairs to build a vocabulary of subwords. "dreambeach" → ["dream", "beach"]. Used by GPT models.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C13.</strong> In MoE, auxiliary loss is introduced to:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Improve accuracy of the task-specific loss</div><div class="mcq-opt"><span class="opt-label">B.</span>Ensure balanced utilization across all experts (prevent expert collapse)</div><div class="mcq-opt"><span class="opt-label">C.</span>Reduce the total number of model parameters</div><div class="mcq-opt"><span class="opt-label">D.</span>Speed up tokenization throughput</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Without auxiliary loss (load balancing loss), the gating network tends to always select the same expert(s), starving others. Auxiliary loss penalizes imbalanced routing.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C14.</strong> Soft prompts in Prompt Tuning exist in which space?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Token vocabulary/discrete space</div><div class="mcq-opt"><span class="opt-label">B.</span>The model's continuous embedding space</div><div class="mcq-opt"><span class="opt-label">C.</span>The latent diffusion space</div><div class="mcq-opt"><span class="opt-label">D.</span>The attention query-key space</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Soft prompts are continuous, learnable vectors in the model's embedding space — they have no corresponding discrete tokens and are optimized directly via gradient descent.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C15.</strong> Perplexity as a pretraining evaluation metric — lower values indicate:</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Larger model size</div><div class="mcq-opt"><span class="opt-label">B.</span>Better model prediction of the sequence (more confident predictions)</div><div class="mcq-opt"><span class="opt-label">C.</span>Higher number of parameters trained</div><div class="mcq-opt"><span class="opt-label">D.</span>Higher training cost in GPU hours</div></div><div class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>B</strong> — Perplexity = 2^H(p) where H is cross-entropy. Lower perplexity = model is less "perplexed" by the test text = better language modeling.</div></div>
+    <div class="grid-mcq"><p class="mcq-q"><strong>C16.</strong> "Inpainting" in Stable Diffusion is a special case of which technique?</p><div class="mcq-options"><div class="mcq-opt"><span class="opt-label">A.</span>Text-to-image generation</div><div class="mcq-opt"><span class="opt-label">B.</span>Depth-to-image</div><div class="mcq-opt"><span class="opt-label">C.</span>Image-to-image</div><div class="mcq-opt"><span class="opt-label">D.</span>Classifier-free guidance</div></div><div class="answer-btn-row"><button class="answer-btn-row"><button class="answer-key" onclick="toggleAnswer(this)">▸ Ans</button></div><div class="answer-reveal"><strong>C</strong> — Inpainting is image-to-image where noise is selectively added only to masked (inpainted) regions; unmasked regions are preserved from the input image.</div></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<footer>
+  UE21CS342BA9 · Generative AI &amp; Applications · Practice Examination Sets<br>
+  Topics: Stable Diffusion · CLIP · BLIP · Whisper · Agentic Workflows · Advanced RAG · Fine-Tuning · LoRA/QLoRA · Quantization · MoE · LLM Evaluation · LLM Harms
+</footer>
+
+<script>
+function switchTab(idx) {
+  document.querySelectorAll('.tab-content').forEach((t, i) => t.classList.toggle('active', i === idx));
+  document.querySelectorAll('.tab-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+}
+function toggleAnswer(btn) {
+  const reveal = btn.nextElementSibling;
+  const isOpen = reveal.classList.contains('open');
+  reveal.classList.toggle('open', !isOpen);
+  btn.textContent = isOpen ? '▸ Show Answer' : '▾ Hide Answer';
+  if (btn.classList.contains('answer-key') && reveal.classList.contains('desc-answer-reveal')) {
+    btn.textContent = isOpen ? '▸ Show Answer Guide' : '▾ Hide Answer Guide';
+  }
+}
+</script>
+</body>
+</html>
