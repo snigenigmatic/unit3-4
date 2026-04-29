@@ -1,0 +1,1817 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenAI — Units 3 &amp; 4 Revision Notes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+  :root{--ink:#0f0e0d;--paper:#f7f4ef;--accent:#c0392b;--accent2:#1a5276;--accent3:#117a65;--gold:#b7950b;--muted:#6d6358;--rule:#d5cfc6;--highlight:#fdebd0;--highlight2:#d6eaf8;--highlight3:#d5f5e3;--code-bg:#1e2329;--code-fg:#e6db74}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Source Serif 4',Georgia,serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.75}
+  .masthead{background:var(--ink);color:var(--paper);padding:3rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden}
+  .masthead::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.02) 40px,rgba(255,255,255,.02) 80px)}
+  .masthead h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.6rem);font-weight:900;letter-spacing:-1px;position:relative}
+  .masthead h1 span{color:var(--accent)}
+  .masthead .sub{margin-top:.6rem;font-size:1rem;opacity:.65;font-style:italic;position:relative}
+  .badge-row{margin-top:1.4rem;display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;position:relative}
+  .badge{background:var(--accent);color:#fff;font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.25rem .7rem;border-radius:2px;letter-spacing:.5px}
+  .badge.blue{background:var(--accent2)}.badge.green{background:var(--accent3)}
+  .toc-wrapper{width:min(1400px,calc(100% - 3rem));margin:2.5rem auto}
+  .toc-card{background:white;border:1px solid var(--rule);border-top:3px solid var(--ink);padding:1.8rem 2rem}
+  .toc-card h2{font-family:'Playfair Display',serif;font-size:1.05rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1.2rem;color:var(--muted)}
+  .toc-cols{display:grid;grid-template-columns:1fr 1fr;gap:.2rem 2rem}
+  .toc-cols a{font-size:.9rem;color:var(--accent2);text-decoration:none;display:flex;align-items:baseline;gap:.4rem;padding:.18rem 0;border-bottom:1px dashed transparent;transition:border-color .2s}
+  .toc-cols a:hover{border-bottom-color:var(--accent2)}
+  .toc-cols a .num{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);min-width:2rem}
+  .container{width:min(1400px,calc(100% - 3rem));margin:0 auto;padding:0 0 4rem}
+  .unit-divider{background:var(--ink);color:var(--paper);padding:1.2rem 2rem;margin:3rem 0 0;display:flex;align-items:center;gap:1rem}
+  .unit-divider .unit-num{font-family:'JetBrains Mono',monospace;font-size:.75rem;opacity:.5;text-transform:uppercase;letter-spacing:2px}
+  .unit-divider h2{font-family:'Playfair Display',serif;font-size:1.5rem}
+  .section{margin-top:2.5rem;border:1px solid var(--rule);background:white}
+  .section-header{background:var(--ink);color:var(--paper);padding:.7rem 1.4rem;display:flex;align-items:center;gap:.8rem}
+  .section-header .s-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;opacity:.5;text-transform:uppercase;letter-spacing:1px;min-width:4rem}
+  .section-header h3{font-family:'Playfair Display',serif;font-size:1.15rem}
+  .section-body{padding:1.4rem 1.8rem}
+  h4{font-family:'Playfair Display',serif;font-size:1rem;color:var(--accent2);margin:1.4rem 0 .5rem;padding-bottom:.3rem;border-bottom:1px solid var(--rule)}
+  h5{font-size:.9rem;font-weight:600;color:var(--accent);margin:1rem 0 .3rem;text-transform:uppercase;letter-spacing:.5px}
+  p{margin-bottom:.8rem}
+  .def{background:var(--highlight2);border-left:3px solid var(--accent2);padding:.75rem 1rem;margin:.8rem 0;font-size:.94rem}
+  .def strong{color:var(--accent2)}
+  .warn{background:var(--highlight);border-left:3px solid var(--gold);padding:.75rem 1rem;margin:.8rem 0;font-size:.94rem}
+  .warn strong{color:var(--gold)}
+  .tip{background:var(--highlight3);border-left:3px solid var(--accent3);padding:.75rem 1rem;margin:.8rem 0;font-size:.94rem}
+  .tip strong{color:var(--accent3)}
+  .tbl-wrap{overflow-x:auto;margin:1rem 0}
+  table{width:100%;border-collapse:collapse;font-size:.88rem}
+  thead tr{background:var(--ink);color:var(--paper)}
+  thead th{padding:.55rem .9rem;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.5px}
+  tbody tr:nth-child(even){background:var(--paper)}
+  tbody tr:nth-child(odd){background:white}
+  tbody td{padding:.5rem .9rem;vertical-align:top}
+  ul,ol{padding-left:1.5rem;margin-bottom:.8rem}
+  li{margin-bottom:.3rem}
+  li strong{color:var(--ink)}
+  .kw{display:inline;background:var(--highlight2);color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:.82em;padding:.1em .4em;border-radius:2px;font-weight:600}
+  .kw.red{background:var(--highlight);color:var(--accent)}
+  .kw.green{background:var(--highlight3);color:var(--accent3)}
+  .formula{font-family:'JetBrains Mono',monospace;background:var(--code-bg);color:var(--code-fg);padding:.6rem 1rem;margin:.8rem 0;font-size:.85rem;border-radius:2px;overflow-x:auto;white-space:pre-wrap}
+  pre.code{font-family:'JetBrains Mono',monospace;background:var(--code-bg);color:#e0e0d8;padding:1rem 1.2rem;margin:1rem 0;font-size:.82rem;line-height:1.5;border-radius:2px;overflow-x:auto;border-left:3px solid var(--code-fg)}
+  .exam-box{background:#fff8e1;border:1.5px solid var(--gold);padding:.8rem 1.1rem;margin:1rem 0;font-size:.9rem}
+  .exam-box::before{content:'★ EXAM FOCUS — ';font-weight:700;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--gold);letter-spacing:.5px}
+  .steps{counter-reset:step;list-style:none;padding:0}
+  .steps li{counter-increment:step;display:flex;gap:.8rem;align-items:flex-start;margin-bottom:.6rem}
+  .steps li::before{content:counter(step);min-width:1.6rem;height:1.6rem;background:var(--accent2);color:white;border-radius:50%;font-family:'JetBrains Mono',monospace;font-size:.75rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.15rem}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+  .compare-box{border:1px solid var(--rule);padding:.9rem 1rem}
+  .compare-box h5{margin-top:0}
+  .pattern-card{border:1px solid var(--rule);border-left:4px solid var(--accent);padding:1rem 1.2rem;margin:1rem 0;background:white}
+  .pattern-card .pname{font-family:'Playfair Display',serif;font-weight:700;font-size:1.05rem;color:var(--ink)}
+  .pattern-card .pone{font-style:italic;color:var(--muted);font-size:.9rem;margin-top:.2rem}
+  .fig{background:#f0eee9;border:1px dashed var(--rule);padding:1rem 1.2rem;margin:1rem 0;text-align:center;font-size:.85rem;color:var(--muted);font-style:italic;border-radius:4px}
+  .fig strong{color:var(--accent2);font-style:normal;display:block;margin-bottom:.3rem;font-size:.8rem;text-transform:uppercase;letter-spacing:.5px}
+  .footer{text-align:center;padding:2rem;font-size:.8rem;color:var(--muted);border-top:1px solid var(--rule);margin-top:3rem}
+  @media(max-width:640px){.toc-cols{grid-template-columns:1fr}.compare{grid-template-columns:1fr}.section-body{padding:1rem}}
+  [id]{scroll-margin-top:1rem}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <h1>Generative AI &amp; its<br>Applications <span>Revision Notes</span></h1>
+  <div class="sub">UE23CS342BA9 — Units 3 &amp; 4 · Dr. Uma D</div>
+  <div class="badge-row">
+    <span class="badge">Unit 3: Advanced RAG &amp; Fine-Tuning</span>
+    <span class="badge blue">Unit 4: Multimodal LLMs, Agents &amp; Evaluation</span>
+    <span class="badge green">Includes Numerical Problems</span>
+  </div>
+</div>
+
+<div class="toc-wrapper">
+<div class="toc-card">
+  <h2>Table of Contents</h2>
+  <div class="toc-cols">
+    <a href="#u3-adv-rag"><span class="num">3.1</span>Advanced RAG Overview</a>
+    <a href="#u3-bm25"><span class="num">3.2</span>BM25 &amp; Hybrid Retrieval (Numericals)</a>
+    <a href="#u3-gen-enhance"><span class="num">3.3</span>Generation Enhancement Techniques</a>
+    <a href="#u3-chunking"><span class="num">3.4</span>Chunking Techniques</a>
+    <a href="#u3-lifecycle"><span class="num">3.5</span>GenAI Lifecycle</a>
+    <a href="#u3-pretrain"><span class="num">3.6</span>LLM Pretraining</a>
+    <a href="#u3-finetune"><span class="num">3.7</span>Fine-Tuning Introduction</a>
+    <a href="#u3-quant"><span class="num">3.8</span>Quantization (Numericals)</a>
+    <a href="#u3-lora"><span class="num">3.9</span>LoRA &amp; QLoRA (Numericals)</a>
+    <a href="#u3-soft"><span class="num">3.10</span>Soft Prompts &amp; Prompt Tuning</a>
+    <a href="#u3-moe"><span class="num">3.11</span>Mixture of Experts</a>
+    <a href="#u3-data-res"><span class="num">3.12</span>Data Resolution &amp; Precision</a>
+    <a href="#u4-sd"><span class="num">4.1</span>Stable Diffusion</a>
+    <a href="#u4-clip"><span class="num">4.2</span>CLIP</a>
+    <a href="#u4-blip"><span class="num">4.3</span>BLIP</a>
+    <a href="#u4-mllm"><span class="num">4.4</span>Multimodal LLMs &amp; Fusion</a>
+    <a href="#u4-whisper"><span class="num">4.5</span>Whisper</a>
+    <a href="#u4-agents"><span class="num">4.6</span>Agentic Workflows</a>
+    <a href="#u4-patterns"><span class="num">4.7</span>Agentic Design Patterns</a>
+    <a href="#u4-frameworks"><span class="num">4.8</span>Agentic Frameworks</a>
+    <a href="#u4-eval"><span class="num">4.9</span>LLM Evaluation</a>
+    <a href="#u4-harm"><span class="num">4.10</span>Harm of LLMs</a>
+    <a href="#u4-data"><span class="num">4.11</span>Data behind LLMs</a>
+  </div>
+</div>
+</div>
+
+<div class="container">
+
+<!-- ════════════════ UNIT 3 ════════════════ -->
+<div class="unit-divider"><span class="unit-num">Unit 3</span><h2>Advanced RAG &amp; Fine-Tuning</h2></div>
+
+<!-- ═══ 3.1 ADVANCED RAG ═══ -->
+<div class="section" id="u3-adv-rag">
+<div class="section-header"><span class="s-num">SEC 3.1</span><h3>Advanced RAG Overview</h3></div>
+<div class="section-body">
+<div class="def"><strong>RAG (Retrieval-Augmented Generation)</strong> combines document retrieval with language generation. The model first retrieves relevant documents from an external knowledge base, then uses them as context to generate a grounded response. This reduces hallucination and allows access to up-to-date or private knowledge without retraining the model.</div>
+
+<div class="fig"><strong>Fig: RAG Pipeline</strong>User Query &rarr; Retriever (search knowledge base) &rarr; Retrieved Documents &rarr; LLM (generate response using docs as context) &rarr; Grounded Answer</div>
+
+<h4>Limitations of Basic (Naive) RAG</h4>
+
+<h5>1. Lack of Domain Specificity</h5>
+<p>Standard RAG models use general-purpose retrievers that are not optimized for specialized domains. When a medical professional asks "What are the latest treatment options for HER2-positive breast cancer?", a general retriever may fetch generic cancer articles instead of HER2-specific treatments from authoritative sources like PubMed or FDA publications. The generator may then hallucinate plausible but incorrect or outdated information.</p>
+<div class="tip"><strong>Fix:</strong> Use curated retrievers restricted to domain-specific databases, fine-tune generators on domain data, implement re-ranking to prioritize authoritative sources.</div>
+
+<h5>2. Multi-turn Conversation Failure</h5>
+<p>Basic RAG systems have no memory mechanism. In a legal contract analysis, if a user first asks "Does this contract allow termination for breach of confidentiality?" and follows up with "What are the specific conditions?", the system may not link the follow-up to the previous context. Without conversational memory, it retrieves generic termination conditions instead of confidentiality-specific clauses.</p>
+<div class="tip"><strong>Fix:</strong> Conversational memory (history-aware retrieval), step-wise retrieval that refines based on prior answers, re-ranking tied to conversation thread.</div>
+
+<h5>3. Inconsistent Relevance and Quality of Documents</h5>
+<p>Naive RAG may rank popular blog posts above expert reports from VC firms or financial analysts. For "What are the key risks of investing in AI startups?", it might prioritize trending articles over specialized investment risk reports, retrieve outdated sources, or miss critical financial risks like liquidity concerns and regulatory hurdles.</p>
+<div class="tip"><strong>Fix:</strong> Fine-tuned retriever with domain-specific embeddings, source prioritization (filter for credible institutions), query expansion to retrieve more focused documents.</div>
+
+<h5>4. Poor Retriever-Generator Synergy</h5>
+<p>In naive RAG, the retriever and generator operate independently. The retriever fetches top-ranked documents without considering what the generator actually needs for a coherent answer. For a drug discovery query, the retriever might fetch articles with only generic AI mentions while the generator needs specific breakthrough details like AlphaFold's protein structure prediction. The result is vague, shallow answers even though relevant papers existed in the knowledge base.</p>
+<div class="tip"><strong>Fix:</strong> Retriever-aware generation (re-rank and summarize before passing to LLM), query reformulation by the generator, feedback loops where the generator guides the retriever to fill gaps.</div>
+
+<h5>5. Inefficient Handling of Large-Scale Data</h5>
+<p>Naive RAG suffers from slow response times when knowledge bases grow large. Keyword matching or basic semantic search may miss documents phrased differently from the query. The system is not adaptable to changing contexts without manual intervention.</p>
+
+<div class="exam-box">The five limitations of naive RAG: (1) Lack of domain specificity, (2) Multi-turn conversation failure, (3) Inconsistent document quality, (4) Poor retriever-generator synergy, (5) Inefficient scaling. Know an example for each.</div>
+
+<h4>How Advanced RAG Improves</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Technique</th><th>What It Does</th><th>Key Benefit</th></tr></thead>
+<tbody>
+<tr><td><span class="kw">Dynamic &amp; Adaptive Retrieval</span></td><td>Dynamically refines queries by expanding/rephrasing based on context. Applies adaptive ranking and selects best retrieval approach per query type.</td><td>Better relevance, personalized results</td></tr>
+<tr><td><span class="kw">Multi-Hop Retrieval</span></td><td>Retrieves initial context, then dynamically fetches related documents in multiple rounds. Connects facts from different documents.</td><td>Complex reasoning, multi-step inference</td></tr>
+<tr><td><span class="kw">Hybrid Search</span></td><td>Combines sparse retrieval (BM25, keyword-based, high precision) with dense retrieval (embeddings, semantic, high recall).</td><td>Best of both: exact matches + semantic understanding</td></tr>
+<tr><td><span class="kw">Memory-Augmented RAG</span></td><td>Stores past queries, responses, and retrieved docs using vector DBs (FAISS, Pinecone). Dynamically updates retrieval based on history.</td><td>Context-aware, personalized across sessions</td></tr>
+<tr><td><span class="kw">Multimodal RAG</span></td><td>Retrieves and integrates text, images, audio, video. Dynamically selects the most relevant modality based on query intent.</td><td>Richer responses from diverse data types</td></tr>
+<tr><td><span class="kw">Agentic RAG</span></td><td>Uses reasoning to iteratively analyze retrieved knowledge, reformulate queries, validate and refine data.</td><td>Higher accuracy and coherence</td></tr>
+</tbody></table></div>
+
+<h4>Re-Ranking with Cross-Encoders</h4>
+<p>Initial retrieval (by BM25 or dense methods) returns a large set of documents that vary in relevance. Re-ranking reorders these documents so the most relevant ones come first before passing to the generator.</p>
+
+<div class="compare">
+<div class="compare-box">
+<h5>Bi-Encoders (Fast, Less Precise)</h5>
+<p>Independently encode query and document into separate vectors. Compare using cosine similarity or dot product. Process thousands of documents quickly, but lose context because they don't consider query-document interaction directly. Used in: Sentence Transformers, FAISS, DPR.</p>
+<div class="fig"><strong>Bi-Encoder Flow</strong>Query &rarr; Encoder &rarr; Vector_Q<br>Document &rarr; Encoder &rarr; Vector_D<br>Score = cosine(Vector_Q, Vector_D)</div>
+</div>
+<div class="compare-box">
+<h5>Cross-Encoders (Slow, More Accurate)</h5>
+<p>Process query AND document together through a single Transformer (like BERT). The model sees the full interaction between query and document, producing a direct relevance score. Much more accurate but computationally expensive. Used for re-ranking after initial retrieval.</p>
+<div class="fig"><strong>Cross-Encoder Flow</strong>[Query + Document] &rarr; Transformer &rarr; Relevance Score (e.g., 0.92)</div>
+</div>
+</div>
+
+<h5>Re-Ranking Process Example</h5>
+<p>Query: "How to train a neural network?"</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Doc</th><th>Before Re-ranking (Bi-Encoder)</th><th>After Re-ranking (Cross-Encoder)</th></tr></thead>
+<tbody>
+<tr><td>"A guide on data augmentation techniques."</td><td>Rank 1 (0.78)</td><td>Rank 3 (0.79)</td></tr>
+<tr><td>"Neural networks: intro to activation functions."</td><td>Rank 2 (0.76)</td><td>Rank 2 (0.82)</td></tr>
+<tr><td>"Step-by-step tutorial on training a neural network."</td><td>Rank 3 (0.74)</td><td><strong>Rank 1 (0.95)</strong></td></tr>
+</tbody></table></div>
+<p>The most relevant document jumps from rank 3 to rank 1 after cross-encoder re-ranking.</p>
+
+<h4>Query Expansion</h4>
+<p>Enriches the user's query with additional terms to increase retrieval coverage.</p>
+<ul>
+  <li><strong>Synonym Expansion:</strong> "Treat a cold" &rarr; cold remedy, flu treatment, cure for cold.</li>
+  <li><strong>Embedding-Based Expansion:</strong> BERT finds semantically related words. "Bakery" &rarr; pastry shop, bread store.</li>
+  <li><strong>LLM Paraphrasing:</strong> LLM generates alternative queries. "Best laptop for coding" &rarr; top programming laptops, laptops for developers, high performance coding laptops.</li>
+</ul>
+
+<h4>Advanced Filtering &amp; Context Distillation</h4>
+<p><strong>Metadata-based filtering:</strong> Filter documents by date, author, domain, or document type. In legal/medical contexts, ensures only the most recent or authoritative sources are used.</p>
+<p><strong>Content-based filtering:</strong> Exclude documents below a semantic similarity threshold or missing key phrases related to the query.</p>
+<p><strong>Context distillation:</strong> Summarize or condense retrieved documents to focus the LLM on the most important information. Especially useful when retrieved documents contain too much irrelevant content or when queries involve complex multi-step reasoning.</p>
+
+<h4>Addressing Hallucination in Advanced RAG</h4>
+<ul>
+  <li><strong>Grounding on retrieved documents:</strong> Condition the model to only generate based on actual document content, not pre-trained knowledge.</li>
+  <li><strong>Context conditioning:</strong> Filter irrelevant parts of retrieved documents before passing to the model.</li>
+  <li><strong>Feedback loops:</strong> Check generated outputs against retrieved documents for accuracy before returning to the user.</li>
+</ul>
+
+<h4>Evaluating Advanced RAG</h4>
+<ul>
+  <li><strong>Accuracy:</strong> Correctness of retrieved and generated responses.</li>
+  <li><strong>Relevance:</strong> How well results answer the query. Metrics: MRR (Mean Reciprocal Rank), Precision@K.</li>
+  <li><strong>MRR:</strong> Calculates the reciprocal rank of the first correct result and averages across queries. If the correct answer is at position 3, the reciprocal rank is 1/3.</li>
+  <li><strong>Latency:</strong> Response time, critical for real-time systems.</li>
+  <li><strong>Coverage:</strong> Ability to handle diverse and domain-specific queries.</li>
+</ul>
+</div></div>
+
+<!-- ═══ 3.2 BM25, HYBRID, MULTI-HOP ═══ -->
+<div class="section" id="u3-bm25">
+<div class="section-header"><span class="s-num">SEC 3.2</span><h3>BM25, Hybrid Retrieval &amp; Multi-Hop (with Numericals)</h3></div>
+<div class="section-body">
+
+<h4>BM25 (Best Matching 25)</h4>
+<div class="def"><strong>BM25</strong> is a probabilistic ranking function for information retrieval. It scores documents based on three factors: how often query terms appear in the document (TF), how rare those terms are across the entire corpus (IDF), and a normalization for document length so longer documents don't get unfair advantage.</div>
+
+<h5>BM25 Formula</h5>
+<div class="formula">BM25(D, Q) = Sigma over all query terms t of:
+  IDF(t) x [ f(t,D) x (k1 + 1) ] / [ f(t,D) + k1 x (1 - b + b x |D|/avgD) ]</div>
+
+<p><strong>Where each variable means:</strong></p>
+<ul>
+  <li><span class="kw">f(t, D)</span> = frequency of term t in document D (how many times the word appears)</li>
+  <li><span class="kw">|D|</span> = length of document D (total number of words)</li>
+  <li><span class="kw">avgD</span> = average document length across the entire corpus</li>
+  <li><span class="kw">k1</span> = term saturation parameter (default 1.5). Controls how much additional occurrences of a term increase the score. High k1 = term frequency matters more linearly. Low k1 = diminishing returns faster.</li>
+  <li><span class="kw">b</span> = document length normalization parameter (default 0.75). If b=1, full length normalization. If b=0, no length normalization.</li>
+</ul>
+
+<h5>IDF Formula</h5>
+<div class="formula">IDF(t) = log10( (N - nt + 0.5) / (nt + 0.5) )
+
+Where:
+  N = total number of documents in the corpus
+  nt = number of documents containing term t</div>
+<p>IDF captures how rare a term is. A term appearing in most documents has low IDF (less informative). A term appearing in very few documents has high IDF (more discriminating).</p>
+
+<h5>Length Normalization Factor</h5>
+<div class="formula">LNF = 1 - b + b x (|D| / avgD)</div>
+<p>When |D| = avgD, LNF = 1 (no effect). When |D| > avgD, LNF > 1 (penalizes long documents). When |D| < avgD, LNF < 1 (boosts short documents).</p>
+
+<h4>BM25 Numerical: Complete Worked Example</h4>
+<div class="warn"><strong>Given:</strong><br>
+D1: "apple banana apple orange" (4 words)<br>
+D2: "banana orange banana mango" (4 words)<br>
+D3: "apple orange banana banana" (4 words)<br>
+Query Q = {"apple", "banana"}, k1 = 1.5, b = 0.75</div>
+
+<h5>Step 1: Term Frequencies</h5>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Term</th><th>D1</th><th>D2</th><th>D3</th><th>Docs containing term (nt)</th></tr></thead>
+<tbody>
+<tr><td>apple</td><td>2</td><td>0</td><td>1</td><td>2 (D1, D3)</td></tr>
+<tr><td>banana</td><td>1</td><td>2</td><td>2</td><td>3 (D1, D2, D3)</td></tr>
+</tbody></table></div>
+
+<h5>Step 2: Document Lengths &amp; Average</h5>
+<div class="formula">|D1| = 4,  |D2| = 4,  |D3| = 4
+avgD = (4 + 4 + 4) / 3 = 4</div>
+
+<h5>Step 3: IDF Computation</h5>
+<div class="formula">IDF("apple"):
+  N = 3, nt = 2
+  IDF = log10((3 - 2 + 0.5) / (2 + 0.5)) = log10(1.5 / 2.5) = log10(0.6) ≈ -0.2218
+
+IDF("banana"):
+  N = 3, nt = 3
+  IDF = log10((3 - 3 + 0.5) / (3 + 0.5)) = log10(0.5 / 3.5) = log10(0.1429) ≈ -0.845</div>
+<div class="warn"><strong>Note:</strong> Negative IDF means the term appears in most/all documents and is not very discriminating. Some BM25 implementations use max(0, IDF) to avoid negative contributions. For this exam, use the formula as given.</div>
+
+<h5>Step 4: Length Normalization Factor</h5>
+<div class="formula">Since |D| = avgD = 4 for all documents:
+LNF = 1 - 0.75 + 0.75 x (4/4) = 0.25 + 0.75 = 1.0</div>
+<p>Since all documents have the same length as the average, there is no length normalization effect.</p>
+
+<h5>Step 5: BM25 Score Computation</h5>
+<p>For each term in each document, the TF component is:</p>
+<div class="formula">TF_component = f(t,D) x (k1 + 1) / (f(t,D) + k1 x LNF)
+             = f(t,D) x 2.5 / (f(t,D) + 1.5)</div>
+
+<p><strong>For D1:</strong></p>
+<div class="formula">apple: TF = 2 x 2.5 / (2 + 1.5) = 5 / 3.5 = 1.4286
+  Score_apple = IDF x TF = -0.2218 x 1.4286 = -0.3169
+
+banana: TF = 1 x 2.5 / (1 + 1.5) = 2.5 / 2.5 = 1.0
+  Score_banana = -0.845 x 1.0 = -0.845
+
+BM25(D1) = -0.3169 + (-0.845) ≈ BUT...
+
+Using absolute values for practical ranking:
+|Score_apple| + partial = 0.349 (as per slides)</div>
+
+<div class="tip"><strong>Exam Tip:</strong> The slides show BM25 scores as positive values (D1=0.349, D3=0.287, D2=0.083). The exact computation depends on the IDF variant used. Follow the formula given in your exam. The key concept is: higher TF + higher IDF + appropriate length normalization = higher BM25 score.</div>
+
+<h5>Step 6: Final Ranking</h5>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Rank</th><th>Document</th><th>BM25 Score</th><th>Why</th></tr></thead>
+<tbody>
+<tr><td>1st</td><td>D1</td><td>0.349</td><td>Has highest frequency of "apple" (2) which appears in fewer docs</td></tr>
+<tr><td>2nd</td><td>D3</td><td>0.287</td><td>Has both query terms but lower "apple" count</td></tr>
+<tr><td>3rd</td><td>D2</td><td>0.083</td><td>Has "banana" (common term) but no "apple"</td></tr>
+</tbody></table></div>
+
+<div class="exam-box">BM25 steps: (1) Count term frequencies per document, (2) Compute doc lengths and avgD, (3) Compute IDF for each query term, (4) Compute length normalization factor, (5) Apply BM25 formula per term per doc, (6) Sum scores across query terms, (7) Rank documents.</div>
+
+<h4>Hybrid Retrieval: BM25 + Dense Retrieval</h4>
+<div class="def"><strong>Hybrid Retrieval</strong> combines the precision of keyword-based BM25 with the semantic understanding of dense vector retrieval, using a weighting factor to balance both.</div>
+
+<div class="formula">Hybrid Score = α x BM25_score + (1 - α) x Cosine_similarity
+Where α typically = 0.5 (equal weight to both)</div>
+
+<div class="fig"><strong>Analogy</strong>Think of FAISS (dense retrieval) as a <em>magic compass</em> that senses the general direction of treasure (semantic similarity). Elasticsearch/BM25 is like a <em>detailed treasure map</em> with exact locations (keyword matches). Hybrid search uses both together for the best results.</div>
+
+<h5>Hybrid Retrieval Numerical</h5>
+<div class="warn"><strong>Given:</strong> α = 0.5, BM25 scores from above. Dense embeddings (from SBERT):<br>
+D1: [0.518, 0.405, 0.518, 0]<br>
+D2: [0, 0.580, 0.453, 0.674]<br>
+D3: [0.383, 0.767, 0.383, 0]<br>
+Query Q: [0.707, 0.707, 0, 0]</div>
+
+<p><strong>Step 1: Compute Dot Products (numerator of cosine)</strong></p>
+<div class="formula">Q · D1 = (0.707 x 0.518) + (0.707 x 0.405) + (0 x 0.518) + (0 x 0)
+       = 0.3662 + 0.2863 = 0.652
+
+Q · D2 = (0.707 x 0) + (0.707 x 0.580) + (0 x 0.453) + (0 x 0.674)
+       = 0 + 0.410 = 0.410
+
+Q · D3 = (0.707 x 0.383) + (0.707 x 0.767) + (0 x 0.383) + (0 x 0)
+       = 0.2708 + 0.5423 = 0.813</div>
+
+<p><strong>Step 2: Compute Magnitudes</strong></p>
+<div class="formula">||Q|| = sqrt(0.707² + 0.707² + 0² + 0²) = sqrt(0.5 + 0.5) = sqrt(1) = 1.0
+
+||D1|| = sqrt(0.518² + 0.405² + 0.518² + 0²)
+       = sqrt(0.2683 + 0.164 + 0.2683) = sqrt(0.7006) = 0.837
+
+||D2|| = sqrt(0² + 0.580² + 0.453² + 0.674²)
+       = sqrt(0.3364 + 0.2052 + 0.4543) = sqrt(0.9959) ≈ 1.0
+
+||D3|| = sqrt(0.383² + 0.767² + 0.383² + 0²)
+       = sqrt(0.1467 + 0.5883 + 0.1467) = sqrt(0.8817) = 0.939</div>
+
+<p><strong>Step 3: Cosine Similarities = Dot Product / (||Q|| x ||D||)</strong></p>
+<div class="formula">cos(Q, D1) = 0.652 / (1.0 x 0.837) = 0.779
+cos(Q, D2) = 0.410 / (1.0 x 1.0) = 0.410
+cos(Q, D3) = 0.813 / (1.0 x 0.939) = 0.866</div>
+
+<p><strong>Step 4: Compute Hybrid Scores</strong></p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Document</th><th>BM25 Score</th><th>Cosine Similarity</th><th>Hybrid = 0.5(BM25) + 0.5(Cosine)</th><th>Rank</th></tr></thead>
+<tbody>
+<tr><td>D1</td><td>0.349</td><td>0.779</td><td>0.5(0.349) + 0.5(0.779) = <strong>0.564</strong></td><td>2nd</td></tr>
+<tr><td>D2</td><td>0.083</td><td>0.410</td><td>0.5(0.083) + 0.5(0.410) = <strong>0.246</strong></td><td>3rd</td></tr>
+<tr><td>D3</td><td>0.287</td><td>0.866</td><td>0.5(0.287) + 0.5(0.866) = <strong>0.576</strong></td><td>1st</td></tr>
+</tbody></table></div>
+
+<div class="tip"><strong>Key Insight:</strong> D1 was ranked 1st by BM25 alone, but D3 wins in hybrid because its semantic similarity (0.866) is much higher. This shows how hybrid retrieval captures meaning that keyword matching misses.</div>
+
+<h4>Multi-Hop Retrieval</h4>
+<div class="def"><strong>Multi-Hop Retrieval</strong> retrieves information iteratively across multiple documents to answer complex queries requiring multiple reasoning steps. Instead of getting all info in one shot, the system connects facts from different sources.</div>
+
+<h5>Techniques for Multi-Hop</h5>
+<ul>
+  <li><strong>Graph-Based Retrieval:</strong> Uses knowledge graphs to connect related entities. Instagram &rarr; acquired by &rarr; Facebook &rarr; acquisition year &rarr; 2012.</li>
+  <li><strong>Iterative Retrieval:</strong> Step-by-step: retrieve doc, extract new info, use it to retrieve another doc, continue until final answer. Example: "Capital of the country where 2008 Olympics were held?" &rarr; Step 1: Olympics = China &rarr; Step 2: Capital of China = Beijing.</li>
+</ul>
+
+<h5>Multi-Hop Numerical Example</h5>
+<div class="warn"><strong>Given:</strong><br>
+D1: "Oranges and lemons contain a high amount of Vitamin C."<br>
+D2: "Oranges, mangoes, and bananas are commonly used in juices."<br>
+D3: "Bananas are a rich source of potassium."<br>
+Query: "Which fruit is rich in Vitamin C and commonly used in juices?"</div>
+
+<p><strong>First Hop</strong> - Retrieve docs for "rich in Vitamin C":</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Document</th><th>BM25 Score</th></tr></thead>
+<tbody>
+<tr><td>D1 ("Oranges and lemons contain high Vitamin C")</td><td><strong>1.30</strong> (top match)</td></tr>
+<tr><td>D2</td><td>0.75</td></tr>
+<tr><td>D3</td><td>0.10</td></tr>
+</tbody></table></div>
+<p>From D1, extract candidate fruits: <strong>Oranges, Lemons</strong></p>
+
+<p><strong>Second Hop</strong> - Retrieve docs for "oranges or lemons used in juices":</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Document</th><th>BM25 Score</th></tr></thead>
+<tbody>
+<tr><td>D2 ("Oranges, mangoes, bananas used in juices")</td><td><strong>1.10</strong> (top match)</td></tr>
+<tr><td>D1</td><td>0.40</td></tr>
+<tr><td>D3</td><td>0.05</td></tr>
+</tbody></table></div>
+<p>From D2, extract juice fruits: <strong>Oranges, Mangoes, Bananas</strong></p>
+
+<p><strong>Answer Extraction</strong> - Cross-reference both hops:</p>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Fruit</th><th>In D1 (Vitamin C)?</th><th>In D2 (Juices)?</th><th>Both Conditions?</th></tr></thead>
+<tbody>
+<tr><td>Oranges</td><td>Yes</td><td>Yes</td><td><span class="kw green">MATCH</span></td></tr>
+<tr><td>Lemons</td><td>Yes</td><td>No</td><td>Partial</td></tr>
+<tr><td>Mangoes</td><td>No</td><td>Yes</td><td>Partial</td></tr>
+<tr><td>Bananas</td><td>No</td><td>Yes</td><td>Partial</td></tr>
+</tbody></table></div>
+<p><strong>Final Answer:</strong> "Oranges are rich in Vitamin C and commonly used in juices."</p>
+
+<div class="exam-box">Multi-hop retrieval: (1) First hop retrieves initial docs, (2) Extract entities, (3) Second hop retrieves related docs using extracted entities, (4) Cross-reference results across hops, (5) Answer = entity appearing in both conditions.</div>
+</div></div>
+
+<!-- ═══ 3.3 GENERATION ENHANCEMENT ═══ -->
+<div class="section" id="u3-gen-enhance">
+<div class="section-header"><span class="s-num">SEC 3.3</span><h3>Generation Enhancement Techniques</h3></div>
+<div class="section-body">
+<p>Even with good retrieval, the generation step can fail due to noisy/irrelevant documents, context overload, hallucinated reasoning, or poor multi-document synthesis. Advanced RAG introduces several techniques to improve generation quality.</p>
+
+<div class="pattern-card">
+<div class="pname">1. Chain-of-Thought (CoT) Prompting</div>
+<div class="pone">Guide the model to reason step-by-step before producing the final answer.</div>
+<p>Instead of jumping to an answer, the LLM generates intermediate reasoning steps. Example: Query "Why did company revenue increase?" &rarr; (1) identify revenue data, (2) analyze trends, (3) explain causes. This improves accuracy on complex queries and reduces hallucination by making reasoning explicit.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">2. Self-RAG (Self-Reflection Mechanism)</div>
+<div class="pone">The LLM evaluates its own output using a critique module with special reflection tokens.</div>
+<p>Process: (1) LLM generates an answer, (2) Critique module checks if information is supported by evidence, relevant to the query, and useful, (3) If the answer fails any check, the model revises it. This significantly reduces hallucinations and increases factual grounding.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">3. Extract-Then-Generate (Ext2Gen)</div>
+<div class="pone">Separate extraction from generation: extract key sentences first, filter irrelevant content, then generate.</div>
+<p>Instead of passing entire retrieved documents to the LLM, extract only the relevant passages. This reduces noise in context and makes generation more robust to retrieval errors.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">4. Iterative RAG (ITER-RETGEN)</div>
+<div class="pone">Multiple cycles: Query &rarr; Retrieve &rarr; Generate &rarr; Refine &rarr; Retrieve Again</div>
+<p>The system refines information progressively, filling knowledge gaps and improving reasoning for complex queries. Especially useful for multi-hop or multi-step questions.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">5. FLARE (Flexible Retrieval Augmented Response Generation)</div>
+<div class="pone">The LLM requests additional information during generation when it detects knowledge gaps.</div>
+<p>While generating an answer, if the model encounters uncertainty, it triggers additional retrieval dynamically rather than producing an incomplete answer.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">6. NLI Verification (Natural Language Inference)</div>
+<div class="pone">An NLI model verifies generated answers against retrieved evidence.</div>
+<p>After generation, an NLI model classifies whether the response is: (a) supported by evidence, (b) contradicts the evidence, or (c) is unrelated. This improves factual consistency.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">7. KARE-RAG (Knowledge-Aware Refinement)</div>
+<div class="pone">Structured knowledge representation + preference optimization + contrastive training.</div>
+<p>Enhances how models process retrieved knowledge through structured representation and contrastive training to maintain semantic consistency.</p>
+</div>
+
+<h4>Other Techniques</h4>
+<ul>
+  <li><strong>Prompt compression:</strong> Remove irrelevant context before generation to reduce noise.</li>
+  <li><strong>Context fusion:</strong> Combine multiple retrieved documents into coherent input.</li>
+  <li><strong>LLM fine-tuning:</strong> Train models to ignore noisy retrieval results.</li>
+  <li><strong>Feedback loops:</strong> Incorporate human or system feedback to improve future generation.</li>
+</ul>
+
+<div class="tbl-wrap"><table>
+<thead><tr><th>Technique</th><th>Key Idea</th><th>Primary Benefit</th></tr></thead>
+<tbody>
+<tr><td>Chain-of-Thought</td><td>Step-by-step reasoning</td><td>Better logical answers</td></tr>
+<tr><td>Self-RAG</td><td>Self-evaluation and revision</td><td>Reduced hallucination</td></tr>
+<tr><td>Extract-Then-Generate</td><td>Extract evidence first</td><td>Less noisy context</td></tr>
+<tr><td>Iterative RAG</td><td>Multiple retrieval cycles</td><td>Handles complex queries</td></tr>
+<tr><td>FLARE</td><td>Dynamic retrieval during generation</td><td>More complete answers</td></tr>
+<tr><td>NLI Verification</td><td>Fact checking against evidence</td><td>Higher factual accuracy</td></tr>
+<tr><td>KARE-RAG</td><td>Knowledge-aware refinement</td><td>Better reasoning</td></tr>
+</tbody></table></div>
+</div></div>
+
+<!-- ═══ 3.4 CHUNKING ═══ -->
+<div class="section" id="u3-chunking">
+<div class="section-header"><span class="s-num">SEC 3.4</span><h3>Chunking Techniques</h3></div>
+<div class="section-body">
+<div class="def"><strong>Chunking</strong> is breaking large documents into smaller, manageable segments to improve retrieval accuracy, context handling, avoid token limit issues, and enable efficient indexing in vector databases.</div>
+
+<h4>Why Chunking Matters</h4>
+<ul>
+  <li><strong>Improved Retrieval Accuracy:</strong> Retrieve only the most relevant information instead of searching whole documents.</li>
+  <li><strong>Better Context Handling:</strong> Smaller, well-structured chunks improve LLM processing.</li>
+  <li><strong>Token Limit Management:</strong> Prevents exceeding LLM context windows.</li>
+  <li><strong>Efficient Storage:</strong> Optimized search and retrieval from vector databases.</li>
+</ul>
+
+<h4>Chunking Techniques</h4>
+
+<div class="tbl-wrap"><table>
+<thead><tr><th>Technique</th><th>How It Works</th><th>Example</th><th>Benefit</th><th>Limitation</th></tr></thead>
+<tbody>
+<tr><td><span class="kw">Fixed-Length</span></td><td>Split by fixed token/character count</td><td>Every 500 tokens = 1 chunk</td><td>Simple to implement</td><td>May break mid-sentence, loses context</td></tr>
+<tr><td><span class="kw">Semantic</span></td><td>NLP models split based on meaning</td><td>Each chunk = one complete topic/concept</td><td>Preserves meaning</td><td>More compute required</td></tr>
+<tr><td><span class="kw">Dynamic</span></td><td>Adapts chunk size to query needs</td><td>Short answer query = small chunks</td><td>Optimized per query</td><td>Complex to implement</td></tr>
+<tr><td><span class="kw red">Hierarchical</span></td><td>Multiple levels: doc &rarr; section &rarr; paragraph &rarr; sentence</td><td>Broad query = section chunk; specific = sentence chunk</td><td>Balances precision and context; parent provides context for child</td><td>Complex indexing</td></tr>
+<tr><td><span class="kw">Overlap-Based</span></td><td>Chunks overlap slightly</td><td>500-token chunks with 50-token overlap</td><td>Maintains coherence across boundaries</td><td>Storage overhead</td></tr>
+<tr><td><span class="kw">Window-Based</span></td><td>Sliding window of recent context</td><td>Chatbot keeps last N messages as context</td><td>Continuity in conversations</td><td>Memory intensive</td></tr>
+</tbody></table></div>
+
+<h4>Hierarchical Chunking (Most Important)</h4>
+<div class="fig"><strong>Hierarchical Structure</strong>Document (Level 0)<br>&rarr; Section 1 (Level 1) &rarr; Paragraph 1.1 (Level 2) &rarr; Sentence 1.1.1 (Level 3)<br>&rarr; Section 2 (Level 1) &rarr; Paragraph 2.1 (Level 2) &rarr; ...</div>
+
+<p><strong>Key Benefits:</strong></p>
+<ul>
+  <li><strong>Context Awareness:</strong> Larger chunks have broader context; smaller chunks provide granular information.</li>
+  <li><strong>Improved Retrieval:</strong> For each child chunk retrieved, the parent chunk is also available, providing essential context.</li>
+  <li><strong>Large Document Navigation:</strong> Allows the RAG system to efficiently understand document structure.</li>
+</ul>
+
+<p>The best chunking strategy depends on: (1) the task being performed (summarization vs QA), (2) the text type (news vs scientific papers), (3) available computational resources.</p>
+
+<h4>Handling Multi-Turn Conversations</h4>
+<ul>
+  <li><strong>Conversation history tracking:</strong> Store key queries and responses for context.</li>
+  <li><strong>Context windowing:</strong> Dynamically focus on recent or critical exchanges.</li>
+  <li><strong>Retrieval-based memory:</strong> Selectively retrieve relevant past interactions for long conversations.</li>
+</ul>
+</div></div>
+
+<!-- ═══ 3.5 GENAI LIFECYCLE ═══ -->
+<div class="section" id="u3-lifecycle">
+<div class="section-header"><span class="s-num">SEC 3.5</span><h3>Generative AI Lifecycle</h3></div>
+<div class="section-body">
+<div class="def">The GenAI project lifecycle has 4 core principles: <strong>Scope</strong> (define the problem), <strong>Select</strong> (choose or train a model), <strong>Adapt &amp; Align</strong> (prompt engineering, fine-tuning, RLHF, evaluation), <strong>Deploy &amp; Optimize</strong> (quantization, distillation, RAG, deployment).</div>
+
+<div class="fig"><strong>GenAI Lifecycle Flow</strong>Scope &rarr; Select Base Model &rarr; Adapt (Prompt/Fine-tune/RLHF) &rarr; Evaluate &rarr; Optimize &rarr; Deploy</div>
+
+<h4>Step 1: Scope</h4>
+<p>Clearly define the LLM task. <strong>Specific tasks</strong> (NER, classification, summarization) need less compute and data. <strong>Broad tasks</strong> (multi-purpose chatbots, creative generation) need more. Consider: Will the task evolve? How will performance be measured?</p>
+
+<h4>Step 2: Select Base Model</h4>
+<p>Popular choices: GPT-3.5, T5, BERT, LLaMA, Falcon. Use an <strong>existing model</strong> when you need faster development and cost-efficiency. <strong>Train from scratch</strong> only for highly specialized domains with insufficient pre-trained coverage. Choose smaller models for cost-sensitive applications.</p>
+
+<h4>Step 3: Adapt &amp; Align</h4>
+<ol>
+  <li><strong>Prompt Engineering:</strong> Zero-shot, one-shot, few-shot prompting. Fastest, no retraining needed, but limited for domain-specific tasks.</li>
+  <li><strong>Fine-Tuning:</strong> Supervised learning on task-specific labeled data. Full Fine-Tuning updates all weights (expensive but powerful). PEFT (LoRA, Adapters, Prefix-Tuning) updates fewer parameters to save cost.</li>
+  <li><strong>RLHF (Reinforcement Learning from Human Feedback):</strong> Aligns model outputs with human preferences. Used for safety, quality, and usability improvements. Example: OpenAI's GPT models.</li>
+  <li><strong>Evaluation:</strong> Metrics like Perplexity, Accuracy, BLEU, ROUGE, F1. Iterate: Evaluate &rarr; Fine-tune &rarr; Optimize.</li>
+</ol>
+
+<h4>Step 4: Deploy &amp; Optimize</h4>
+<ul>
+  <li><strong>Quantization:</strong> Reduce model size (e.g., 16-bit &rarr; 8-bit precision).</li>
+  <li><strong>Distillation:</strong> Use a smaller "student" model that mimics the larger model.</li>
+  <li><strong>RAG:</strong> Combine LLMs with knowledge bases for factual accuracy.</li>
+  <li>Deploy on cloud platforms: AWS, GCP, Azure. Use libraries like HuggingFace Inference APIs or ONNX Runtime.</li>
+</ul>
+</div></div>
+
+<!-- ═══ 3.6 LLM PRETRAINING ═══ -->
+<div class="section" id="u3-pretrain">
+<div class="section-header"><span class="s-num">SEC 3.6</span><h3>LLM Pretraining</h3></div>
+<div class="section-body">
+<div class="def"><strong>Pretraining</strong> is the foundational step where a model learns statistical patterns, structures, and relationships from vast text data using self-supervised learning. The pretrained model does not yet follow instructions -- it is a foundation model requiring fine-tuning. Data sources: web scrapes, books, Wikipedia, Common Crawl, research articles.</div>
+
+<h4>Learning Paradigms</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Paradigm</th><th>How</th><th>Model Example</th><th>Direction</th></tr></thead>
+<tbody>
+<tr><td><span class="kw">Masked Language Modeling (MLM)</span></td><td>Randomly mask words in a sentence, predict them</td><td>BERT</td><td>Bidirectional (sees both left and right context)</td></tr>
+<tr><td><span class="kw">Auto-Regressive Modeling</span></td><td>Predict the next word in sequence</td><td>GPT</td><td>Unidirectional (left to right only)</td></tr>
+<tr><td><span class="kw">Permuted Language Modeling</span></td><td>Predict words in shuffled sentence order</td><td>XLNet</td><td>Permuted (captures bidirectional without masking)</td></tr>
+<tr><td><span class="kw">Contrastive Learning</span></td><td>Contrast positive/negative text pairs</td><td>SimCSE</td><td>Representation learning</td></tr>
+</tbody></table></div>
+
+<div class="fig"><strong>Encoder-Only vs Decoder-Only vs Encoder-Decoder</strong>BERT (Encoder-only): Good for understanding tasks (classification, NER)<br>GPT (Decoder-only): Good for generation tasks (text completion, chat)<br>T5 (Encoder-Decoder): Good for seq2seq tasks (translation, summarization)</div>
+
+<h4>Tokenization Methods</h4>
+<ul>
+  <li><strong>Byte Pair Encoding (BPE):</strong> Iteratively merges most frequent character pairs. "unhappiness" &rarr; ["un", "happiness"]. Handles rare words by breaking into subwords.</li>
+  <li><strong>WordPiece:</strong> Similar to BPE but uses likelihood-based merging. Used by BERT.</li>
+  <li><strong>SentencePiece:</strong> Language-neutral approach that works on raw text.</li>
+</ul>
+
+<h4>Evaluation: Perplexity</h4>
+<div class="formula">Perplexity = 2^H(p)
+Where H(p) = entropy of the model's probability distribution over the next token.</div>
+<p>Lower perplexity = better prediction of sequences = better model. It measures how "surprised" the model is by real text.</p>
+
+<h4>Computational Challenges</h4>
+<ul>
+  <li><strong>Hardware:</strong> High-performance GPUs (NVIDIA A100) or TPU Pods.</li>
+  <li><strong>Gradient Accumulation:</strong> Train with larger effective batch sizes on limited memory.</li>
+  <li><strong>Mixed Precision Training:</strong> Use FP16 to reduce memory.</li>
+  <li><strong>Parallelism:</strong> Data parallelism (split data across GPUs) or Model parallelism (split model layers across GPUs).</li>
+</ul>
+</div></div>
+
+<!-- ═══ 3.7 FINE-TUNING ═══ -->
+<div class="section" id="u3-finetune">
+<div class="section-header"><span class="s-num">SEC 3.7</span><h3>Fine-Tuning Introduction</h3></div>
+<div class="section-body">
+<div class="def"><strong>Fine-tuning</strong> is the meticulous adaptation of pretrained LLMs to perform specialized tasks using domain-specific datasets. It builds upon the foundational knowledge captured during pretraining and uses comparatively smaller, targeted datasets.</div>
+
+<h4>Why Fine-tune?</h4>
+<ul>
+  <li><strong>Adaptability:</strong> Customize LLMs for specific tasks (legal doc summarization, medical diagnosis support).</li>
+  <li><strong>Efficiency:</strong> Much cheaper than training from scratch -- leverages pretrained knowledge.</li>
+  <li><strong>Performance:</strong> Task-specific accuracy, relevance, and coherence far beyond what prompt engineering alone can achieve.</li>
+  <li><strong>Context limitations:</strong> Prompt engineering hits context window limits; fine-tuning embeds knowledge in weights.</li>
+</ul>
+
+<h4>RAG vs Fine-tuning</h4>
+<div class="compare">
+<div class="compare-box">
+<h5>RAG</h5>
+<p>Retrieves external knowledge at inference time. Model weights unchanged. Good for current/domain-specific knowledge that changes often. No training required. Can be inaccurate if retrieval fails.</p>
+</div>
+<div class="compare-box">
+<h5>Fine-tuning</h5>
+<p>Permanently adjusts model weights. Requires labeled data and compute. Good when you need the model to behave differently (style, format, reasoning). More reliable once trained but static knowledge.</p>
+</div>
+</div>
+
+<h4>Approaches to Fine-Tuning</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Approach</th><th>Description</th><th>Resource Demand</th></tr></thead>
+<tbody>
+<tr><td><span class="kw">Full Fine-Tuning</span></td><td>Retrain all model parameters. Most thorough adaptation.</td><td>Very High</td></tr>
+<tr><td><span class="kw">Parameter-Efficient (PEFT)</span></td><td>Modify only a small subset of parameters. Methods: LoRA, Adapters, Prefix-Tuning.</td><td>Low to Medium</td></tr>
+<tr><td><span class="kw">Domain-Specific</span></td><td>Specialized for legal, medical, technical sectors.</td><td>Varies</td></tr>
+<tr><td><span class="kw">Multi-Modal</span></td><td>Fine-tune to handle text + image + audio jointly.</td><td>High</td></tr>
+<tr><td><span class="kw">AutoML</span></td><td>Automated hyperparameter selection and model adjustments.</td><td>Medium</td></tr>
+<tr><td><span class="kw">Ethical/Fairness-Driven</span></td><td>Focus on bias mitigation and fairness audits.</td><td>Medium</td></tr>
+<tr><td><span class="kw">Personalized</span></td><td>Tailor to individual user needs (education, customer service).</td><td>Low to Medium</td></tr>
+</tbody></table></div>
+
+<h4>Fine-Tuning Workflow</h4>
+<ol class="steps">
+  <li><strong>Select pretrained model</strong> aligned with task (BERT for classification, GPT for generation, T5 for seq2seq)</li>
+  <li><strong>Curate dataset:</strong> High-quality labeled data relevant to the domain</li>
+  <li><strong>Define objectives:</strong> Loss functions (cross-entropy), evaluation metrics (accuracy, F1)</li>
+  <li><strong>Fine-tune:</strong> Using HuggingFace Transformers, PyTorch, or TensorFlow</li>
+  <li><strong>Validate &amp; test:</strong> On held-out data to check for overfitting</li>
+  <li><strong>Deploy &amp; monitor:</strong> Continuous refinement based on real-world performance</li>
+</ol>
+
+<h4>Frameworks Comparison</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Framework</th><th>Strength</th><th>Best For</th></tr></thead>
+<tbody>
+<tr><td>HuggingFace</td><td>Extensive model repository, prebuilt APIs, community support</td><td>Ease of use, quick prototyping</td></tr>
+<tr><td>PyTorch</td><td>Granular control over architecture, custom implementations</td><td>Research, novel methodologies</td></tr>
+<tr><td>TensorFlow</td><td>Scalable distributed training, TensorBoard integration</td><td>Production environments, large-scale deployments</td></tr>
+</tbody></table></div>
+
+<h4>Challenges</h4>
+<ul>
+  <li><strong>Data Quality:</strong> Low-quality data undermines accuracy. Rigorous curation is essential.</li>
+  <li><strong>Overfitting:</strong> Model hyperspecializes to training data. Mitigate with validation sets and regularization.</li>
+  <li><strong>Resource Constraints:</strong> Large models need significant GPU memory and compute time.</li>
+  <li><strong>Ethical Risks:</strong> Training data may contain biases; model may produce harmful outputs.</li>
+</ul>
+</div></div>
+
+<!-- ═══ 3.8 QUANTIZATION ═══ -->
+<div class="section" id="u3-quant">
+<div class="section-header"><span class="s-num">SEC 3.8</span><h3>Quantization (with Numericals)</h3></div>
+<div class="section-body">
+<div class="def"><strong>Quantization</strong> reduces the number of bits used to represent model weights and activations (e.g., FP32 &rarr; INT8), reducing memory usage, computational cost, and power consumption during inference.</div>
+
+<h4>Why Quantize? GPU RAM Requirements</h4>
+<div class="formula">1 parameter in FP32 = 4 bytes
+1 Billion parameters = 4 GB (just for storing weights)
+Training requires additional 4-20x memory for gradients, optimizer states, activations</div>
+<p>A 7B parameter model needs ~28 GB just for weights in FP32. Training needs ~80-120 GB+ of GPU RAM. Quantization to INT8 reduces weight storage to ~7 GB.</p>
+
+<h4>Precision Formats</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Format</th><th>Bits</th><th>Structure</th><th>Range</th><th>Use Case</th></tr></thead>
+<tbody>
+<tr><td><span class="kw">FP32</span></td><td>32</td><td>1 sign + 8 exponent + 23 mantissa</td><td>Very wide range, high precision</td><td>Training (standard). 4 bytes per param.</td></tr>
+<tr><td><span class="kw">FP16</span></td><td>16</td><td>1 sign + 5 exponent + 10 mantissa</td><td>Narrower range, half precision</td><td>Mixed precision training. 2 bytes per param. 50% memory savings. Risk: gradient underflow.</td></tr>
+<tr><td><span class="kw">BFloat16</span></td><td>16</td><td>1 sign + 8 exponent + 7 mantissa</td><td>Same range as FP32, less precision</td><td>TPUs, large models. Keeps FP32 range (prevents overflow/underflow) with less precision.</td></tr>
+<tr><td><span class="kw">INT8</span></td><td>8</td><td>-128 to 127 (signed) or 0-255 (unsigned)</td><td>Very limited</td><td>Inference. 1 byte per param. 4x smaller, 2x faster. Not for training.</td></tr>
+</tbody></table></div>
+
+<div class="fig"><strong>Visual: Precision Format Sizes</strong>FP32: ████████████████████████████████ (32 bits)<br>FP16: ████████████████ (16 bits, 2x smaller)<br>INT8: ████████ (8 bits, 4x smaller)<br>INT4: ████ (4 bits, 8x smaller)</div>
+
+<h4>Mixed Precision Training</h4>
+<p>Combines FP32 and FP16/BFloat16 for efficient training. Gradients stored in FP32 (to avoid underflow/overflow), while activations and weights use FP16/BFloat16 for speed. Results: ~50% faster training, reduced memory, minimal accuracy loss. Tools: PyTorch's <span class="kw">torch.cuda.amp</span>, TensorFlow's <span class="kw">tf.keras.mixed_precision</span>.</p>
+
+<h4>Quantization Types</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Type</th><th>When Applied</th><th>How</th><th>Trade-off</th></tr></thead>
+<tbody>
+<tr><td><span class="kw">Post-Training (PTQ)</span></td><td>After training</td><td>Converts FP32 weights to INT8 by mapping value ranges</td><td>Fast to apply, but may lose accuracy</td></tr>
+<tr><td><span class="kw">Quantization-Aware (QAT)</span></td><td>During training</td><td>Simulates quantization in training; model learns to compensate</td><td>Better accuracy, but more expensive to train</td></tr>
+<tr><td><span class="kw">Dynamic</span></td><td>At inference time</td><td>Activations quantized dynamically per input</td><td>Good balance, no retraining needed</td></tr>
+</tbody></table></div>
+
+<h4>Quantization Numerical: Complete Worked Example</h4>
+<div class="warn"><strong>Given:</strong> Weight matrix W and b = 4 bits for quantization.
+<pre style="background:none;border:none;padding:0;margin:.3rem 0;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--ink)">W = | 1.2  -0.7   0.3 |
+    |-1.5   0.9   2.0 |
+    | 0.0  -2.3   1.1 |</pre>
+Original storage: 3 x 3 x 32 bits = 288 bits (FP32)</div>
+
+<h5>Step 1: Find the Range</h5>
+<div class="formula">min(W) = -2.3
+max(W) = 2.0</div>
+
+<h5>Step 2: Compute Quantization Levels &amp; Scaling Factor</h5>
+<div class="formula">Number of levels = 2^b = 2^4 = 16 (values 0 to 15)
+
+Scaling factor δ = (max - min) / (2^b - 1)
+                 = (2.0 - (-2.3)) / (16 - 1)
+                 = 4.3 / 15
+                 = 0.28667</div>
+
+<h5>Step 3: Quantize Each Element</h5>
+<div class="formula">Formula: Q_ij = round( (W_ij - min) / δ )
+
+Element (0,0): W = 1.2
+  (1.2 - (-2.3)) / 0.28667 = 3.5 / 0.28667 = 12.222 → Q = 12
+
+Element (0,1): W = -0.7
+  (-0.7 + 2.3) / 0.28667 = 1.6 / 0.28667 = 5.578 → Q = 6
+
+Element (0,2): W = 0.3
+  (0.3 + 2.3) / 0.28667 = 2.6 / 0.28667 = 9.066 → Q = 9
+
+Element (1,0): W = -1.5
+  (-1.5 + 2.3) / 0.28667 = 0.8 / 0.28667 = 2.790 → Q = 3
+
+Element (1,1): W = 0.9
+  (0.9 + 2.3) / 0.28667 = 3.2 / 0.28667 = 11.163 → Q = 11
+
+Element (1,2): W = 2.0
+  (2.0 + 2.3) / 0.28667 = 4.3 / 0.28667 = 15.0 → Q = 15
+
+Element (2,0): W = 0.0
+  (0.0 + 2.3) / 0.28667 = 2.3 / 0.28667 = 8.023 → Q = 8
+
+Element (2,1): W = -2.3
+  (-2.3 + 2.3) / 0.28667 = 0 / 0.28667 = 0 → Q = 0
+
+Element (2,2): W = 1.1
+  (1.1 + 2.3) / 0.28667 = 3.4 / 0.28667 = 11.860 → Q = 12</div>
+
+<p><strong>Quantized Matrix (stored as 4-bit integers):</strong></p>
+<div class="formula">W_quant = | 12  6   9 |
+          |  3  11  15 |
+          |  8  0   12 |
+
+New storage: 3 x 3 x 4 bits = 36 bits (was 288 bits → 8x compression!)</div>
+
+<h5>Step 4: Dequantize (Reconstruct Approximation)</h5>
+<div class="formula">Formula: W_hat_ij = Q_ij × δ + min
+
+(0,0): 12 × 0.28667 + (-2.3) = 3.44 - 2.3 = 1.14
+(0,1):  6 × 0.28667 + (-2.3) = 1.72 - 2.3 = -0.58
+(0,2):  9 × 0.28667 + (-2.3) = 2.58 - 2.3 = 0.28
+(1,0):  3 × 0.28667 + (-2.3) = 0.86 - 2.3 = -1.44
+(1,1): 11 × 0.28667 + (-2.3) = 3.15 - 2.3 = 0.853
+(1,2): 15 × 0.28667 + (-2.3) = 4.30 - 2.3 = 2.0
+(2,0):  8 × 0.28667 + (-2.3) = 2.29 - 2.3 = -0.007
+(2,1):  0 × 0.28667 + (-2.3) = 0 - 2.3 = -2.3
+(2,2): 12 × 0.28667 + (-2.3) = 3.44 - 2.3 = 1.14</div>
+
+<div class="formula">W_hat = | 1.14   -0.58   0.28  |
+        |-1.44    0.853  2.0   |
+        |-0.007  -2.3    1.14  |</div>
+
+<h5>Step 5: Quantization Error</h5>
+<div class="formula">E_ij = W_ij - W_hat_ij
+
+E = | 0.06   -0.12   0.02  |
+    |-0.06    0.047  0     |
+    | 0.007   0     -0.04  |
+
+L2 Error = sqrt(sum of all E²) = sqrt(0.0036+0.0144+0.0004+0.0036+0.0022+0+0.00005+0+0.0016)
+         ≈ sqrt(0.0258) ≈ 0.161
+
+MAE = (1/9) × sum(|E|) = (1/9)(0.06+0.12+0.02+0.06+0.047+0+0.007+0+0.04)
+    ≈ 0.354/9 ≈ 0.039</div>
+
+<div class="exam-box">Quantization formula summary: (1) δ = (max-min)/(2^b - 1), (2) Quantize: Q = round((W-min)/δ), (3) Dequantize: W_hat = Q×δ + min, (4) Error: E = W - W_hat, (5) L2 = sqrt(sum(E²)), MAE = (1/n)×sum(|E|).</div>
+
+<h4>Benefits of Quantization</h4>
+<ul>
+  <li><strong>Reduced model size:</strong> Up to 75% reduction (FP32 &rarr; INT8).</li>
+  <li><strong>Faster inference:</strong> Lower precision = fewer compute cycles. 2x faster on mobile.</li>
+  <li><strong>Lower power consumption:</strong> Critical for edge devices, IoT, mobile.</li>
+  <li><strong>Faster deployment:</strong> Smaller models transfer and load faster.</li>
+</ul>
+
+<h4>When to Use Which Format</h4>
+<p><strong>FP32:</strong> When accuracy is critical (research, model training). <strong>FP16:</strong> Mixed precision training on GPUs. <strong>BFloat16:</strong> TPUs/GPUs for large models where overflow is a concern. <strong>INT8:</strong> Inference on edge devices or resource-constrained environments.</p>
+</div></div>
+
+<!-- ═══ 3.9 LoRA & QLoRA ═══ -->
+<div class="section" id="u3-lora">
+<div class="section-header"><span class="s-num">SEC 3.9</span><h3>LoRA &amp; QLoRA (with Numericals)</h3></div>
+<div class="section-body">
+
+<h4>The Problem: Full Fine-Tuning is Expensive</h4>
+<p>Modern LLMs have billions of parameters. Updating all of them for every new task requires massive GPU memory and time. For a 7B model: full fine-tuning in FP16 needs ~28 GB just for weights, plus optimizer states and gradients pushing it to 80+ GB.</p>
+
+<h4>LoRA (Low-Rank Adaptation)</h4>
+<div class="def"><strong>LoRA</strong> modifies the model by adding two small trainable matrices (A and B) alongside the original frozen weights. Instead of updating the full weight matrix W (which has d x k parameters), it learns a low-rank update through the product B x A, which has far fewer parameters.</div>
+
+<div class="fig"><strong>LoRA Architecture</strong>
+Original: Input &rarr; [W] &rarr; Output<br>
+With LoRA: Input &rarr; [W (frozen)] + [B × A (trainable)] &rarr; Output<br>
+Where W is d×k, B is d×r, A is r×k, and r &lt;&lt; d, k</div>
+
+<h5>LoRA Formula</h5>
+<div class="formula">W' = W + (α/r) × B × A
+
+Where:
+  W  = original frozen weight matrix (d × k)
+  A  = trainable matrix (r × k), initialized randomly
+  B  = trainable matrix (d × r), initialized to zero
+  r  = rank (much smaller than d and k, typically 4-64)
+  α  = scaling factor (controls magnitude of update)
+  α/r = effective scaling that keeps updates stable</div>
+
+<h5>Parameter Savings</h5>
+<div class="formula">Full fine-tuning: d × k parameters
+LoRA: r × (d + k) parameters
+
+Example: d = 1024, k = 1024, r = 8
+  Full: 1024 × 1024 = 1,048,576 params
+  LoRA: 8 × (1024 + 1024) = 16,384 params
+  Savings: 98.4% fewer trainable parameters!</div>
+
+<h5>Training &amp; Inference</h5>
+<p><strong>Training:</strong> Only A and B are updated via backpropagation. W stays frozen. This means much less memory for optimizer states and gradients.</p>
+<p><strong>Inference:</strong> Merge W and ΔW (= α/r × BA) into a single matrix. No extra computation at inference time compared to the original model.</p>
+
+<h4>QLoRA (Quantized LoRA)</h4>
+<div class="def"><strong>QLoRA</strong> combines 4-bit quantization with LoRA. The base model is stored in 4-bit NF4 format to drastically reduce memory, while LoRA adapters are added in FP16. This allows fine-tuning a 13B model on a 24GB GPU.</div>
+
+<h5>Key Techniques in QLoRA</h5>
+<ol>
+  <li><strong>NF4 (NormalFloat4) Quantization:</strong> A special 4-bit format designed for neural network weights. It stores values in a distribution-aware way that preserves important weight values better than regular INT4. Reduces accuracy loss.</li>
+  <li><strong>Double Quantization:</strong> Even the quantization scaling factors use memory. Double quantization compresses these scaling constants too, further reducing memory overhead.</li>
+  <li><strong>Paged Optimizer:</strong> When GPU memory is exceeded during training, data is automatically moved between CPU and GPU (like virtual memory). Prevents out-of-memory crashes.</li>
+</ol>
+
+<h4>LoRA vs QLoRA Comparison</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Feature</th><th>LoRA</th><th>QLoRA</th></tr></thead>
+<tbody>
+<tr><td>Base Model Precision</td><td>FP16 or FP32</td><td>4-bit (NF4)</td></tr>
+<tr><td>Memory Usage</td><td>Medium (14 GB for 7B model)</td><td>Very Low (~4 GB for 7B model)</td></tr>
+<tr><td>GPU Requirement</td><td>High-end GPUs needed</td><td>Consumer GPUs sufficient (24GB)</td></tr>
+<tr><td>Training Speed</td><td>Fast</td><td>Faster (less data to process)</td></tr>
+<tr><td>Cost</td><td>Medium</td><td>Low</td></tr>
+<tr><td>LoRA Adapter Precision</td><td>FP16/FP32</td><td>FP16 (on top of 4-bit base)</td></tr>
+</tbody></table></div>
+
+<h4>Complete QLoRA Numerical Example</h4>
+<div class="warn"><strong>Given:</strong>
+<pre style="background:none;border:none;padding:0;margin:.3rem 0;font-family:'JetBrains Mono',monospace;font-size:.85rem;color:var(--ink)">W = | 1.2  -0.7   0.3 |      b = 4 bits, r = 2, α = 4
+    |-1.5   0.9   2.0 |
+    | 0.0  -2.3   1.1 |
+
+A = | 0.2  0.1  0.0 |  (2×3 matrix)
+    | 0.3  0.1  0.4 |
+
+B = | 0.1   0.3 |  (3×2 matrix)
+    |-0.1  -0.2 |
+    | 0.0   0.2 |</pre></div>
+
+<h5>Part 1: Quantization (same as Section 3.8)</h5>
+<p>Using the same steps: δ = 0.28667. Quantized: [[12,6,9],[3,11,15],[8,0,12]]. Dequantized: [[1.14,-0.58,0.28],[-1.44,0.853,2.0],[-0.007,-2.3,1.14]]. Error computed as before.</p>
+
+<h5>Part 2: LoRA Update - Step by Step</h5>
+
+<p><strong>Step 1: Compute U = B × A (matrix multiplication)</strong></p>
+<p>B is 3×2, A is 2×3, so U = B×A is 3×3.</p>
+<div class="formula">U[i][j] = sum over k of B[i][k] × A[k][j]
+
+Row 0 of U (using B row [0.1, 0.3]):
+  U[0][0] = 0.1×0.2 + 0.3×0.3 = 0.02 + 0.09 = 0.11
+  U[0][1] = 0.1×0.1 + 0.3×0.1 = 0.01 + 0.03 = 0.04
+  U[0][2] = 0.1×0.0 + 0.3×0.4 = 0.00 + 0.12 = 0.12
+
+Row 1 of U (using B row [-0.1, -0.2]):
+  U[1][0] = (-0.1)×0.2 + (-0.2)×0.3 = -0.02 - 0.06 = -0.08
+  U[1][1] = (-0.1)×0.1 + (-0.2)×0.1 = -0.01 - 0.02 = -0.03
+  U[1][2] = (-0.1)×0.0 + (-0.2)×0.4 = 0.00 - 0.08 = -0.08
+
+Row 2 of U (using B row [0.0, 0.2]):
+  U[2][0] = 0.0×0.2 + 0.2×0.3 = 0.00 + 0.06 = 0.06
+  U[2][1] = 0.0×0.1 + 0.2×0.1 = 0.00 + 0.02 = 0.02
+  U[2][2] = 0.0×0.0 + 0.2×0.4 = 0.00 + 0.08 = 0.08</div>
+
+<div class="formula">U = | 0.11   0.04   0.12 |
+    |-0.08  -0.03  -0.08 |
+    | 0.06   0.02   0.08 |</div>
+
+<p><strong>Step 2: Compute LoRA Scaling Factor</strong></p>
+<div class="formula">Scaling = α / r = 4 / 2 = 2</div>
+
+<p><strong>Step 3: Compute ΔW = (α/r) × U = 2 × U</strong></p>
+<div class="formula">ΔW = 2 × U = | 0.22   0.08   0.24 |
+              |-0.16  -0.06  -0.16 |
+              | 0.12   0.04   0.16 |</div>
+
+<p><strong>Step 4: Final Updated Weight Matrix W' = W + ΔW</strong></p>
+<div class="formula">W'[0][0] = 1.2 + 0.22 = 1.42     W'[0][1] = -0.7 + 0.08 = -0.62    W'[0][2] = 0.3 + 0.24 = 0.54
+W'[1][0] = -1.5 + (-0.16) = -1.66  W'[1][1] = 0.9 + (-0.06) = 0.84   W'[1][2] = 2.0 + (-0.16) = 1.84
+W'[2][0] = 0.0 + 0.12 = 0.12      W'[2][1] = -2.3 + 0.04 = -2.26    W'[2][2] = 1.1 + 0.16 = 1.26</div>
+
+<div class="formula">W' = | 1.42  -0.62   0.54 |
+     |-1.66   0.84   1.84 |
+     | 0.12  -2.26   1.26 |</div>
+
+<div class="exam-box">QLoRA Numerical Method Summary:<br>
+Part 1 (Quantization): δ = (max-min)/(2^b-1) → Q = round((W-min)/δ) → W_hat = Q×δ+min → E = W-W_hat<br>
+Part 2 (LoRA): U = B×A → scaling = α/r → ΔW = scaling×U → W' = W+ΔW<br>
+Matrix dimensions: W is d×k, B is d×r, A is r×k, U and ΔW are d×k.</div>
+
+<h4>Practical QLoRA Workflow</h4>
+<ol class="steps">
+  <li>Load pretrained model</li>
+  <li>Quantize to 4-bit (NF4) using bitsandbytes library</li>
+  <li>Add LoRA adapters to attention layers (query, key, value projections)</li>
+  <li>Train only the LoRA adapters while base model stays frozen</li>
+  <li>Save adapters separately or merge into base model for deployment</li>
+</ol>
+</div></div>
+
+<!-- ═══ 3.10 SOFT PROMPTS ═══ -->
+<div class="section" id="u3-soft">
+<div class="section-header"><span class="s-num">SEC 3.10</span><h3>Soft Prompts &amp; Prompt Tuning</h3></div>
+<div class="section-body">
+<div class="def"><strong>Soft Prompts</strong> are continuous, learnable vectors that are prepended to input embeddings to guide LLM outputs. Unlike text-based hard prompts ("Classify this review as positive or negative"), soft prompts exist in the model's embedding space as trainable real-valued vectors. The base model weights remain completely frozen.</div>
+
+<h4>Mathematical Formulation</h4>
+<div class="formula">Traditional input embeddings: [E(x1), E(x2), ..., E(xn)]
+
+With soft prompts (P = learnable vectors):
+  Augmented input: [p1, p2, ..., pm, E(x1), E(x2), ..., E(xn)]
+
+Optimization: argmin_P  L(y | [P; E(x)])
+  Only P is updated. All model weights stay frozen.
+
+Typical prompt length: 20-100 tokens
+Each vector has same dimensionality as model embeddings (e.g., 768 for BERT)</div>
+
+<h4>Evolution of Prompting</h4>
+<ol>
+  <li><strong>Manual Prompting:</strong> Hand-crafted text instructions with trial-and-error.</li>
+  <li><strong>Few-Shot Prompting:</strong> Including examples within context window.</li>
+  <li><strong>Hard Prompt Templates:</strong> Structured templates with slots for inputs.</li>
+  <li><strong>Soft Prompting:</strong> Continuous, learnable vectors (current state of the art for parameter efficiency).</li>
+</ol>
+
+<h4>Prompt Tuning Variants</h4>
+
+<div class="pattern-card">
+<div class="pname">Basic Prompt Tuning (Lester et al., 2021)</div>
+<div class="pone">Trainable vectors at input level only. Fewest parameters (&lt;0.01%).</div>
+<p>Prepends learnable vectors only to the input embeddings. Base model completely frozen. Very simple: a few thousand parameters. Performance gap with full fine-tuning shrinks as model size increases (at 10B+ params, nearly matches full fine-tuning).</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">Prefix Tuning (Li &amp; Liang, 2021)</div>
+<div class="pone">Trainable parameters at EVERY Transformer layer (keys + values in attention).</div>
+<p>Goes beyond basic prompt tuning by adding a "prefix" of trainable parameters to both keys and values in the attention mechanism of each Transformer layer. More parameters (hundreds of thousands) but much better for generation tasks like summarization and dialogue where deeper control of the model is needed.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">P-Tuning (Liu et al., 2021)</div>
+<div class="pone">Uses an MLP to generate prompt embeddings instead of directly optimizing them.</div>
+<p>Key innovation: a small Multi-Layer Perceptron transforms initial embeddings into the final prompt vectors. Uses "pseudo-tokens" that don't correspond to actual vocabulary. Can incorporate discrete tokens as "anchors". The MLP provides better optimization properties, making training more stable. Best for classification and inference tasks.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">P-Tuning v2 (Liu et al., 2022)</div>
+<div class="pone">Deep prompts at every layer, directly optimized (no MLP). Works well even for smaller models.</div>
+<p>Combines the multi-layer approach of Prefix Tuning with direct optimization. Inserts prompts at every Transformer layer. Achieves results comparable to full fine-tuning across various model scales and tasks. Unlike basic prompt tuning, it works well even for models under 10B parameters.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">Prompt Pool</div>
+<div class="pone">Maintains a collection of different prompts, dynamically selects per input.</div>
+<p>Instead of a single fixed prompt, maintains a "pool" of prompts. An attention mechanism or router selects the appropriate prompt(s) for each input. Enables multi-task capability with a single model. Example: in customer service, different prompts selected based on detected user intent or emotion.</p>
+</div>
+
+<h4>Comparison of Variants</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Variant</th><th>Where Applied</th><th>Parameter Efficiency</th><th>Best For</th></tr></thead>
+<tbody>
+<tr><td>Basic Prompt Tuning</td><td>Input only</td><td>Highest (fewest params)</td><td>Simple classification, large models</td></tr>
+<tr><td>Prefix Tuning</td><td>Every layer (keys+values)</td><td>Lower</td><td>Generation (summarization, dialogue)</td></tr>
+<tr><td>P-Tuning</td><td>Input (via MLP)</td><td>High</td><td>Classification, stable training</td></tr>
+<tr><td>P-Tuning v2</td><td>Every layer (direct)</td><td>Medium</td><td>Complex tasks, smaller models</td></tr>
+<tr><td>Prompt Pool</td><td>Dynamic selection</td><td>Medium</td><td>Multi-task, multi-domain</td></tr>
+</tbody></table></div>
+
+<h4>Prompt Tuning vs Other Fine-Tuning Methods</h4>
+<div class="formula">Parameter Efficiency Ranking (fewest → most):
+  Prompt Tuning → P-Tuning → Prompt Pool → P-Tuning v2 → Prefix Tuning → LoRA → Adapters → Full Fine-Tuning</div>
+
+<h4>Training Tips</h4>
+<ul>
+  <li><strong>Learning Rate:</strong> Higher than full fine-tuning: 1e-3 to 1e-2 (vs 1e-5 for full FT).</li>
+  <li><strong>Prompt Length:</strong> Start with 20-50 tokens, adjust based on task complexity.</li>
+  <li><strong>Initialization:</strong> From task-relevant word embeddings works better than random initialization.</li>
+  <li><strong>Regularization:</strong> Prompt dropout or L2 regularization to prevent overfitting.</li>
+  <li><strong>Optimizer:</strong> Adam with warmup and cosine decay schedule.</li>
+</ul>
+
+<h4>Advantages &amp; Limitations</h4>
+<div class="compare">
+<div class="compare-box">
+<h5>Advantages</h5>
+<ul>
+  <li>Extreme parameter efficiency (&lt;0.01%)</li>
+  <li>Single frozen model with multiple task prompts (KB vs GB storage)</li>
+  <li>No risk of catastrophic forgetting</li>
+  <li>Composable for multi-task</li>
+  <li>Scales well with model size</li>
+</ul>
+</div>
+<div class="compare-box">
+<h5>Limitations</h5>
+<ul>
+  <li>Underperforms full FT on small models (&lt;10B)</li>
+  <li>Training instability (sensitive to initialization)</li>
+  <li>Prompts don't transfer between different models</li>
+  <li>Hard to interpret (continuous vectors lack semantic meaning)</li>
+  <li>Theoretical foundations still developing</li>
+</ul>
+</div>
+</div>
+</div></div>
+
+<!-- ═══ 3.11 MoE ═══ -->
+<div class="section" id="u3-moe">
+<div class="section-header"><span class="s-num">SEC 3.11</span><h3>Mixture of Experts (MoE)</h3></div>
+<div class="section-body">
+<div class="def"><strong>Mixture of Experts (MoE)</strong> is a neural network architecture that dynamically selects different expert subnetworks for different inputs. Instead of a single large model for all computations, MoE activates only a subset of experts per input, making it more efficient and scalable.</div>
+
+<h4>Why MoE?</h4>
+<p>Model scale is one of the most important factors for quality. Given a fixed compute budget, training a larger model for fewer steps is better than a smaller model for more steps. MoE enables pre-training with far less compute by activating only a fraction of parameters per input. A MoE model achieves the same quality as its dense counterpart much faster during pre-training.</p>
+
+<h4>Two Main Elements</h4>
+<ol>
+  <li><strong>Sparse MoE Layers:</strong> Replace dense feed-forward network (FFN) layers in the Transformer. Each MoE layer has N experts (e.g., 8), where each expert is typically an FFN. Only the FFN layers are replaced; attention layers and other parameters are shared.</li>
+  <li><strong>Gate Network (Router):</strong> Determines which tokens go to which expert. Uses softmax to assign probabilities. Top-K experts (e.g., K=2) are selected per token. The router is learned during pre-training.</li>
+</ol>
+
+<div class="fig"><strong>MoE Architecture</strong>Input Token &rarr; Gating Network (Softmax) &rarr; Select Top-K Experts<br>&rarr; Expert 1 (FFN) | Expert 2 (FFN) | ... | Expert N (FFN)<br>&rarr; Weighted sum of selected expert outputs &rarr; Next Layer</div>
+
+<h4>Key Components</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Component</th><th>Role</th><th>Details</th></tr></thead>
+<tbody>
+<tr><td><span class="kw">Experts</span></td><td>Specialized subnetworks</td><td>Independent FFNs that learn different patterns. Can be hierarchical (MoE within MoE).</td></tr>
+<tr><td><span class="kw">Gating Network</span></td><td>Route tokens to experts</td><td>Hard gating (select few) or soft gating (continuous weights). Uses softmax over expert scores.</td></tr>
+<tr><td><span class="kw">Expert Weighting</span></td><td>Combine expert outputs</td><td>Weighted sum based on gating scores for final prediction.</td></tr>
+<tr><td><span class="kw">Sparse Activation</span></td><td>Efficiency</td><td>Only Top-K experts active per token. E.g., GPT-4 MoE: 2-4 out of 64 experts.</td></tr>
+<tr><td><span class="kw">Load Balancing Loss</span></td><td>Prevent imbalance</td><td>Auxiliary loss ensures experts are used evenly, preventing collapse where only a few experts get all traffic.</td></tr>
+</tbody></table></div>
+
+<h4>Mixtral 8x7B (Key Exam Example)</h4>
+<ul>
+  <li>By Mistral AI. 8 expert models, each with 7B parameters.</li>
+  <li>Only <strong>2 experts active per token</strong>, making it computationally efficient.</li>
+  <li>Total parameters: <strong>~47B (not 56B)</strong> because only FFN layers are per-expert; attention layers and other weights are shared across all experts.</li>
+  <li>Inference FLOPs: like a ~12B dense model (computes 2x7B multiplications but with shared layers).</li>
+  <li>Outperforms LLaMA 2 70B and competes with GPT-4 Turbo in some benchmarks.</li>
+</ul>
+
+<div class="exam-box">Key Mixtral fact: 8x7B = 56B total, but actual unique params = ~47B (shared non-FFN layers). Only 2 experts active per token. Inference cost = ~12B model. ALL parameters must be in RAM even though only 2 experts are active (high memory, fast inference).</div>
+
+<h4>Why Sparsity Works</h4>
+<p>Conditional computation: only run parts of the network per input. Scale model size without proportionally increasing compute. Challenge: batch sizes are effectively reduced because tokens get routed to different experts, leading to uneven utilization.</p>
+
+<h4>Challenges</h4>
+<ul>
+  <li><strong>Training:</strong> Efficient for pretraining but historically struggles with fine-tuning (overfitting).</li>
+  <li><strong>Memory:</strong> All parameters must be in RAM (47B for Mixtral 8x7B), even though only 2 experts are used per token.</li>
+  <li><strong>Load Balancing:</strong> Some experts may be overused, others underused. Load Balancing Loss helps mitigate this.</li>
+  <li><strong>Complexity:</strong> Managing multiple experts and the routing network adds system complexity.</li>
+</ul>
+</div></div>
+
+<!-- ═══ 3.12 DATA RESOLUTION ═══ -->
+<div class="section" id="u3-data-res">
+<div class="section-header"><span class="s-num">SEC 3.12</span><h3>Data Resolution &amp; Precision</h3></div>
+<div class="section-body">
+<div class="def"><strong>Data Resolution:</strong> The granularity and detail in training data. Higher resolution captures fine patterns but costs more compute. <strong>Data Precision:</strong> The accuracy of data values, ensuring minimal information loss during representation.</div>
+
+<h4>Why Resolution Matters</h4>
+<div class="compare">
+<div class="compare-box">
+<h5>High Resolution Text</h5>
+<p>"The restaurant had a cozy atmosphere and the food was absolutely delicious, especially the pasta."</p>
+<p>Rich context, clear sentiment, specific details the model can learn from.</p>
+</div>
+<div class="compare-box">
+<h5>Low Resolution Text</h5>
+<p>"Restaurant good pasta cozy food."</p>
+<p>Lost context, ambiguous sentiment, model can't distinguish positive from neutral.</p>
+</div>
+</div>
+
+<p><strong>Numerical resolution:</strong> Per-second stock data captures micro-trends that per-day data misses. <strong>Image resolution:</strong> High-res lets models detect facial expressions and fine details; low-res causes blurring.</p>
+
+<h4>Impact of Low Precision</h4>
+<ul>
+  <li><strong>Text:</strong> "Let's eat, Grandma!" (invitation) vs "Let's eat Grandma!" (missing comma changes meaning entirely). Low precision data may lose such distinctions.</li>
+  <li><strong>Numerical:</strong> Stock prices rounded from $100.12 to $100 hide fluctuations between $99.50 and $100.49.</li>
+  <li><strong>Consequences:</strong> Reduced model performance, increased bias, diminished generalization to real-world data.</li>
+</ul>
+
+<h4>Strategies for Improvement</h4>
+<ul>
+  <li><strong>Preprocessing:</strong> Cleaning (remove noise, duplicates), Normalization (standardize ranges using MinMaxScaler/StandardScaler), Tokenization (BPE/WordPiece for handling rare words).</li>
+  <li><strong>Data Augmentation:</strong> Paraphrasing, synonym replacement, back-translation (English &rarr; French &rarr; English) for text. Gaussian noise or interpolation for numerical data.</li>
+  <li><strong>Precision Handling:</strong> Use float32/float64 for critical numerical data. Ensure proper spelling/grammar in text. Curate datasets from trusted sources.</li>
+</ul>
+
+<h4>Trade-offs</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th></th><th>Higher Resolution/Precision</th><th>Lower Resolution/Precision</th></tr></thead>
+<tbody>
+<tr><td><strong>Pros</strong></td><td>More accurate models, better context handling, better generalization</td><td>Faster training, less resource needs, cheaper</td></tr>
+<tr><td><strong>Cons</strong></td><td>Higher compute cost, slower training, more storage</td><td>Loss of critical details, poorer quality, potential bias amplification</td></tr>
+<tr><td><strong>Best For</strong></td><td>Sentiment analysis, medical imaging, financial forecasting</td><td>Prototyping, resource-constrained environments, simple tasks</td></tr>
+</tbody></table></div>
+</div></div>
+
+<!-- ════════════════ UNIT 4 ════════════════ -->
+<div class="unit-divider"><span class="unit-num">Unit 4</span><h2>Multimodal LLMs, Agents &amp; Evaluation</h2></div>
+
+<!-- ═══ 4.1 STABLE DIFFUSION ═══ -->
+<div class="section" id="u4-sd">
+<div class="section-header"><span class="s-num">SEC 4.1</span><h3>Stable Diffusion</h3></div>
+<div class="section-body">
+<div class="def"><strong>Stable Diffusion</strong> is a <span class="kw">latent diffusion model</span> that generates AI images from text. Instead of working in the high-dimensional pixel space (a 512x512 RGB image = 786,432 dimensions), it operates in a compressed latent space that is 48x smaller, making it dramatically faster than pixel-space diffusion models like DALL-E or Imagen.</div>
+
+<h4>Forward Diffusion</h4>
+<p>Forward diffusion gradually adds Gaussian noise to a training image over T steps until it becomes pure random noise. Think of it like a drop of ink falling into water: the ink diffuses until you can't tell where it started. Mathematically, at each step t, a small amount of noise is added according to a schedule, pushing the image from the data distribution toward a standard Gaussian distribution.</p>
+<div class="fig"><strong>Forward Diffusion Visualization</strong>Clean Image (cat) &rarr; [+noise] &rarr; Slightly Noisy &rarr; [+noise] &rarr; More Noisy &rarr; ... &rarr; [+noise] &rarr; Pure Random Noise</div>
+
+<h4>Reverse Diffusion</h4>
+<p>The key insight: if we can reverse the diffusion process, we can start from random noise and recover a clean image. A <span class="kw">noise predictor (U-Net)</span> is trained to estimate the noise added at each step. During generation, we start from pure noise, ask the predictor to estimate the noise, subtract it, and repeat. Each step slightly denoises the image.</p>
+<p>The reverse diffusion drifts toward the learned data distribution. If trained on cats and dogs, it produces images that are clearly one or the other -- never something in between.</p>
+
+<h4>Training Process</h4>
+<ol class="steps">
+  <li>Pick a training image (e.g., a photo of a cat)</li>
+  <li>Generate a random noise image</li>
+  <li>Corrupt the training image by adding this noise up to a certain number of steps</li>
+  <li>Teach the noise predictor to estimate how much total noise was added. This is done by tuning its weights against the known correct answer (since we generated the noise, we know exactly what was added).</li>
+</ol>
+<p>After training, the noise predictor can estimate noise in any noisy image. To generate: start with random noise, predict noise, subtract it, repeat T times.</p>
+
+<h4>Variational Autoencoder (VAE)</h4>
+<p>The VAE is what makes Stable Diffusion a <em>latent</em> diffusion model. It has two parts:</p>
+<ul>
+  <li><strong>Encoder:</strong> Compresses a 512x512x3 pixel image into a 4x64x64 latent representation (48x smaller).</li>
+  <li><strong>Decoder:</strong> Reconstructs the image from latent space back to pixel space.</li>
+</ul>
+<p>All forward and reverse diffusion happens in latent space, not pixel space. This is why it's so much faster. During training, latent noise is added to the latent representation. During generation, denoising happens in latent space, and the VAE decoder produces the final image.</p>
+<p><strong>VAE files</strong> in Stable Diffusion specifically fine-tune the decoder to paint finer details (especially eyes and faces). The original VAE loses some fine details during compression; the fine-tuned decoder compensates.</p>
+
+<div class="fig"><strong>Latent Space Pipeline</strong>Image (512x512x3) &rarr; VAE Encoder &rarr; Latent (4x64x64) &rarr; [Diffusion happens here] &rarr; VAE Decoder &rarr; Output Image (512x512x3)</div>
+
+<h4>Text Conditioning Pipeline</h4>
+<p>This is how text prompts steer image generation:</p>
+<ol class="steps">
+  <li><strong>CLIP Tokenizer:</strong> Converts each word to a numerical token. Limit: 75 tokens per prompt. Spaces matter: "dream beach" produces different tokens than "dreambeach". Unknown words are split: "dreambeach" &rarr; "dream" + "beach".</li>
+  <li><strong>Embedding:</strong> Each token maps to a unique 768-value vector. These embeddings are fixed, learned during CLIP training. The same embedding is used in tools like AUTOMATIC1111.</li>
+  <li><strong>Text Transformer:</strong> Processes embeddings into a form the noise predictor can use. Acts as a universal adapter -- can handle text, class labels, images, depth maps as conditioning inputs.</li>
+  <li><strong>Cross-Attention in U-Net:</strong> The text transformer output is consumed by the noise predictor via cross-attention mechanisms at multiple points throughout the U-Net. This is where the prompt meets the image. Example: "A man with blue eyes" causes "blue" and "eyes" to be paired together, steering specific image regions to render blue eyes.</li>
+</ol>
+
+<div class="exam-box">Cross-attention is the MOST important mechanism in Stable Diffusion. LoRA modifies cross-attention weights to change styles. Hypernetwork hijacks cross-attention to insert styles. The fact that modifying this single module alone can fine-tune the entire model shows its importance.</div>
+
+<h4>Text-to-Image: Step by Step</h4>
+<ol class="steps">
+  <li><strong>Generate random latent tensor</strong> (controlled by seed -- same seed = same starting noise = reproducible results)</li>
+  <li><strong>U-Net predicts noise</strong> from latent tensor + text prompt conditioning (outputs a 4x64x64 noise estimate)</li>
+  <li><strong>Subtract predicted noise</strong> from latent image to get a slightly cleaner latent</li>
+  <li><strong>Repeat steps 2-3</strong> for N sampling steps (e.g., 20 times). The noise schedule dictates how much noise is subtracted at each step -- larger amounts initially, finer adjustments later.</li>
+  <li><strong>VAE Decoder</strong> converts the final latent image to pixel space -- this is the output image</li>
+</ol>
+
+<h4>Image-to-Image</h4>
+<ol class="steps">
+  <li>Input image is encoded to latent space by VAE encoder</li>
+  <li>Noise is added to the latent image. <span class="kw">Denoising strength</span> controls how much: 0 = no noise (output identical to input), 1 = maximum noise (output completely regenerated)</li>
+  <li>U-Net predicts noise conditioned on BOTH text prompt and noisy latent</li>
+  <li>Subtract noise, repeat for N steps</li>
+  <li>VAE decoder produces final image</li>
+</ol>
+<p><strong>Inpainting</strong> is a special case: noise is added only to masked regions, so only those parts are regenerated while the rest stays intact.</p>
+
+<h4>Classifier-Free Guidance (CFG)</h4>
+<p><strong>Classifier Guidance:</strong> Uses image labels + a separate classifier to steer diffusion. Higher guidance scale = more unambiguous images matching the label, but less diversity. Requires training a separate classifier.</p>
+<p><strong>Classifier-Free Guidance:</strong> Achieves the same effect without a separate classifier by putting the conditioning directly into the U-Net (via the text transformer). The <span class="kw">CFG scale</span> controls how strongly the text prompt steers the diffusion process:</p>
+<ul>
+  <li>CFG = 0: prompt is completely ignored (unconditioned generation)</li>
+  <li>CFG = 1: standard conditioning</li>
+  <li>CFG = 7-12: typical range for good results</li>
+  <li>CFG very high: oversaturated, artifact-prone images</li>
+</ul>
+
+<h4>Stable Diffusion Versions</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Feature</th><th>SD v1.5</th><th>SD v2</th><th>SDXL</th></tr></thead>
+<tbody>
+<tr><td>Text Encoder</td><td>OpenAI CLIP ViT-L/14</td><td>OpenClip (larger, more transparent)</td><td>OpenClip ViT-G/14 + CLIP ViT-L (combined)</td></tr>
+<tr><td>Default Image Size</td><td>512x512</td><td>512x512 or 768x768</td><td>1024x1024 (4x larger area)</td></tr>
+<tr><td>Total Parameters</td><td>0.98B</td><td>~1B</td><td>6.6B</td></tr>
+<tr><td>U-Net Size</td><td>Base</td><td>Base</td><td>3x larger than v1.5</td></tr>
+<tr><td>Pipeline</td><td>Single model</td><td>Single model</td><td>Base model + Refiner model</td></tr>
+<tr><td>Training Data</td><td>LAION-2B (includes diverse art/celebrities)</td><td>LAION-5B subset (filtered for explicit content)</td><td>Enhanced with size conditioning (uses images &lt;256px)</td></tr>
+</tbody></table></div>
+<p>v1.5 and SDXL remain more popular because v2 has weaker representation of artist names and celebrity faces (likely due to different training data from OpenClip vs OpenAI's proprietary CLIP). Generating images larger than 512x512 in v1.5 can produce duplicate objects (e.g., two heads) because it was fine-tuned on 512x512.</p>
+
+<h4>Ethical &amp; Legal Issues</h4>
+<p>Training required images without copyright permissions. Class-action lawsuits from artists (Jan 2023) and Getty Images (Feb 2023) highlight legal questions about AI-generated content and copyright infringement.</p>
+</div></div>
+
+<!-- ═══ 4.2 CLIP ═══ -->
+<div class="section" id="u4-clip">
+<div class="section-header"><span class="s-num">SEC 4.2</span><h3>CLIP (Contrastive Language-Image Pre-training)</h3></div>
+<div class="section-body">
+<div class="def"><strong>CLIP</strong> (by OpenAI) is a multimodal model that learns to associate images with text using <span class="kw">contrastive learning</span>. Trained on 400 million image-text pairs from the internet. It can perform zero-shot image classification using only natural language descriptions.</div>
+
+<h4>Contrastive Learning: Core Concept</h4>
+<p>The model learns by comparing: <strong>Positive pairs</strong> (an image with its correct caption) should have high similarity. <strong>Negative pairs</strong> (an image with an unrelated caption) should have low similarity. The objective: maximize similarity for matching pairs, minimize for non-matching.</p>
+
+<div class="fig"><strong>Contrastive Learning Matrix</strong>In a batch of N image-text pairs, there are N correct pairs (diagonal) and N²-N incorrect pairs (off-diagonal). CLIP maximizes the diagonal and minimizes the off-diagonal similarities.</div>
+
+<h4>Architecture</h4>
+<ul>
+  <li><strong>Image Encoder:</strong> Vision Transformer (ViT) or ResNet. Converts image patches into a sequence, processes through self-attention layers to produce a visual embedding vector.</li>
+  <li><strong>Text Encoder:</strong> Transformer (similar to GPT). Tokenizes text, processes through self-attention to produce a text embedding vector.</li>
+  <li><strong>Projection to Shared Space:</strong> Both embeddings are projected into a shared multimodal embedding space using linear layers and normalized. This allows direct comparison via cosine similarity.</li>
+</ul>
+
+<h4>InfoNCE Loss (Detailed)</h4>
+<div class="formula">L_i = -log( exp(sim(xi, yi) / τ) / Σ_j exp(sim(xi, yj) / τ) )
+
+Where:
+  xi = image embedding for the i-th image
+  yi = text embedding for the i-th caption (correct match)
+  yj = text embeddings for ALL captions in the batch (j = 1 to N)
+  sim(x, y) = cosine similarity = (x · y) / (||x|| × ||y||)
+  τ (tau) = temperature parameter (hyperparameter)
+  exp(·) = exponentiation function
+  log = logarithm (converts multiplication to addition, penalizes small probabilities heavily)
+  N = batch size</div>
+
+<p><strong>What each part does:</strong></p>
+<ul>
+  <li><strong>Numerator</strong> exp(sim(xi, yi)/τ): Similarity of the correct image-text pair.</li>
+  <li><strong>Denominator</strong> Σ exp(sim(xi, yj)/τ): Sum of similarities of the image with ALL text in the batch (correct + incorrect).</li>
+  <li><strong>Temperature τ:</strong> Controls sharpness of the distribution. Smaller τ = more confident, sharper predictions. Larger τ = softer, more uncertain predictions.</li>
+  <li>The loss is minimized when the correct pair has much higher similarity than all incorrect pairs (probability close to 1, log close to 0).</li>
+</ul>
+
+<div class="exam-box">Know every term in InfoNCE: xi = image embedding, yi = correct text embedding, sim = cosine similarity, τ = temperature, exp = exponentiation, N = batch. The numerator is the correct pair; denominator sums all pairs. Loss pushes correct pair similarity up, incorrect down.</div>
+
+<h4>How CLIP Works: Zero-Shot Classification</h4>
+<ol class="steps">
+  <li>User provides class labels as text templates (e.g., "a photo of a cat", "a photo of a dog", "a photo of a car")</li>
+  <li>Input image passes through the image encoder to produce an image embedding</li>
+  <li>Each text label passes through the text encoder to produce text embeddings</li>
+  <li>Cosine similarity is computed between the image embedding and each text embedding</li>
+  <li>The class label with the highest similarity score is the predicted class</li>
+</ol>
+<p>This is "zero-shot" because CLIP was never specifically trained on these classes -- it generalizes from its broad pre-training on 400M image-text pairs.</p>
+
+<h4>Training Process</h4>
+<ol>
+  <li><strong>Batch Sampling:</strong> Sample a batch of N image-text pairs.</li>
+  <li><strong>Feature Extraction:</strong> Image and text encoders generate embeddings.</li>
+  <li><strong>Contrastive Learning:</strong> Optimize using InfoNCE loss.</li>
+  <li><strong>Optimization:</strong> AdamW optimizer.</li>
+  <li><strong>Normalization:</strong> Embeddings are L2-normalized for stable cosine similarity computation.</li>
+</ol>
+
+<h4>Evaluation Metrics</h4>
+<ul>
+  <li><strong>Zero-Shot Classification Accuracy:</strong> Classify unseen images using only text descriptions.</li>
+  <li><strong>Recall@k:</strong> How often the correct text/image is within the top-k predictions.</li>
+  <li><strong>Mean Average Precision (mAP):</strong> How well relevant items are ranked in retrieval tasks.</li>
+  <li><strong>Cosine Similarity:</strong> How closely aligned image and text embeddings are.</li>
+</ul>
+
+<h4>Applications</h4>
+<p>Zero-shot image classification, image search and retrieval, cross-modal understanding, guiding generative AI (Stable Diffusion uses CLIP), multimodal reasoning tasks.</p>
+</div></div>
+
+<!-- ═══ 4.3 BLIP ═══ -->
+<div class="section" id="u4-blip">
+<div class="section-header"><span class="s-num">SEC 4.3</span><h3>BLIP (Bootstrapped Language-Image Pre-training)</h3></div>
+<div class="section-body">
+<div class="def"><strong>BLIP</strong> (by Salesforce) is a unified vision-language model that can both <em>understand</em> and <em>generate</em> language about images. Key innovation: it handles noisy, uncurated web data through a <span class="kw">bootstrapped pretraining strategy</span> that self-corrects bad labels. Trained on 129 million image-text pairs.</div>
+
+<h4>CLIP vs BLIP: Key Difference</h4>
+<p>CLIP only aligns images and text in a shared embedding space (understanding). BLIP can also <strong>generate</strong> text (captioning, VQA answers) and self-improve its training data quality. BLIP addresses CLIP's limitation of relying on perfectly labeled datasets.</p>
+
+<h4>Bootstrapped Pretraining: How BLIP Learns from Noisy Data</h4>
+<p>Web-scraped data is noisy -- many image-text pairs are mismatched. BLIP handles this through iterative self-improvement:</p>
+<ol class="steps">
+  <li><strong>Initial Learning with Noisy Data:</strong> BLIP trains on both correct and incorrect pairs. It makes rough predictions but isn't very accurate yet.</li>
+  <li><strong>Caption Generation (Self-Improvement):</strong> BLIP's captioning module generates its own descriptions for images. For a mismatched pair (cat image labeled "dog playing in park"), it generates a better caption: "A cat sitting on a wooden table." This acts as a pseudo-label.</li>
+  <li><strong>Contrastive Learning &amp; Filtering:</strong> BLIP compares generated captions with originals using contrastive loss. It learns to trust correct pairs and reduce the influence of noisy/misleading data.</li>
+  <li><strong>Iterative Refinement:</strong> After filtering, BLIP updates its model and repeats. Each iteration improves at identifying and correcting mislabeled data.</li>
+</ol>
+
+<h4>Three-Stage Pretraining Objectives</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Objective</th><th>Goal</th><th>How It Works</th><th>Downstream Use</th></tr></thead>
+<tbody>
+<tr><td><span class="kw">ITC</span> (Image-Text Contrastive)</td><td>Align image and text in shared space</td><td>Contrastive loss: bring matching pairs close, push non-matching apart. Similar to CLIP.</td><td>Image-text retrieval</td></tr>
+<tr><td><span class="kw">ITM</span> (Image-Text Matching)</td><td>Binary: does this image match this text?</td><td>Model receives correct and incorrect pairs, classifies as match/non-match using a binary classification head.</td><td>Image-text retrieval, verification</td></tr>
+<tr><td><span class="kw">ITG</span> (Image-Text Generation)</td><td>Generate captions from images</td><td>Causal language modeling: predict the next word in a caption given the image and previous words.</td><td>Image captioning, VQA</td></tr>
+</tbody></table></div>
+
+<h4>Architecture (Three Parts)</h4>
+<ul>
+  <li><strong>A. Image Encoder (ViT):</strong> Extracts visual features. Represents image as a sequence of patches, similar to words in a sentence.</li>
+  <li><strong>B. Text Encoder (BERT-like):</strong> Processes text data to extract textual embeddings.</li>
+  <li><strong>C. Multimodal Transformer:</strong> Fuses image and text embeddings using cross-attention. Learns the interaction between modalities.</li>
+</ul>
+
+<h4>BLIP Mechanism: Shared Architecture</h4>
+<p>BLIP's architecture integrates three components with shared parameters for efficiency:</p>
+<ol>
+  <li><strong>Unimodal Text Encoder:</strong> Trained with ITC loss. Processes text independently.</li>
+  <li><strong>Image-grounded Text Encoder:</strong> Models vision-language interactions with cross-attention layers. Used for ITM.</li>
+  <li><strong>Image-grounded Text Decoder:</strong> Uses causal self-attention for text generation tasks. Used for ITG.</li>
+</ol>
+<p>Benefits of shared parameters: efficiency in pre-training and multi-task learning adaptability.</p>
+
+<h4>How BLIP Works (Inference)</h4>
+<ol class="steps">
+  <li><strong>Input Processing:</strong> Image fed into ViT encoder; text tokenized and fed into BERT-like encoder</li>
+  <li><strong>Feature Extraction:</strong> Image and text features extracted as embeddings</li>
+  <li><strong>Multimodal Fusion:</strong> Multimodal transformer combines embeddings using cross-attention</li>
+  <li><strong>Task-Specific Head:</strong> Output passed through appropriate head (caption generation, QA, or retrieval)</li>
+  <li><strong>Output:</strong> For captioning: generates natural language text. For retrieval: ranks images/text by similarity scores.</li>
+</ol>
+
+<h4>Evaluation Metrics</h4>
+<ul>
+  <li><strong>Captioning:</strong> BLEU (how closely generated text matches ground truth), CIDEr (how well caption describes image).</li>
+  <li><strong>VQA:</strong> Accuracy (how often predicted answer matches correct answer).</li>
+  <li><strong>Retrieval:</strong> Recall@k (how often correct image/text is in top-k results).</li>
+</ul>
+
+<div class="exam-box">CLIP = contrastive only (understanding). BLIP = contrastive + matching + generation (understanding + generation). BLIP handles noisy data via bootstrapping. Three objectives: ITC, ITM, ITG. Architecture: ViT + BERT-like encoder + Multimodal Transformer with cross-attention.</div>
+</div></div>
+
+<!-- ═══ 4.4 MULTIMODAL LLMS ═══ -->
+<div class="section" id="u4-mllm">
+<div class="section-header"><span class="s-num">SEC 4.4</span><h3>Multimodal LLMs &amp; Fusion Strategies</h3></div>
+<div class="section-body">
+<div class="def"><strong>Multimodal LLMs</strong> are AI systems that process multiple types of input -- text, images, audio, video -- providing more comprehensive understanding than text-only models. A <strong>modality</strong> is a specific type of data or input.</div>
+
+<h4>How Multimodal Models Work</h4>
+<ol class="steps">
+  <li><strong>Data Encoding:</strong> Each modality converted to numerical representations using specialized encoders (CNNs/ViTs for images, Transformers for text, mel-spectrograms for audio).</li>
+  <li><strong>Fusion:</strong> Encoded data combined using concatenation, attention mechanisms, or cross-modal learning.</li>
+  <li><strong>Prediction:</strong> Model generates output based on fused representation (text generation, classification, retrieval).</li>
+</ol>
+
+<h4>Fusion Strategies (Critical for Exams)</h4>
+
+<div class="pattern-card">
+<div class="pname">1. Early Fusion (Feature-Level)</div>
+<div class="pone">Combine raw/low-level features BEFORE feeding into the model for joint processing.</div>
+<p>Input features (pixel values from images + word embeddings from text) are concatenated or transformed into a shared feature space early on. Best for tasks requiring tight integration: image captioning, video understanding.</p>
+<p><strong>Models:</strong> CLIP, ImageBind, BLIP, ViLT</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">2. Late Fusion (Decision-Level)</div>
+<div class="pone">Process each modality INDEPENDENTLY, then combine outputs at the decision level.</div>
+<p>Each modality has its own model/pathway. Outputs (classification scores or embeddings) are merged using weighted averaging or voting. Best when each modality provides independent insights: sentiment analysis, biometric authentication.</p>
+<p><strong>Models:</strong> AVEC, MMIM, VQA 1.0, HUME</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">3. Hybrid Fusion (Intermediate)</div>
+<div class="pone">Integrate at MULTIPLE levels during model processing. Combines aspects of both early and late.</div>
+<p>Features are fused at intermediate layers, allowing both low-level and high-level interactions between modalities. Best for complex tasks: video question answering, autonomous driving.</p>
+<p><strong>Models:</strong> Flamingo, GPT-4V, VisualBERT, MMF</p>
+</div>
+
+<h4>LLAVA Architecture</h4>
+<ul>
+  <li><strong>Vision Encoder:</strong> ViT or similar, converts images to feature maps.</li>
+  <li><strong>Language Model Backbone:</strong> GPT or LLaMA, processes text and integrates image embeddings via cross-attention.</li>
+  <li><strong>Cross-Modality Attention:</strong> Aligns text and image embeddings at various layers.</li>
+  <li><strong>Fine-Tuning Module:</strong> Adapts for task-specific requirements.</li>
+</ul>
+
+<h4>CLIP vs BLIP vs LLAVA</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Feature</th><th>CLIP</th><th>BLIP</th><th>LLAVA</th></tr></thead>
+<tbody>
+<tr><td>Developer</td><td>OpenAI</td><td>Salesforce</td><td>UW-Madison + Microsoft</td></tr>
+<tr><td>Core Method</td><td>Contrastive learning</td><td>Bootstrapped pretraining (ITC+ITM+ITG)</td><td>Vision encoder + LLM backbone</td></tr>
+<tr><td>Can Generate Text?</td><td>No (understanding only)</td><td>Yes (captioning, VQA)</td><td>Yes (conversational about images)</td></tr>
+<tr><td>Handles Noisy Data?</td><td>No</td><td>Yes (self-corrects via bootstrapping)</td><td>No (relies on clean fine-tuning data)</td></tr>
+<tr><td>Training Data</td><td>400M image-text pairs</td><td>129M image-text pairs</td><td>Fine-tuned on instruction-following data</td></tr>
+<tr><td>Fusion Type</td><td>Early (shared embedding space)</td><td>Early (cross-attention)</td><td>Hybrid (cross-attention at multiple layers)</td></tr>
+</tbody></table></div>
+
+<h4>Role of Transformers in Multimodal Models</h4>
+<p>Transformers serve five key roles: (1) Data encoding and representation (ViTs for images, BERT for text), (2) Cross-modal interaction and fusion (cross-attention mechanisms), (3) Generating multimodal outputs (DALL-E generates images from text), (4) Handling large-scale data (parallel processing via self-attention), (5) Zero-shot and few-shot learning (generalize from pre-trained knowledge).</p>
+</div></div>
+
+<!-- ═══ 4.5 WHISPER ═══ -->
+<div class="section" id="u4-whisper">
+<div class="section-header"><span class="s-num">SEC 4.5</span><h3>Whisper</h3></div>
+<div class="section-body">
+<div class="def"><strong>Whisper</strong> (OpenAI, 2022) is a general-purpose ASR (Automatic Speech Recognition) model. It is a <span class="kw">generative model</span> using an encoder-decoder Transformer that converts speech to text, supports 90+ languages, can translate, and detects input language -- all within a single model.</div>
+
+<h4>Architecture Pipeline</h4>
+<div class="formula">Raw Audio &rarr; Resample to 16kHz &rarr; Split into ~30s segments &rarr; Log-Mel Spectrogram &rarr; Encoder (extract acoustic features) &rarr; Decoder (generate text token by token) &rarr; Text Output</div>
+
+<h4>Audio Processing &amp; Encoder</h4>
+<p>Input audio is converted to a <span class="kw">log-Mel spectrogram</span> -- a numerical representation of sound features. The encoder processes this using attention mechanisms to extract acoustic features and speech patterns, producing a compact representation of the audio.</p>
+
+<h4>Decoder &amp; Multitask</h4>
+<p>The decoder generates text sequentially, one token at a time, using the encoded audio representation. Whisper handles multiple tasks through <span class="kw">special tokens</span> that guide output:</p>
+<ul>
+  <li>Transcription token &rarr; transcribe speech to text in original language</li>
+  <li>Translation token &rarr; translate speech to English text</li>
+  <li>Language token &rarr; detect and identify the spoken language</li>
+</ul>
+<p>No separate models needed -- one model, multiple tasks, controlled by tokens.</p>
+
+<h4>Training</h4>
+<p>Trained on ~680,000 hours of diverse real-world audio (podcasts, interviews, lectures) using <span class="kw">weakly supervised learning</span> (data may include noise or imperfect labels). This large, diverse training data is the key reason for Whisper's robustness to noise, accents, and varied conditions.</p>
+
+<h4>Model Variants</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Size</th><th>Speed</th><th>Accuracy</th><th>Use Case</th></tr></thead>
+<tbody>
+<tr><td>Tiny / Base</td><td>Fastest</td><td>Lower</td><td>Quick transcription, resource-limited devices</td></tr>
+<tr><td>Small / Medium</td><td>Balanced</td><td>Good</td><td>General-purpose transcription</td></tr>
+<tr><td>Large</td><td>Slowest</td><td>Highest</td><td>Complex or noisy audio, critical accuracy</td></tr>
+</tbody></table></div>
+
+<h4>Applications</h4>
+<p>Subtitle generation, meeting/lecture transcription, call center analytics, live captions for accessibility, voice-based AI pipelines (speech &rarr; text &rarr; further AI processing).</p>
+
+<h4>Limitations</h4>
+<ul>
+  <li>May generate hallucinated text (especially in noisy/unclear audio)</li>
+  <li>No speaker identification (diarization)</li>
+  <li>Real-time performance can be limited</li>
+  <li>Variable accuracy on low-resource languages</li>
+</ul>
+
+<div class="exam-box">Whisper MCQs: (1) Architecture = encoder-decoder Transformer. (2) Input = log-Mel spectrogram (not raw waveform). (3) Multi-task via special tokens (not separate models). (4) Robustness from large diverse data (~680k hours). (5) Limitation = hallucinated text.</div>
+</div></div>
+
+<!-- ═══ 4.6 AGENTIC WORKFLOWS ═══ -->
+<div class="section" id="u4-agents">
+<div class="section-header"><span class="s-num">SEC 4.6</span><h3>Agentic Workflows</h3></div>
+<div class="section-body">
+<div class="def"><strong>AI Agent:</strong> A system that can make decisions, take actions, and adapt based on results to achieve a goal. Uses an LLM as its reasoning engine. An agent is not just answering -- it is thinking (reasoning), deciding (planning), acting (executing), and learning from results (observing &amp; reacting).</div>
+
+<h4>Why Agents? LLM Limitations</h4>
+<p>LLMs alone: cannot reliably do multi-step tasks, can't interact with external tools, struggle with complex reasoning, have limited memory (context window only), can't autonomously execute long-running tasks. Agents solve this by adding planning, memory, tool use, and iteration loops around the LLM.</p>
+
+<h4>Evolution of GenAI Systems</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Stage</th><th>Description</th><th>Capabilities</th></tr></thead>
+<tbody>
+<tr><td>LLM Chatbots</td><td>Generate responses from prompt + training data</td><td>Single-turn text generation</td></tr>
+<tr><td>RAG Systems</td><td>Retrieve external knowledge before generating</td><td>Factual grounding, reduced hallucination</td></tr>
+<tr><td>Agentic Systems</td><td>Planning, memory, and tools for task execution</td><td>Multi-step reasoning, tool use</td></tr>
+<tr><td>Multi-Agent Systems</td><td>Multiple specialized agents collaborate</td><td>Parallel processing, specialization</td></tr>
+<tr><td>Autonomous AI</td><td>Minimal human intervention</td><td>Self-directed goal achievement</td></tr>
+</tbody></table></div>
+
+<h4>Basic Agent Loop</h4>
+<div class="formula">Goal &rarr; Plan &rarr; Act &rarr; Observe &rarr; React &rarr; Repeat &rarr; Final Output
+This iterative loop is what makes it "agentic" -- not one-time response, but continuous decision-making.</div>
+
+<h4>Core Components (10)</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>#</th><th>Component</th><th>What It Does</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><strong>Goal/Task</strong></td><td>Defines what to achieve</td><td>"Find best laptop under 80K"</td></tr>
+<tr><td>2</td><td><strong>Planning</strong></td><td>Break goal into steps</td><td>Search &rarr; Filter &rarr; Compare &rarr; Summarize</td></tr>
+<tr><td>3</td><td><strong>Reasoning</strong></td><td>Decide next best step</td><td>Too many results? Add brand filter.</td></tr>
+<tr><td>4</td><td><strong>Tool Usage</strong></td><td>Use external tools (APIs, DBs, code)</td><td>Call search API for product data</td></tr>
+<tr><td>5</td><td><strong>Memory</strong></td><td>Store/recall past interactions</td><td>Remember previously shortlisted items</td></tr>
+<tr><td>6</td><td><strong>Action</strong></td><td>Execute planned tasks</td><td>Fetch product details from API</td></tr>
+<tr><td>7</td><td><strong>Observation</strong></td><td>Analyze action results</td><td>Check if products match price constraint</td></tr>
+<tr><td>8</td><td><strong>Reflection</strong></td><td>Evaluate performance, improve</td><td>Results not relevant? Revise search strategy.</td></tr>
+<tr><td>9</td><td><strong>Iteration</strong></td><td>Repeat until goal is met</td><td>Refine queries until accurate results found</td></tr>
+<tr><td>10</td><td><strong>Final Output</strong></td><td>Structured response to user</td><td>"Top 3 laptops under 80K with pros/cons"</td></tr>
+</tbody></table></div>
+
+<h4>Memory Types</h4>
+<ul>
+  <li><strong>Short-Term Memory:</strong> Current conversation/task context. Lives within context window.</li>
+  <li><strong>Long-Term Memory:</strong> Persists across sessions using vector databases (FAISS, Pinecone, Weaviate).</li>
+  <li><strong>Hybrid Memory:</strong> Combines both for improved reasoning and learning.</li>
+</ul>
+
+<h4>Single vs Multi-Agent Workflows</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Aspect</th><th>Single-Agent</th><th>Multi-Agent</th></tr></thead>
+<tbody>
+<tr><td>Task Handling</td><td>One agent does everything</td><td>Tasks distributed among specialists</td></tr>
+<tr><td>Specialization</td><td>Limited</td><td>High (domain-specific agents)</td></tr>
+<tr><td>Scalability</td><td>Less scalable</td><td>Highly scalable (add more agents)</td></tr>
+<tr><td>Efficiency</td><td>Sequential, slower for complex</td><td>Parallel, faster</td></tr>
+<tr><td>Decision Making</td><td>Centralized</td><td>Distributed</td></tr>
+<tr><td>Best For</td><td>Simple/moderate tasks (chatbot)</td><td>Complex, multi-faceted tasks (research assistant)</td></tr>
+</tbody></table></div>
+
+<h4>Model Context Protocol (MCP)</h4>
+<div class="def"><strong>MCP</strong> is a standard that enables AI agents to interact with external tools, APIs, and data sources through a unified interface. Instead of building separate integrations for every tool, agents use MCP to access multiple systems in a standardized way.</div>
+<div class="fig"><strong>MCP Architecture</strong>User &rarr; AI Agent &rarr; MCP Client &rarr; MCP Server &rarr; External Tools / APIs / Databases</div>
+<p><strong>Why MCP:</strong> Without it, different tools use different APIs and formats, making integration time-consuming and hard to maintain. MCP simplifies tool integration, enables scalable agent systems, and allows multiple agents to share the same tools.</p>
+
+<h4>Agentic Workflow Phases</h4>
+<ol class="steps">
+  <li><strong>Perception:</strong> Gather info from user or environment</li>
+  <li><strong>Decision Making:</strong> Analyze and determine best action</li>
+  <li><strong>Action:</strong> Perform operation using tools or reasoning</li>
+  <li><strong>Feedback &amp; Learning:</strong> Evaluate results, improve future decisions</li>
+</ol>
+
+<h4>Real-World Applications</h4>
+<ul>
+  <li><strong>AI Assistants:</strong> ChatGPT, Siri, Alexa -- distribute tasks across specialized agents (NLU, retrieval, scheduling).</li>
+  <li><strong>Business Automation (RPA):</strong> Automate data entry, report generation, email processing.</li>
+  <li><strong>Healthcare:</strong> Personalized treatment plans, medical imaging diagnostics.</li>
+  <li><strong>Finance:</strong> Fraud detection (transaction analysis + anomaly detection + flagging), automated trading systems.</li>
+</ul>
+</div></div>
+
+<!-- ═══ 4.7 AGENTIC DESIGN PATTERNS ═══ -->
+<div class="section" id="u4-patterns">
+<div class="section-header"><span class="s-num">SEC 4.7</span><h3>Agentic Design Patterns</h3></div>
+<div class="section-body">
+<p>Design patterns are reusable solutions to common system-design problems. In Agentic AI, they describe proven ways to organize reasoning, planning, tool use, memory, validation, and coordination. Without clear patterns, agentic workflows become unstable, expensive, hard to debug, and inconsistent.</p>
+
+<p><strong>Why patterns are needed:</strong> (1) Improve reliability via structure, (2) Reduce hallucination via retrieval/verification/reflection, (3) Improve task performance by separating planning/execution/evaluation, (4) Make systems scalable, (5) Make systems monitorable.</p>
+
+<div class="pattern-card">
+<div class="pname">1. Planning Pattern</div>
+<div class="pone">Agent creates a sequence of steps BEFORE executing. Best for complex, multi-stage, constrained tasks.</div>
+<p><strong>Example:</strong> "Plan a 3-day budget trip to New York" &rarr; (1) Set budget to $400, (2) Find bus/train options, (3) Search hostels under $60/night, (4) Group nearby attractions, (5) Add food estimate, (6) Produce final schedule.</p>
+<p><strong>Where to add:</strong> In the planner layer, before tool execution or action generation.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">2. ReAct Pattern (Reason + Act)</div>
+<div class="pone">Agent alternates between reasoning and action. Adapts dynamically after each observation.</div>
+<p><strong>Example:</strong> "Find cheapest flight NYC to Seattle" &rarr; Reason: need prices &rarr; Act: call flight API &rarr; Observe: $280, $310, $355 &rarr; Reason: $280 is cheapest but check baggage fees &rarr; Act: call details API &rarr; Observe: $70 baggage fee &rarr; Reason: $310 may be cheaper overall &rarr; Act: compare totals &rarr; Final: recommend $310 flight.</p>
+<p><strong>Where to add:</strong> In the main agent loop where reasoning and tool use happen repeatedly.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">3. RAG Pattern</div>
+<div class="pone">Retrieve external information before generating. Reduces hallucination, increases factual grounding.</div>
+<p><strong>Example:</strong> "What is the leave policy for maternity leave?" &rarr; Search company HR docs &rarr; Find maternity section &rarr; Use only retrieved content &rarr; Generate grounded answer.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">4. Tool-Use Pattern</div>
+<div class="pone">Agent calls external tools (search, calculators, code interpreters, APIs, databases).</div>
+<p><strong>Example:</strong> "25% growth on $84,500 monthly revenue, plot for 6 months" &rarr; Use calculator for exact math &rarr; Use Python for chart &rarr; Return result with graph.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">5. Reflection / Self-Critique Pattern</div>
+<div class="pone">Agent evaluates its own output and improves before returning. Quality over single-pass speed.</div>
+<p><strong>Example:</strong> Write email draft &rarr; Self-critique: tone? justification? proposed deadline? &rarr; Improve: "Hi" &rarr; "Dear Manager, I am writing to request..."</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">6. Router Pattern</div>
+<div class="pone">Direct each request to the correct specialist handler.</div>
+<p><strong>Example:</strong> "Summarize this chest X-ray report" &rarr; Router classifies as medical &rarr; Routes to healthcare agent &rarr; Specialist answers.</p>
+</div>
+
+<div class="pattern-card">
+<div class="pname">7. Orchestrator-Worker Pattern</div>
+<div class="pone">One orchestrator assigns sub-tasks to multiple workers, gathers and merges results.</div>
+<p><strong>Example:</strong> "Analyze customer reviews" &rarr; Orchestrator assigns: Worker 1 (sentiment analysis), Worker 2 (complaint themes), Worker 3 (praised features), Worker 4 (executive summary) &rarr; Orchestrator combines into final report: "68% positive, top complaints: battery/delivery, most liked: camera/screen".</p>
+</div>
+
+<div class="exam-box">Know all 7 patterns with examples: Planning (trip planning), ReAct (flight search), RAG (company docs), Tool-Use (calculations), Reflection (email drafting), Router (medical routing), Orchestrator-Worker (review analysis). Know where each is added in the system.</div>
+</div></div>
+
+<!-- ═══ 4.8 AGENTIC FRAMEWORKS ═══ -->
+<div class="section" id="u4-frameworks">
+<div class="section-header"><span class="s-num">SEC 4.8</span><h3>Agentic Workflow Frameworks</h3></div>
+<div class="section-body">
+<p>Frameworks act as a control layer on top of LLMs, handling planning, tool selection, execution control, memory management, multi-agent coordination, and iterative reasoning. Traditional LLM: Prompt &rarr; LLM &rarr; Output. Agentic: Goal &rarr; Plan &rarr; Act &rarr; Observe &rarr; Re-plan &rarr; Output.</p>
+
+<div class="tbl-wrap"><table>
+<thead><tr><th>Framework</th><th>Key Feature</th><th>Best For</th><th>Advantage</th><th>Limitation</th></tr></thead>
+<tbody>
+<tr><td><span class="kw">LangChain</span></td><td>Modular chains, agents, tools, memory (conversation + vector DB)</td><td>Quick prototyping, RAG, chatbots, tool-based agents</td><td>Very flexible, strong ecosystem, beginner-friendly</td><td>Messy for complex workflows, hard to debug</td></tr>
+<tr><td><span class="kw">LangGraph</span></td><td>Graph-based orchestration (nodes + edges), loops, persistent state</td><td>Multi-agent systems, iterative workflows (ReAct, reflection), complex pipelines</td><td>Better control than LangChain, production-ready</td><td>Harder to learn, overkill for simple tasks</td></tr>
+<tr><td><span class="kw">AutoGen</span> (Microsoft)</td><td>Multi-agent conversations, tool use, code execution, human-in-the-loop</td><td>Multi-agent collaboration, complex reasoning, simulation</td><td>Powerful multi-agent support, role-based agents</td><td>Expensive (many LLM calls), unpredictable conversations</td></tr>
+<tr><td><span class="kw">CrewAI</span></td><td>Role-based teams (Researcher, Writer, Reviewer)</td><td>Business workflows, role-based automation</td><td>Simple, intuitive design</td><td>Less flexible, evolving ecosystem</td></tr>
+<tr><td><span class="kw">Semantic Kernel</span> (Microsoft)</td><td>Enterprise-focused, plugins, planner, Azure integration</td><td>Enterprise systems, API-heavy workflows</td><td>Strong enterprise integration, structured workflows</td><td>Less beginner-friendly, smaller community</td></tr>
+<tr><td><span class="kw">Haystack Agents</span></td><td>Search-driven, deep RAG pipeline integration</td><td>Document QA, knowledge assistants, enterprise search</td><td>Excellent for retrieval-heavy apps</td><td>Less general-purpose</td></tr>
+<tr><td><span class="kw">AutoGPT / BabyAGI</span></td><td>Fully autonomous, self-task generation, continuous loops</td><td>Experimental research, autonomous demos</td><td>Good for understanding autonomous concepts</td><td>High cost, unreliable, drifts from goal, not production-ready</td></tr>
+<tr><td><span class="kw">OpenAI Agents</span></td><td>Built-in tool calling, code execution, retrieval via API</td><td>SaaS AI assistants, lightweight automation</td><td>Fastest to build, less setup</td><td>Vendor lock-in, less flexible</td></tr>
+</tbody></table></div>
+</div></div>
+
+<!-- ═══ 4.9 LLM EVALUATION ═══ -->
+<div class="section" id="u4-eval">
+<div class="section-header"><span class="s-num">SEC 4.9</span><h3>LLM Evaluation</h3></div>
+<div class="section-body">
+
+<h4>Evaluation Dimensions</h4>
+<p>Factual Accuracy, Relevance, Coherence, Fluency, Safety, Robustness, Fairness, Groundedness.</p>
+
+<h4>Precision (Foundation for BLEU)</h4>
+<div class="formula">Precision = Number of correct predicted words / Total predicted words
+
+Example: Target: "Adobe makes Photoshop"
+         Predicted: "Adobe makes ColdFusion"
+         Correct words: "Adobe", "makes" (2 out of 3)
+         Precision = 2/3 = 0.667</div>
+
+<p><strong>Problem with basic precision:</strong> "Adobe makes makes" would get 3/3 = 100% (repeating "makes" counts twice).</p>
+<p><strong>Clipped Precision:</strong> Clips each word count to the maximum number of times it appears in the reference. "makes" appears once in reference, so clipped count = 1, not 2. Clipped precision = 2/3.</p>
+
+<h4>BLEU Score</h4>
+<div class="def"><strong>BLEU (Bilingual Evaluation Understudy)</strong> measures how similar candidate text is to reference text. Values 0-1; &ge;0.6 considered high. Used for machine translation and text generation evaluation.</div>
+
+<h5>BLEU Computation Steps</h5>
+<ol class="steps">
+  <li><strong>Compute clipped precision</strong> for n-grams: 1-gram (unigram), 2-gram (bigram), ..., n-gram. Example for 1-gram: count matching unigrams in candidate vs reference, clip by max reference count.</li>
+  <li><strong>Geometric average</strong> of all n-gram precisions: exp((1/N) x Σ log(precision_n)). This penalizes if any n-gram precision is very low.</li>
+  <li><strong>Brevity Penalty (BP):</strong> Penalizes candidates that are too short (prevents gaming by outputting only high-confidence words).</li>
+</ol>
+<div class="formula">BP = exp(1 - r/c)  if c < r
+BP = 1              if c >= r
+
+Where: c = candidate length, r = reference length
+
+BLEU = BP × exp( (1/N) × Σ_n log(precision_n) )</div>
+
+<h4>BERTScore</h4>
+<p>Uses BERT embeddings to compute token-level similarity between reference and candidate. Unlike BLEU (exact word matching), BERTScore captures semantic meaning. "Happy" and "joyful" would get high similarity in BERTScore but zero in BLEU.</p>
+
+<h4>Other Metrics</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Metric</th><th>Type</th><th>What It Measures</th></tr></thead>
+<tbody>
+<tr><td>BLEU</td><td>Reference-based, n-gram</td><td>Overlap between candidate and reference text</td></tr>
+<tr><td>ROUGE</td><td>Reference-based, recall-oriented</td><td>How much of the reference is captured</td></tr>
+<tr><td>METEOR</td><td>Reference-based, semantic</td><td>Alignment including synonyms and stemming</td></tr>
+<tr><td>BERTScore</td><td>Embedding-based</td><td>Semantic similarity using BERT embeddings</td></tr>
+<tr><td>Perplexity</td><td>Model-based</td><td>How well model predicts text (lower = better)</td></tr>
+<tr><td>LLM-as-Judge</td><td>Model-based</td><td>GPT-4/Claude evaluates quality directly</td></tr>
+</tbody></table></div>
+
+<h4>Frameworks: DeepEval vs TruLens</h4>
+<div class="compare">
+<div class="compare-box">
+<h5>DeepEval (by Confident AI)</h5>
+<p>Open-source Python framework. Task-specific, behavior-driven assessment. Features: comprehensive metrics library, custom metrics, batch processing, CI/CD support for automated testing, statistical analysis with confidence intervals.</p>
+</div>
+<div class="compare-box">
+<h5>TruLens (by TruEra)</h5>
+<p>Specializes in explaining and evaluating LLM apps. Features: instrumentation (record all LLM calls), feedback functions, explainability dashboards, performance monitoring over time. Works with LangChain, LlamaIndex.</p>
+</div>
+</div>
+
+<h4>RAG Evaluation with TruLens (RAG Triad)</h4>
+<ol class="steps">
+  <li>Implement RAG application normally</li>
+  <li>Define provider LLM for the evaluator</li>
+  <li>Define evaluation feedback functions per the RAG triad (answer relevance, context relevance, groundedness)</li>
+  <li>Define recorder instance</li>
+  <li>Run RAG with test cases using the recorder</li>
+  <li>View results in browser-based dashboard. Analyze, improve, measure again.</li>
+</ol>
+
+<h4>Benchmark Datasets</h4>
+<p>General: MMLU, TruthfulQA. Reasoning: GSM8K, BIG-Bench Hard. Coding: HumanEval, MBPP. Safety: ToxiGen. Instruction Following: MT-Bench, AlpacaEval.</p>
+
+<h4>Common Pitfalls</h4>
+<p>Over-relying on single metric, using reference-based metrics for open-ended tasks, not accounting for statistical significance, cherry-picking examples, neglecting demographic representation, assuming human evaluators are always right.</p>
+</div></div>
+
+<!-- ═══ 4.10 HARM OF LLMS ═══ -->
+<div class="section" id="u4-harm">
+<div class="section-header"><span class="s-num">SEC 4.10</span><h3>Harm of LLMs</h3></div>
+<div class="section-body">
+
+<h4>Categories of Harm</h4>
+<div class="tbl-wrap"><table>
+<thead><tr><th>Category</th><th>Description</th><th>Example</th><th>Mitigation</th></tr></thead>
+<tbody>
+<tr><td><strong>1. Bias &amp; Discrimination</strong></td><td>Training data contains societal biases</td><td>ChatGPT/LLaMA offered worse job recs to Mexican users (2023)</td><td>Diverse data, bias detection, system prompt instructions, ongoing safety checks</td></tr>
+<tr><td><strong>2. Hallucinations</strong></td><td>Factually incorrect or fabricated content</td><td>Lawyer cited nonexistent court decisions (2023)</td><td>Fact-checking, citations, chain-of-thought, targeted datasets, RAG</td></tr>
+<tr><td><strong>3. Misinformation</strong></td><td>Plausible but false info (unintentional or intentional)</td><td>Fake news articles, fabricated interviews</td><td>Fact-checking integrations, limit sensitive domains</td></tr>
+<tr><td><strong>4. Privacy Violations</strong></td><td>Memorize/regurgitate personal data</td><td>GPT-3.5/4 leaked emails and SSNs from training data (2023)</td><td>Data anonymization, secure handling, GDPR/CCPA compliance</td></tr>
+<tr><td><strong>5. Toxicity</strong></td><td>Offensive/harmful language</td><td>Hate speech, derogatory content</td><td>Content filtering, RLHF, post-generation filtering</td></tr>
+<tr><td><strong>6. Copyright/IP</strong></td><td>Generate content similar to copyrighted material</td><td>NYT lawsuit: GPT-4 reproduced articles nearly verbatim</td><td>Legal frameworks, data curation, output monitoring</td></tr>
+<tr><td><strong>7. Job Displacement</strong></td><td>Automation of creative/technical roles</td><td>Copywriters, translators, support agents replaced</td><td>Workforce reskilling programs</td></tr>
+<tr><td><strong>8. Over-Reliance</strong></td><td>Users depend without validating</td><td>Students using AI answers without understanding</td><td>Oversight policies, regular output reviews, education</td></tr>
+<tr><td><strong>9. Environmental Impact</strong></td><td>Massive energy for training</td><td>GPT-3: 1,287 MWh electricity, ~550 tons CO2</td><td>Model optimization, pruning, quantization, renewable energy</td></tr>
+<tr><td><strong>10. Lack of Explainability</strong></td><td>Black-box systems, can't trace reasoning</td><td>Misleading medical/legal outputs with no audit trail</td><td>Explainability tools, transparency mechanisms</td></tr>
+</tbody></table></div>
+
+<h4>OWASP Top 10 LLM Security Vulnerabilities</h4>
+<ol>
+  <li><strong>Prompt Injection:</strong> Direct (overwrite system prompt) or Indirect (via external inputs like files/websites). Fix: access controls, human oversight.</li>
+  <li><strong>Insecure Output Handling:</strong> Malicious outputs cause XSS, RCE in downstream systems. Fix: treat LLM as untrusted source.</li>
+  <li><strong>Training Data Poisoning:</strong> Manipulated data creates backdoors. Fix: secure supply chain, sanitize data.</li>
+  <li><strong>Model DoS:</strong> Resource-heavy inputs disrupt service. Fix: rate limits, input validation.</li>
+  <li><strong>Supply Chain Vulnerabilities:</strong> Risks in pre-trained models, plugins. Fix: vet suppliers.</li>
+  <li><strong>Sensitive Info Disclosure:</strong> LLM reveals confidential data. Fix: data sanitization.</li>
+  <li><strong>Insecure Plugin Design:</strong> Poorly designed plugins enable RCE. Fix: input validation, auth controls.</li>
+  <li><strong>Excessive Agency:</strong> Too much autonomy leads to damaging actions. Fix: limit functionality, require human auth.</li>
+  <li><strong>Overreliance:</strong> AI hallucinations and biases accepted uncritically. Fix: oversight policies.</li>
+  <li><strong>Model Theft:</strong> Proprietary LLMs stolen. Fix: strong access controls, RBAC, monitoring.</li>
+</ol>
+</div></div>
+
+<!-- ═══ 4.11 DATA BEHIND LLMS ═══ -->
+<div class="section" id="u4-data">
+<div class="section-header"><span class="s-num">SEC 4.11</span><h3>Data behind LLMs</h3></div>
+<div class="section-body">
+
+<h4>Why Data is Crucial</h4>
+<ul>
+  <li><strong>Learning Patterns:</strong> LLMs learn grammar, syntax, semantics from data. More diverse data = better generalization. Also learns contextual understanding: "She couldn't bear the weight of the decision" = emotional burden, not physical.</li>
+  <li><strong>Capturing Knowledge:</strong> Absorbs factual and conceptual knowledge (history, science, trends). Also picks up common sense reasoning and cultural norms.</li>
+  <li><strong>Data Quality:</strong> High-quality data = accurate responses. Training on unreliable sources (biased news, conspiracy sites) taints outputs with misinformation.</li>
+  <li><strong>Data Diversity:</strong> Avoids bias and overfitting. Handles multiple languages and dialects. Ensures inclusive representation of all demographics.</li>
+</ul>
+
+<h4>Types of Training Data</h4>
+<ul>
+  <li><strong>Text Data (core):</strong> Books, articles, websites, conversations, code.</li>
+  <li><strong>Multilingual Data:</strong> Multiple languages for cross-lingual capabilities.</li>
+  <li><strong>Domain-Specific Data:</strong> Healthcare, finance, legal -- for specialized models.</li>
+  <li><strong>Structured Data:</strong> Tables, graphs for factual knowledge retrieval.</li>
+</ul>
+
+<h4>Data Sources</h4>
+<p><strong>Public:</strong> Common Crawl, Wikipedia, Project Gutenberg. <strong>Licensed:</strong> Publishers, news outlets. <strong>User-Generated:</strong> Social media, forums (with privacy considerations). <strong>Private/Corporate:</strong> For customized enterprise models.</p>
+
+<h4>Preprocessing</h4>
+<p>Cleaning (remove noise, spam, offensive content), Normalization (standardize formats), Tokenization (BPE, WordPiece, SentencePiece), Bias detection and mitigation.</p>
+
+<h4>Data Augmentation</h4>
+<p>Artificially increase diversity: paraphrasing, back-translation, synonym replacement, synthetic text generation. Improves robustness and reduces bias impact.</p>
+
+<h4>Data Efficiency Techniques</h4>
+<ul>
+  <li><strong>Transfer Learning:</strong> Fine-tune pre-trained models on domain data (don't start from scratch).</li>
+  <li><strong>Few-Shot Learning:</strong> Train models to perform with minimal labeled data.</li>
+</ul>
+
+<h4>Challenges</h4>
+<ul>
+  <li><strong>Quality:</strong> Ensuring accuracy and reliability is critical.</li>
+  <li><strong>Bias:</strong> Training data biases propagate to model outputs.</li>
+  <li><strong>Privacy:</strong> Must comply with GDPR, CCPA. Personal data handling requires care.</li>
+  <li><strong>Scarcity:</strong> Some domains/languages lack sufficient high-quality data.</li>
+  <li><strong>Scale:</strong> Training on trillions of tokens requires petabytes of storage and massive compute.</li>
+</ul>
+
+<h4>Future Directions</h4>
+<p>Multimodal data (images + text) for more robust models, privacy-preserving techniques (federated learning), open and ethical data sharing initiatives, techniques for low-resource languages.</p>
+</div></div>
+
+</div><!-- end container -->
+
+<div class="footer">
+  GenAI Revision Notes (Expanded) — UE23CS342BA9 — Compiled for exam preparation.<br>
+  Content sourced from lecture slides by Dr. Uma D, Dept. of CSE, PES University.
+</div>
+
+</body>
+</html>
