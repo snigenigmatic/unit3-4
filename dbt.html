@@ -1,0 +1,1362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Database Technologies — Units 3 &amp; 4 Revision Notes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+  :root {
+    --ink:#0f0e0d; --paper:#f7f4ef; --accent:#c0392b; --accent2:#1a5276; --accent3:#117a65;
+    --gold:#b7950b; --muted:#6d6358; --rule:#d5cfc6; --highlight:#fdebd0; --highlight2:#d6eaf8;
+    --highlight3:#d5f5e3; --highlight-warn:#fef9e7; --code-bg:#1e2329; --code-fg:#e6db74;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Source Serif 4',Georgia,serif;background:var(--paper);color:var(--ink);font-size:16px;line-height:1.75;}
+  .masthead{background:var(--ink);color:var(--paper);padding:3rem 2rem 2.5rem;text-align:center;position:relative;overflow:hidden;}
+  .masthead::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.02) 40px,rgba(255,255,255,.02) 80px);}
+  .masthead h1{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3.2rem);font-weight:900;letter-spacing:-1px;position:relative;}
+  .masthead h1 span{color:var(--accent);}
+  .masthead .sub{margin-top:.6rem;font-size:1rem;opacity:.65;font-style:italic;position:relative;}
+  .badge-row{margin-top:1.4rem;display:flex;justify-content:center;gap:.6rem;flex-wrap:wrap;position:relative;}
+  .badge{background:var(--accent);color:#fff;font-family:'JetBrains Mono',monospace;font-size:.72rem;padding:.25rem .7rem;border-radius:2px;letter-spacing:.5px;}
+  .badge.blue{background:var(--accent2);} .badge.green{background:var(--accent3);}
+  .toc-wrapper{width:min(1200px,calc(100% - 3rem));margin:2.5rem auto;}
+  .toc-card{background:white;border:1px solid var(--rule);border-top:3px solid var(--ink);padding:1.8rem 2rem;}
+  .toc-card h2{font-family:'Playfair Display',serif;font-size:1.05rem;text-transform:uppercase;letter-spacing:2px;margin-bottom:1.2rem;color:var(--muted);}
+  .toc-cols{display:grid;grid-template-columns:1fr 1fr;gap:.2rem 2rem;}
+  .toc-cols a{font-size:.9rem;color:var(--accent2);text-decoration:none;display:flex;align-items:baseline;gap:.4rem;padding:.18rem 0;border-bottom:1px dashed transparent;transition:border-color .2s;}
+  .toc-cols a:hover{border-bottom-color:var(--accent2);}
+  .toc-cols a .num{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);min-width:2.5rem;}
+  .container{width:min(1200px,calc(100% - 3rem));margin:0 auto;padding:0 0 4rem;}
+  .unit-divider{background:var(--ink);color:var(--paper);padding:1.2rem 2rem;margin:3rem 0 0;display:flex;align-items:center;gap:1rem;}
+  .unit-divider .unit-num{font-family:'JetBrains Mono',monospace;font-size:.75rem;opacity:.5;text-transform:uppercase;letter-spacing:2px;}
+  .unit-divider h2{font-family:'Playfair Display',serif;font-size:1.5rem;}
+  .section{margin-top:2.5rem;border:1px solid var(--rule);background:white;}
+  .section-header{background:var(--ink);color:var(--paper);padding:.7rem 1.4rem;display:flex;align-items:center;gap:.8rem;}
+  .section-header .s-num{font-family:'JetBrains Mono',monospace;font-size:.7rem;opacity:.5;text-transform:uppercase;letter-spacing:1px;min-width:4rem;}
+  .section-header h3{font-family:'Playfair Display',serif;font-size:1.15rem;}
+  .section-body{padding:1.4rem 1.8rem;}
+  h4{font-family:'Playfair Display',serif;font-size:1rem;color:var(--accent2);margin:1.4rem 0 .5rem;padding-bottom:.3rem;border-bottom:1px solid var(--rule);}
+  h5{font-size:.9rem;font-weight:600;color:var(--accent);margin:1rem 0 .3rem;text-transform:uppercase;letter-spacing:.5px;}
+  p{margin-bottom:.8rem;}
+  .def{background:var(--highlight2);border-left:3px solid var(--accent2);padding:.75rem 1rem;margin:.8rem 0;font-size:.94rem;}
+  .def strong{color:var(--accent2);}
+  .warn{background:var(--highlight);border-left:3px solid var(--gold);padding:.75rem 1rem;margin:.8rem 0;font-size:.94rem;}
+  .warn strong{color:var(--gold);}
+  .tip{background:var(--highlight3);border-left:3px solid var(--accent3);padding:.75rem 1rem;margin:.8rem 0;font-size:.94rem;}
+  .tip strong{color:var(--accent3);}
+  .exam-box{background:#fff8e1;border:1.5px solid var(--gold);padding:.8rem 1.1rem;margin:1rem 0;font-size:.9rem;}
+  .exam-box::before{content:'★ EXAM FOCUS — ';font-weight:700;font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--gold);letter-spacing:.5px;}
+  .tbl-wrap{overflow-x:auto;margin:1rem 0;}
+  table{width:100%;border-collapse:collapse;font-size:.88rem;}
+  thead tr{background:var(--ink);color:var(--paper);}
+  thead th{padding:.55rem .9rem;text-align:left;font-family:'JetBrains Mono',monospace;font-size:.75rem;letter-spacing:.5px;}
+  tbody tr:nth-child(even){background:var(--paper);}
+  tbody tr:nth-child(odd){background:white;}
+  tbody td{padding:.5rem .9rem;vertical-align:top;}
+  ul,ol{padding-left:1.5rem;margin-bottom:.8rem;}
+  li{margin-bottom:.3rem;}
+  .kw{display:inline;background:var(--highlight2);color:var(--accent2);font-family:'JetBrains Mono',monospace;font-size:.82em;padding:.1em .4em;border-radius:2px;font-weight:600;}
+  .kw.red{background:var(--highlight);color:var(--accent);} .kw.green{background:var(--highlight3);color:var(--accent3);}
+  .formula{font-family:'JetBrains Mono',monospace;background:var(--code-bg);color:var(--code-fg);padding:.6rem 1rem;margin:.8rem 0;font-size:.9rem;border-radius:2px;}
+  pre.code{font-family:'JetBrains Mono',monospace;background:var(--code-bg);color:#e0e0d8;padding:1rem 1.2rem;margin:1rem 0;font-size:.82rem;line-height:1.5;border-radius:2px;overflow-x:auto;border-left:3px solid var(--code-fg);}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0;}
+  .compare-box{border:1px solid var(--rule);padding:.9rem 1rem;}
+  .compare-box h5{margin-top:0;}
+  .solved-box{background:#fafafa;border:1.5px solid var(--accent2);border-radius:2px;padding:1rem 1.2rem;margin:1rem 0;}
+  .solved-box .solved-title{font-family:'JetBrains Mono',monospace;font-size:.78rem;font-weight:700;color:var(--accent2);letter-spacing:.5px;margin-bottom:.6rem;text-transform:uppercase;}
+  .solved-step{display:flex;gap:.8rem;margin-bottom:.5rem;align-items:flex-start;}
+  .solved-step .step-n{background:var(--accent2);color:#fff;border-radius:50%;min-width:1.5rem;height:1.5rem;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.72rem;flex-shrink:0;margin-top:.15rem;}
+  .result-box{background:var(--highlight3);border-left:3px solid var(--accent3);padding:.5rem .8rem;margin-top:.6rem;font-family:'JetBrains Mono',monospace;font-size:.9rem;}
+  .arch-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.8rem;margin:1rem 0;}
+  .arch-card{border:1px solid var(--rule);border-top:3px solid var(--accent);padding:.8rem 1rem;}
+  .arch-card h5{margin-top:0;color:var(--accent);}
+  .arch-card.blue{border-top-color:var(--accent2);} .arch-card.blue h5{color:var(--accent2);}
+  .arch-card.green{border-top-color:var(--accent3);} .arch-card.green h5{color:var(--accent3);}
+  .footer{text-align:center;padding:2rem;font-size:.8rem;color:var(--muted);border-top:1px solid var(--rule);margin-top:3rem;}
+  @media(max-width:640px){.toc-cols,.compare,.arch-grid{grid-template-columns:1fr;}.section-body{padding:1rem;}}
+  [id]{scroll-margin-top:1rem;}
+</style>
+</head>
+<body>
+
+<div class="masthead">
+  <h1>Database Technologies<br><span>Units 3 &amp; 4 — Complete Revision Notes</span></h1>
+  <div class="sub">Parallel &amp; Distributed Databases · Stream Processing · Big Data Architectures — Prof. Suresh Jamadagni</div>
+  <div class="badge-row">
+    <span class="badge">Unit 3: Parallel &amp; Distributed DB</span>
+    <span class="badge blue">Unit 4: Stream Processing &amp; Big Data</span>
+    <span class="badge green">All Solved Examples Included</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc-wrapper">
+<div class="toc-card">
+  <h2>Table of Contents</h2>
+  <div class="toc-cols">
+    <a href="#parallel-intro"><span class="num">3.1</span>Parallel Databases — Introduction</a>
+    <a href="#models"><span class="num">3.2</span>Models of Parallelism</a>
+    <a href="#query-par"><span class="num">3.3</span>Query Parallelism (Intra &amp; Inter)</a>
+    <a href="#par-algos"><span class="num">3.4</span>Parallel Algorithms</a>
+    <a href="#join-perf"><span class="num">3.5</span>Join Performance &amp; Solved Example</a>
+    <a href="#mapreduce"><span class="num">3.6</span>Map-Reduce Framework &amp; Hadoop</a>
+    <a href="#dist-intro"><span class="num">3.7</span>Distributed Database Concepts</a>
+    <a href="#homo-hetero"><span class="num">3.8</span>Homogeneous vs Heterogeneous DDB</a>
+    <a href="#ddb-adv"><span class="num">3.9</span>Advantages &amp; Functions of DDB</a>
+    <a href="#fragmentation"><span class="num">3.10</span>Data Fragmentation &amp; Replication</a>
+    <a href="#dist-query"><span class="num">3.11</span>Distributed Query Processing</a>
+    <a href="#dist-join"><span class="num">3.12</span>Distributed Join &amp; Semi-Join Examples</a>
+    <a href="#transactions"><span class="num">3.13</span>Distributed Transactions &amp; 2PC / 3PC</a>
+    <a href="#locking"><span class="num">3.14</span>Distributed Locking</a>
+    <a href="#p2p"><span class="num">3.15</span>P2P Networks &amp; Chord Circles</a>
+    <a href="#stream-intro"><span class="num">4.1</span>Stream Processing — Introduction</a>
+    <a href="#batch-stream"><span class="num">4.2</span>Batch vs Stream Processing</a>
+    <a href="#time-concepts"><span class="num">4.3</span>Event Time vs Processing Time</a>
+    <a href="#windows"><span class="num">4.4</span>Window Aggregations (Tumbling &amp; Sliding)</a>
+    <a href="#watermarks"><span class="num">4.5</span>Watermarks</a>
+    <a href="#lambda"><span class="num">4.6</span>Lambda Architecture</a>
+    <a href="#kappa"><span class="num">4.7</span>Kappa Architecture</a>
+    <a href="#spark"><span class="num">4.8</span>Apache Spark &amp; RDDs</a>
+    <a href="#spark-streaming"><span class="num">4.9</span>Spark Streaming &amp; DStreams</a>
+    <a href="#structured-streaming"><span class="num">4.10</span>Structured Streaming</a>
+    <a href="#kafka"><span class="num">4.11</span>Apache Kafka</a>
+    <a href="#multimodel"><span class="num">4.12</span>Multi-model Databases</a>
+    <a href="#datawarehouse"><span class="num">4.13</span>Data Warehousing &amp; OLAP</a>
+    <a href="#datamining"><span class="num">4.14</span>Data Mining</a>
+    <a href="#datalake"><span class="num">4.15</span>Data Lakes, Lakehouse &amp; Data Fabric</a>
+    <a href="#netflix"><span class="num">4.16</span>Case Study: Netflix Architecture</a>
+  </div>
+</div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════ UNIT 3 ═══════════════════ -->
+<div class="unit-divider">
+  <span class="unit-num">Unit 3</span>
+  <h2>Parallel &amp; Distributed Databases</h2>
+</div>
+
+<!-- 3.1 Parallel Databases Intro -->
+<div class="section" id="parallel-intro">
+  <div class="section-header"><span class="s-num">3.1</span><h3>Parallel Databases — Introduction</h3></div>
+  <div class="section-body">
+    <p>Database operations are frequently time-consuming and involve large volumes of data — they can profit significantly from parallel processing.</p>
+    <div class="def"><strong>Parallel Database System:</strong> A system that seeks to improve performance through parallelization of various operations such as loading data, building indexes, and evaluating queries.</div>
+    <p>Parallel databases improve processing and I/O speeds by using <strong>multiple CPUs and disks in parallel</strong>. The key goals are:</p>
+    <ul>
+      <li><strong>Speedup:</strong> Doing the same task faster with more hardware.</li>
+      <li><strong>Scaleup:</strong> Handling larger tasks in the same time as the hardware scales.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 3.2 Models of Parallelism -->
+<div class="section" id="models">
+  <div class="section-header"><span class="s-num">3.2</span><h3>Models of Parallelism</h3></div>
+  <div class="section-body">
+    <div class="arch-grid">
+      <div class="arch-card">
+        <h5>Shared-Memory</h5>
+        <p>Single physical address space for the entire machine. Every processor can access all memory directly. Large machines are of the <strong>NUMA</strong> (Non-Uniform Memory Access) type — accessing another processor's memory takes slightly more time. Critical bottleneck: whether data is in its own cache.</p>
+      </div>
+      <div class="arch-card blue">
+        <h5>Shared-Disk</h5>
+        <p>Every processor has its own private memory, but all disks are accessible from any processor via communication network. Disk controllers manage competing requests. Appears in two forms: <strong>NAS</strong> (Network Attached Storage — transfers files) and <strong>SAN</strong> (Storage Area Networks — transfers disk blocks).</p>
+      </div>
+      <div class="arch-card green">
+        <h5>Shared-Nothing</h5>
+        <p>Each processor has its own memory <em>and</em> its own disk(s). All communication is via the network. <strong>Most commonly used architecture</strong> for database systems. Relatively inexpensive to build using commodity machines in racks. Key challenge: data shipping between processors is costly.</p>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Shared Memory</th><th>Shared Disk</th><th>Shared Nothing</th></tr></thead>
+        <tbody>
+          <tr><td>Memory</td><td>Shared (global)</td><td>Private per processor</td><td>Private per processor</td></tr>
+          <tr><td>Disks</td><td>Private per processor</td><td>Shared via network</td><td>Private per processor</td></tr>
+          <tr><td>Communication</td><td>Memory bus</td><td>Disk network</td><td>Message passing (network)</td></tr>
+          <tr><td>Scalability</td><td>Limited (memory bus bottleneck)</td><td>Moderate</td><td>High</td></tr>
+          <tr><td>Cost</td><td>High</td><td>Moderate</td><td>Low (commodity hardware)</td></tr>
+          <tr><td>Common Use</td><td>Small SMP servers</td><td>NAS/SAN clusters</td><td>Large-scale DB systems</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 3.3 Query Parallelism -->
+<div class="section" id="query-par">
+  <div class="section-header"><span class="s-num">3.3</span><h3>Query Parallelism</h3></div>
+  <div class="section-body">
+    <p>Two distinct methods used to leverage multiple processors and disks to enhance DBMS performance:</p>
+    <div class="compare">
+      <div class="compare-box">
+        <h5>Intra-Query Parallelism</h5>
+        <p>Speeds up execution of a <strong>single, long-running query</strong> by breaking it into smaller tasks run concurrently.</p>
+        <ul>
+          <li><strong>Goal:</strong> Reduce response time for one complex query (OLAP).</li>
+          <li><strong>Mechanism:</strong> Query divided into sub-queries on different data partitions; results combined.</li>
+          <li><strong>Intra-operation:</strong> Same operation (scan, sort, join) split across data subsets.</li>
+          <li><strong>Inter-operation:</strong> Different operations in the same query run concurrently (pipeline or bushy-tree parallelism).</li>
+          <li><strong>Benefit:</strong> Improves individual query latency.</li>
+        </ul>
+      </div>
+      <div class="compare-box">
+        <h5>Inter-Query Parallelism</h5>
+        <p>Executes <strong>multiple independent queries</strong> simultaneously on different processors.</p>
+        <ul>
+          <li><strong>Goal:</strong> Increase overall system throughput; handle high-volume concurrent requests (OLTP).</li>
+          <li><strong>Mechanism:</strong> DBMS allocates resources to different queries, schedules parallel execution, maximizing CPU and I/O utilization.</li>
+          <li><strong>Benefit:</strong> Enhances ability to handle concurrent workloads (not individual query speed).</li>
+          <li><strong>Complexity:</strong> Relatively simpler to achieve than intra-query parallelism.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Feature</th><th>Intra-Query</th><th>Inter-Query</th></tr></thead>
+        <tbody>
+          <tr><td>Focus</td><td>A single query</td><td>Multiple queries/transactions</td></tr>
+          <tr><td>Primary Goal</td><td>Minimize single query response time</td><td>Maximize overall system throughput</td></tr>
+          <tr><td>Use Case</td><td>Complex, long-running queries (OLAP)</td><td>High volume of concurrent requests (OLTP)</td></tr>
+          <tr><td>Complexity</td><td>More complex to implement efficiently</td><td>Relatively simpler to achieve</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 3.4 Parallel Algorithms -->
+<div class="section" id="par-algos">
+  <div class="section-header"><span class="s-num">3.4</span><h3>Parallel Algorithms</h3></div>
+  <div class="section-body">
+    <h4>Tuple-at-a-Time Operations (on Shared-Nothing)</h4>
+    <p>For <strong>p processors</strong>, divide relation R's tuples evenly among p processor's disks:</p>
+    <ul>
+      <li>For <strong>Selection σ<sub>C</sub>(R):</strong> Each processor examines tuples on its own disk. Result σ<sub>C</sub>(R) is divided among processors the same way R is.</li>
+      <li>For <strong>Projection π<sub>L</sub>(R):</strong> The number of tuples at each processor stays the same. If R is distributed evenly, so is the projection.</li>
+      <li><span class="warn"><strong>Note:</strong> A selection can radically change distribution of tuples compared to R (uneven results). Projection preserves distribution.</span></li>
+    </ul>
+
+    <h4>Parallel Algorithms for Full-Relation Operations</h4>
+    <ul>
+      <li><strong>Deduplication δ(R):</strong> Use a hash function to distribute tuples — duplicates land at the same processor. Apply standard algorithm at each processor in parallel.</li>
+      <li><strong>Union / Intersection / Difference (R ∪ S, R ∩ S, R − S):</strong> Use the <em>same hash function</em> on both R and S. Work in parallel on portions at each processor.</li>
+      <li><strong>Join R(X,Y) ⋈ S(Y,Z):</strong> Hash tuples of both R and S on Y-attributes to p buckets (one per processor). Each processor joins its portion independently.</li>
+      <li><strong>Aggregation (GROUP BY):</strong> Hash tuples on grouping attributes to p buckets. Each processor aggregates its bucket.</li>
+    </ul>
+
+    <h4>Performance of Parallel Algorithms</h4>
+    <div class="def">
+      <strong>Key Insight:</strong> Total work (disk I/Os + CPU cycles) is never less for parallel than for uniprocessor. The advantage is in <em>elapsed time</em> — p processors can do work in 1/p of the time.
+    </div>
+    <ul>
+      <li>A unary operation like σ<sub>C</sub>(R) completes in <strong>1/p</strong> of the uniprocessor time (when R is evenly distributed).</li>
+      <li>Number of disk I/Os is essentially the same as for uniprocessor selection.</li>
+    </ul>
+
+    <h4>Performance Analysis for Parallel Join</h4>
+    <p>For join R ⋈ S using hash-distribution to p processors:</p>
+    <div class="formula">
+      Total reads (first pass): B(R) + B(S) disk I/Os
+      Tuples to ship: ((p−1)/p) × (B(R) + B(S)) blocks
+      Disk I/Os for initial read + store = 2(B(R) + B(S)) / p
+      Disk I/Os by naive parallel join at each processor = 3(B(R) + B(S)) / p
+      Total disk I/Os per processor = 5(B(R) + B(S)) / p
+      Uniprocessor: 3(B(R) + B(S))
+    </div>
+  </div>
+</div>
+
+<!-- 3.5 Join Solved Example -->
+<div class="section" id="join-perf">
+  <div class="section-header"><span class="s-num">3.5</span><h3>Solved Example: Parallel Join Performance</h3></div>
+  <div class="section-body">
+    <div class="exam-box">This numeric example frequently appears in exams. Know all the steps and formulas.</div>
+    <div class="solved-box">
+      <div class="solved-title">Problem: R(X,Y) ⋈ S(Y,Z) — B(R) = 1000, B(S) = 500, M = 101 buffers, p = 10 processors</div>
+      <div class="solved-step"><span class="step-n">1</span><span>Hash each tuple of R and S to one of 10 "buckets" using hash function h on join attribute Y. Ship each tuple to the processor corresponding to its bucket.</span></div>
+      <div class="solved-step"><span class="step-n">2</span><span><strong>Total disk I/Os to read R and S:</strong> B(R) + B(S) = 1000 + 500 = <strong>1500</strong> I/Os → 150 per processor.</span></div>
+      <div class="solved-step"><span class="step-n">3</span><span>Each processor has ~150 blocks total. Of these, ~15 blocks belong to each of the other 9 processors, so each processor ships 15 × 9 = <strong>135 blocks</strong> to other processors. Total network communication = 135 × 10 = <strong>1350 blocks</strong>.</span></div>
+      <div class="solved-step"><span class="step-n">4</span><span>Each processor receives ~50 blocks of S-tuples. Ship S first, store in memory (using 50 of 101 buffers). Then stream R-tuples through, comparing against in-memory S for join output.</span></div>
+      <div class="solved-step"><span class="step-n">5</span><span>Cost of the join = <strong>1500 disk I/Os</strong> total. Elapsed time dominated by 150 disk I/Os per processor + tuple shipping + in-memory join computation.</span></div>
+      <div class="result-box">✓ Elapsed time ≈ 1/10th of the uniprocessor time (far less than 1500 I/Os on one machine)</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3.6 MapReduce -->
+<div class="section" id="mapreduce">
+  <div class="section-header"><span class="s-num">3.6</span><h3>Map-Reduce Framework &amp; Hadoop</h3></div>
+  <div class="section-body">
+    <div class="def"><strong>MapReduce:</strong> A high-level parallel programming system that divides large input datasets into smaller independent chunks and processes them concurrently across multiple nodes. The framework automatically handles task scheduling, monitoring, and inter-machine communication.</div>
+
+    <h4>How MapReduce Works</h4>
+    <ul>
+      <li>User writes code for two functions: <span class="kw">map()</span> and <span class="kw">reduce()</span>.</li>
+      <li>A <strong>master controller</strong> divides input data into chunks and assigns different processors to execute map on each chunk.</li>
+      <li>Other processors (or the same) perform reduce on pieces of the map output.</li>
+    </ul>
+
+    <h4>Three Phases</h4>
+    <div class="arch-grid">
+      <div class="arch-card">
+        <h5>Mapping</h5>
+        <p>Indexing and sorting data into the desired structure based on specified key-value pairs. Each mapper processes one input split independently.</p>
+      </div>
+      <div class="arch-card blue">
+        <h5>Shuffling</h5>
+        <p>Redistributes the mapper's output across nodes depending on the key. All values for the same key are grouped to the same reducer.</p>
+      </div>
+      <div class="arch-card green">
+        <h5>Reducing</h5>
+        <p>Produces a summary of previously mapped and shuffled data. Each reducer processes all values for its assigned keys and produces final output.</p>
+      </div>
+    </div>
+
+    <h4>The Storage Model (Hadoop)</h4>
+    <ul>
+      <li>Massively parallel machine, typically <strong>shared-nothing</strong>.</li>
+      <li>Commodity computers mounted in racks, connected by simple network.</li>
+      <li>Data stored in large files divided into <strong>chunks</strong> (typically many megabytes, e.g., complete disk cylinders).</li>
+      <li>Each chunk is <strong>replicated several times</strong> for fault tolerance.</li>
+    </ul>
+
+    <h4>MapReduce Execution Flow (Hadoop)</h4>
+    <ol>
+      <li>Client submits the job (JAR file, Mapper &amp; Reducer logic, input/output paths).</li>
+      <li>Job Tracker accepts the job, splits into tasks, assigns to Task Trackers based on <strong>data locality</strong>.</li>
+      <li>Task Trackers execute Map Tasks on local input splits.</li>
+      <li>Intermediate results are shuffled and sorted.</li>
+      <li>Reduce Tasks process grouped results, generating final output.</li>
+      <li>Final output is written back to <strong>HDFS</strong>.</li>
+    </ol>
+
+    <h4>MapReduce Advantages</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Advantage</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Parallelism</td><td>Tasks executed simultaneously across hundreds/thousands of nodes</td></tr>
+          <tr><td>Scalability</td><td>Handles increasing data volumes by adding more nodes</td></tr>
+          <tr><td>Fault Tolerance</td><td>Automatically recovers from task/node failures using replicated data</td></tr>
+          <tr><td>Efficiency</td><td>Reduces network traffic by processing data locally (data locality)</td></tr>
+          <tr><td>Simplicity</td><td>Developers implement only map() and reduce(); framework handles the rest</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 3.7 Distributed DB Concepts -->
+<div class="section" id="dist-intro">
+  <div class="section-header"><span class="s-num">3.7</span><h3>Distributed Database Concepts</h3></div>
+  <div class="section-body">
+    <div class="compare">
+      <div class="compare-box">
+        <h5>Parallel Database System</h5>
+        <p>Data stored at a <strong>single site</strong>. Used to improve query performance through parallel implementation. Processors are closely coupled (shared memory/disk/nothing).</p>
+      </div>
+      <div class="compare-box">
+        <h5>Distributed Database System (DDB)</h5>
+        <p>Data stored across <strong>several sites</strong>, each managed by a DBMS capable of running independently. Sites are loosely coupled via a general network.</p>
+      </div>
+    </div>
+    <div class="def"><strong>DDB (Distributed Database):</strong> A collection of multiple logically related databases distributed over a computer network.</div>
+    <div class="def"><strong>DDBMS (Distributed DBMS):</strong> A software system that manages a DDB while making the distribution <em>transparent</em> to the user.</div>
+  </div>
+</div>
+
+<!-- 3.8 Homogeneous vs Heterogeneous -->
+<div class="section" id="homo-hetero">
+  <div class="section-header"><span class="s-num">3.8</span><h3>Homogeneous vs Heterogeneous Distributed Databases</h3></div>
+  <div class="section-body">
+    <div class="compare">
+      <div class="compare-box">
+        <h5>Homogeneous DDB</h5>
+        <ul>
+          <li>All sites have <strong>identical software</strong>.</li>
+          <li>Sites are aware of each other and agree to cooperate in processing user requests.</li>
+          <li>Each site surrenders part of its autonomy (right to change schemas or software).</li>
+          <li>Appears to user as a <strong>single system</strong>.</li>
+        </ul>
+      </div>
+      <div class="compare-box">
+        <h5>Heterogeneous DDB</h5>
+        <ul>
+          <li>Different sites may use <strong>different schemas and software</strong>.</li>
+          <li>Difference in schema → major problem for <strong>query processing</strong>.</li>
+          <li>Difference in software → major problem for <strong>transaction processing</strong>.</li>
+          <li>Sites may not be aware of each other; provide limited cooperation facilities.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 3.9 Advantages and Functions -->
+<div class="section" id="ddb-adv">
+  <div class="section-header"><span class="s-num">3.9</span><h3>Advantages &amp; Additional Functions of DDB</h3></div>
+  <div class="section-body">
+    <h4>Advantages of Distributed Databases</h4>
+    <ol>
+      <li><strong>Management with Transparency:</strong> Hides data location details.
+        <ul>
+          <li><em>Distribution/Network transparency:</em> Freedom from operational network details (location + naming transparency).</li>
+          <li><em>Replication transparency:</em> User unaware copies exist.</li>
+          <li><em>Fragmentation transparency:</em> User unaware of fragments.</li>
+        </ul>
+      </li>
+      <li><strong>Increased Reliability and Availability:</strong>
+        <ul>
+          <li><em>Reliability:</em> Probability system is running at a specific time point.</li>
+          <li><em>Availability:</em> Probability system is continuously available during a time interval.</li>
+        </ul>
+      </li>
+      <li><strong>Improved Performance:</strong> DDBMS fragments the database keeping data close to where it's needed most (data localization reduces CPU and I/O).</li>
+      <li><strong>Easier Expansion:</strong> Adding more data, increasing database sizes, or adding processors is much easier.</li>
+    </ol>
+    <h4>Additional Functions Required by a DDBMS</h4>
+    <ol>
+      <li><strong>Keeping track of data:</strong> Track data distribution, fragmentation, and replication.</li>
+      <li><strong>Distributed query processing:</strong> Access remote sites via communication network.</li>
+      <li><strong>Distributed transaction management:</strong> Execute transactions accessing data from many sites.</li>
+      <li><strong>Replicated data management:</strong> Decide which replica to access; maintain consistency of copies.</li>
+      <li><strong>Distributed database recovery:</strong> Recover from individual site crashes or communication failure.</li>
+      <li><strong>Security:</strong> Proper management of data security and user authorization/access privileges.</li>
+      <li><strong>Distributed directory (catalog) management:</strong> Design and policy for directory placement.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- 3.10 Data Fragmentation & Replication -->
+<div class="section" id="fragmentation">
+  <div class="section-header"><span class="s-num">3.10</span><h3>Data Fragmentation &amp; Replication</h3></div>
+  <div class="section-body">
+    <h4>Data Fragmentation</h4>
+    <p>Fragmentation breaks a database into logical units stored at different sites. Info about fragmentation, allocation, and replication is in a <strong>global directory</strong>.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Definition</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Horizontal Fragment</strong></td><td>A subset of the <em>tuples</em> in a relation (row-based)</td><td>All employees where DNO = 5</td></tr>
+          <tr><td><strong>Vertical Fragment</strong></td><td>A subset of the <em>attributes</em> of a relation (column-based)</td><td>Only SSN and AGE columns of EMPLOYEE</td></tr>
+          <tr><td><strong>Mixed (Hybrid) Fragment</strong></td><td>Combines horizontal and vertical fragmentations</td><td>SSN and AGE of employees in dept 5</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Data Replication</h4>
+    <div class="def"><strong>Data Replication:</strong> The process of storing fragments of data in more than one site/node to improve availability. If a site fails, other sites can provide the same data.</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>How it Works</th><th>Use Case</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Transactional Replication</strong></td><td>Sites receive full initial copy, then receive updates as data changes. Accurately replicates each change.</td><td>Server-to-server environments</td></tr>
+          <tr><td><strong>Snapshot Replication</strong></td><td>Distributes data as it appears at a specific moment in time. Does not monitor for updates.</td><td>When data changes are infrequent</td></tr>
+          <tr><td><strong>Merge Replication</strong></td><td>Data from two or more databases combined into one. Both publisher and subscriber can independently make changes.</td><td>Server-to-client environments</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 3.11 Distributed Query Processing -->
+<div class="section" id="dist-query">
+  <div class="section-header"><span class="s-num">3.11</span><h3>Distributed Query Processing</h3></div>
+  <div class="section-body">
+    <h4>4 Stages of Distributed Query Processing</h4>
+    <ol>
+      <li><strong>Query Mapping:</strong> Input query on distributed data → algebraic query on global relations. Done by referring to global conceptual schema. Does NOT consider actual data distribution.</li>
+      <li><strong>Localization:</strong> Maps distributed query on global schema → separate queries on individual fragments using data distribution and replication info.</li>
+      <li><strong>Global Query Optimization:</strong> Selects a strategy from candidates closest to optimal. DDBs are connected by network, so <strong>communication costs are most significant</strong>.</li>
+      <li><strong>Local Query Optimization:</strong> Standard query optimization at each individual site.</li>
+    </ol>
+    <h4>The Distributed Join Problem</h4>
+    <p>For join R(A,B) ⋈ S(B,C) where R and S reside at <strong>different nodes</strong>:</p>
+    <ul>
+      <li><strong>Option 1:</strong> Send copy of R to site of S and compute join there.</li>
+      <li><strong>Option 2:</strong> Send copy of S to site of R and compute join there.</li>
+    </ul>
+    <p>Cost factors to consider: (1) cost of data transmission over network; (2) potential gain from parallel processing at multiple sites.</p>
+  </div>
+</div>
+
+<!-- 3.12 Solved Join Examples -->
+<div class="section" id="dist-join">
+  <div class="section-header"><span class="s-num">3.12</span><h3>Solved Examples: Distributed Join &amp; Semi-Join</h3></div>
+  <div class="section-body">
+    <div class="exam-box">Both the Distributed Join example and Semi-Join example are high-priority exam topics. Know the byte calculations.</div>
+
+    <h4>Solved Example 1: Distributed Join Cost Comparison</h4>
+    <div class="solved-box">
+      <div class="solved-title">Given: EMPLOYEE at Site 1, DEPARTMENT at Site 2. Query submitted at Site 3 (result site).</div>
+      <p><strong>Data sizes:</strong> EMPLOYEE = 100 bytes/record × 10,000 records = 1,000,000 bytes. DEPARTMENT = 35 bytes/record × 100 records = 3,500 bytes. Query result = 40 bytes/record × 10,000 = 400,000 bytes.</p>
+      <p><strong>Query:</strong> π<sub>Fname,Lname,Dname</sub>(EMPLOYEE ⋈<sub>Dno=Dnumber</sub> DEPARTMENT)</p>
+      <div class="solved-step"><span class="step-n">1</span><span><strong>Option 1 — Transfer both to Site 3:</strong> Transfer EMPLOYEE (1,000,000) + DEPARTMENT (3,500) = <strong>1,003,500 bytes</strong></span></div>
+      <div class="solved-step"><span class="step-n">2</span><span><strong>Option 2 — Transfer EMPLOYEE to Site 2, join, send result to Site 3:</strong> Transfer EMPLOYEE (1,000,000) + result to Site 3 (400,000) = <strong>1,400,000 bytes</strong></span></div>
+      <div class="solved-step"><span class="step-n">3</span><span><strong>Option 3 — Transfer DEPARTMENT to Site 1, join, send result to Site 3:</strong> Transfer DEPARTMENT (3,500) + result to Site 3 (400,000) = <strong>403,500 bytes</strong></span></div>
+      <div class="result-box">✓ Option 3 is best: 403,500 bytes — always prefer transferring the smaller relation</div>
+    </div>
+
+    <h4>Solved Example 2: Semi-Join Optimization</h4>
+    <div class="def"><strong>Semi-Join:</strong> Only the relevant part (join attributes projected out) of one relation is shipped to the site of the other, reducing transmission cost.</div>
+    <p><strong>Algorithm:</strong> To compute R(X,Y) ⋈ S(Y,Z):</p>
+    <ol>
+      <li>Project join attributes of S → send π<sub>Y</sub>(S) to site of R.</li>
+      <li>Compute R ⋈ π<sub>Y</sub>(S) at site of R — this filters R to only tuples that will match.</li>
+      <li>Send the result to site of S, compute full join R ⋈ S there.</li>
+    </ol>
+
+    <div class="solved-box">
+      <div class="solved-title">Semi-Join Example: π(EMPLOYEE ⋈ DEPARTMENT) — result at Site 2</div>
+      <div class="solved-step"><span class="step-n">1</span><span>Project join attribute Dnumber from DEPARTMENT (Site 2): F = π<sub>Dnumber</sub>(DEPARTMENT). Size = 4 bytes × 100 records = <strong>400 bytes</strong>. Send F to Site 1.</span></div>
+      <div class="solved-step"><span class="step-n">2</span><span>At Site 1, join F with EMPLOYEE: R = π<sub>Dno,Fname,Lname</sub>(F ⋈<sub>Dnumber=Dno</sub> EMPLOYEE). Size = (4+15+15) × 10,000 = 34 × 10,000 = <strong>340,000 bytes</strong>. Transfer R to Site 2.</span></div>
+      <div class="solved-step"><span class="step-n">3</span><span>At Site 2, join transferred R with DEPARTMENT to get the final result.</span></div>
+      <div class="result-box">✓ Total bytes transferred = 400 + 340,000 = 340,400 bytes (far better than Option 3's 403,500!)</div>
+    </div>
+
+    <h4>Joins of Many Relations</h4>
+    <p>When joining 3+ relations at different sites, several semi-joins may be needed to eliminate <strong>dangling tuples</strong> before shipping. Important: some schemas have no finite sequence of semi-joins that eliminates all dangling tuples.</p>
+    <div class="tip"><strong>Example:</strong> Natural join R(A,B) ⋈ S(B,C) ⋈ T(C,A) — while R ⋈ S produces n tuples {(1,1,1),(2,2,2),...,(n,n,n)}, the full R ⋈ S ⋈ T may be empty if T = {(1,2),(2,3),...,(n-1,n),(n,1)} — no matching (C,A) pairs.</div>
+  </div>
+</div>
+
+<!-- 3.13 Distributed Transactions -->
+<div class="section" id="transactions">
+  <div class="section-header"><span class="s-num">3.13</span><h3>Distributed Transactions, 2PC &amp; 3PC</h3></div>
+  <div class="section-body">
+    <h4>Distributed Transaction Components</h4>
+    <p>A transaction may access data at several sites. Two roles per site:</p>
+    <div class="compare">
+      <div class="compare-box">
+        <h5>Local Transaction Manager</h5>
+        <ul>
+          <li>Maintains a log for recovery purposes.</li>
+          <li>Participates in coordinating concurrent execution of transactions at that site.</li>
+        </ul>
+      </div>
+      <div class="compare-box">
+        <h5>Transaction Coordinator</h5>
+        <ul>
+          <li>Starts execution of transactions originating at the site.</li>
+          <li>Distributes sub-transactions to appropriate sites.</li>
+          <li>Coordinates termination — either <strong>committed at all sites</strong> or <strong>aborted at all sites</strong>.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="warn"><strong>Key Rule:</strong> It is NOT acceptable to have a transaction committed at one site and aborted at another. Commit protocols ensure atomicity.</div>
+
+    <h4>Two-Phase Commit Protocol (2PC) — Phase 1: Voting</h4>
+    <ol>
+      <li>Coordinator logs <span class="kw">&lt;Prepare T&gt;</span> at its site.</li>
+      <li>Coordinator sends <code>prepare T</code> message to all participant sites.</li>
+      <li>Each site decides whether to commit or abort its component of T.</li>
+      <li>If site wants to <strong>commit</strong>: Enters <em>pre-committed</em> state (cannot abort without coordinator). Performs necessary steps, logs <span class="kw">&lt;Ready T&gt;</span>, flushes log to disk, sends <code>ready T</code> to coordinator.</li>
+      <li>If site wants to <strong>abort</strong>: Logs <span class="kw">&lt;Don't Commit T&gt;</span>, sends <code>don't commit T</code> to coordinator.</li>
+    </ol>
+
+    <h4>Two-Phase Commit Protocol (2PC) — Phase 2: Decision</h4>
+    <ol>
+      <li>If coordinator received <code>ready T</code> from <em>all</em> components → logs <span class="kw">&lt;Commit T&gt;</span> and sends <code>commit T</code> to all sites.</li>
+      <li>If coordinator received <code>don't commit T</code> from any site → logs <span class="kw">&lt;Abort T&gt;</span> and sends <code>abort T</code> to all sites.</li>
+      <li>Site receiving <code>commit T</code>: commits its component, logs <span class="kw">&lt;Commit T&gt;</span>.</li>
+      <li>Site receiving <code>abort T</code>: aborts T, logs <span class="kw">&lt;Abort T&gt;</span>.</li>
+    </ol>
+
+    <h4>Three-Phase Commit Protocol (3PC)</h4>
+    <p>Addresses some drawbacks of 2PC (e.g., blocking when coordinator fails in Phase 2).</p>
+    <ul>
+      <li><strong>Phase 1:</strong> Identical to 2PC Phase 1 (obtain preliminary votes). Every site ready to commit if instructed.</li>
+      <li><strong>Phase 2 (new):</strong> Coordinator makes pre-commit decision (as in 2PC) and records it in <strong>multiple (at least K) sites</strong>. This ensures the decision survives coordinator crash.</li>
+      <li><strong>Phase 3:</strong> Coordinator sends final commit/abort message to all participating sites.</li>
+    </ul>
+    <div class="tip"><strong>Tradeoff:</strong> 3PC is more complex and expensive but avoids the blocking problem of 2PC when the coordinator crashes after Phase 1.</div>
+
+    <h4>Concurrency Control Requirements</h4>
+    <p>All distributed concurrency mechanisms must:</p>
+    <ul>
+      <li>Be <strong>resilient</strong> to site and communication link failures.</li>
+      <li>Allow <strong>parallelism</strong> to enhance performance.</li>
+      <li>Incur <strong>optimal cost</strong> and minimize communication delays.</li>
+      <li>Place correct <strong>constraints on atomic actions</strong>.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 3.14 Distributed Locking -->
+<div class="section" id="locking">
+  <div class="section-header"><span class="s-num">3.14</span><h3>Distributed Locking &amp; Catalog Management</h3></div>
+  <div class="section-body">
+    <h4>Distributed Locking Approaches</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Method</th><th>How It Works</th><th>Pros</th><th>Cons</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Centralized Lock Systems</strong></td>
+            <td>One designated lock site maintains a lock table for all logical elements. Transactions send requests to this one site.</td>
+            <td>Simple to implement. 3 messages per lock (request, grant, release).</td>
+            <td>Single lock site is a <strong>bottleneck</strong>. If it crashes, no locks can be granted anywhere.</td>
+          </tr>
+          <tr>
+            <td><strong>Primary-Copy Locking</strong></td>
+            <td>Each logical element X has one copy designated as the "primary copy." Transactions request lock from primary copy's site. Distributes lock function.</td>
+            <td>Avoids bottleneck. Same simplicity as centralized. 3 messages per lock.</td>
+            <td>Primary copy site still a single point of failure for that element.</td>
+          </tr>
+          <tr>
+            <td><strong>Global Locks from Local Locks (Majority Locking)</strong></td>
+            <td>No copy is "primary" — all copies symmetric. Transaction must obtain local locks from a <em>majority</em> of copies. Broadcasts single request to all sites.</td>
+            <td>No single point of failure. Release by single broadcast message.</td>
+            <td>More messages per lock. Complex deadlock detection.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Distributed Catalog Management</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Scheme</th><th>Description</th><th>Trade-off</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Centralized Catalogs</strong></td><td>Entire catalog at one site. Easy to implement.</td><td>Loses reliability, availability, autonomy, and distributed processing benefits.</td></tr>
+          <tr><td><strong>Fully Replicated Catalogs</strong></td><td>Identical complete catalog at every site. Reads answered locally.</td><td>All updates must be broadcast to all sites. Uses 2PC for consistency.</td></tr>
+          <tr><td><strong>Partially Replicated Catalogs</strong></td><td>Each site has catalog for its local data. Can cache remote entries. Changes propagated to the "birth" site immediately.</td><td>Cached copies may be stale. Best balance between consistency and performance.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The <strong>Schema Architecture</strong> of a distributed database has layers: User → External View → Global Conceptual Schema (GCS) → Local Conceptual Schema (LCS) → Local Internal Schema (LIS) → Stored Data.</p>
+  </div>
+</div>
+
+<!-- 3.15 P2P and Chord -->
+<div class="section" id="p2p">
+  <div class="section-header"><span class="s-num">3.15</span><h3>Peer-to-Peer Networks &amp; Chord Circles</h3></div>
+  <div class="section-body">
+    <h4>Peer-to-Peer Network Characteristics</h4>
+    <p>A P2P network is a collection of nodes that are:</p>
+    <ol>
+      <li><strong>Autonomous:</strong> No central control; join/leave at will.</li>
+      <li><strong>Loosely coupled:</strong> Communicate over general-purpose network (Internet).</li>
+      <li><strong>Equal in functionality:</strong> No leader or controlling node.</li>
+      <li><strong>Resource sharing:</strong> Share resources with each other.</li>
+    </ol>
+    <p>Each node has a subset of data elements, but <strong>no centralized index</strong> says where something is located.</p>
+
+    <h4>Distributed Hashing Problem</h4>
+    <p>Given a large set of key-value pairs (K,V), constraints:</p>
+    <ol>
+      <li>At any time, only one node knows the value for any given key K.</li>
+      <li>Key-value pairs distributed roughly equally among peers.</li>
+      <li>Any node can find V for key K with messages growing much slower than number of peers.</li>
+      <li>Routing info at each node must also grow much slower than number of nodes.</li>
+    </ol>
+
+    <h4>Chord Circles</h4>
+    <div class="def"><strong>Chord:</strong> Arranges peers in a "chord circle." Nodes are placed on a circle using a hash function h that maps both keys and node IDs to m-bit numbers (2<sup>m</sup> positions).</div>
+    <ul>
+      <li>To place node with ID i: compute h(i) → place at position N<sub>h(i)</sub>.</li>
+      <li><strong>Successor</strong> = next higher node clockwise. <strong>Predecessor</strong> = next counter-clockwise.</li>
+      <li>Key-value pair (K,V): stored at lowest-numbered node N<sub>j</sub> such that h(K) ≤ j.</li>
+      <li>If m = 6 → 64 positions. Example: pair with h(K) = 45 → stored at N<sub>48</sub>.</li>
+    </ul>
+
+    <h4>Finger Tables</h4>
+    <p>Each node maintains a <strong>finger table</strong> with m entries giving the first node found at distances 1, 2, 4, 8, ..., 2<sup>m-1</sup> around the circle (powers of two).</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Distance</th><th>1</th><th>2</th><th>4</th><th>8</th><th>16</th><th>32</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Node (for N8)</strong></td><td>N14</td><td>N14</td><td>N14</td><td>N21</td><td>N32</td><td>N42</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h4>Solved Example: Search Using Finger Tables</h4>
+    <div class="solved-box">
+      <div class="solved-title">N8 wants to find key K where h(K) = 54. Circle: N1, N8, N14, N21, N32, N38, N42, N48, N51, N56</div>
+      <div class="solved-step"><span class="step-n">1</span><span>N8 checks if h(K)=54 is in range [9,14] (successor N14) — No. Examines finger table: all entries below 54. Takes largest entry = N42. Sends message to N42 to find K.</span></div>
+      <div class="solved-step"><span class="step-n">2</span><span>N42 checks if 54 is in range [43,48] (successor N48) — No. Examines own finger table: N48, N48, N48, N51, N1, N14. Last entry below 54 (circularly) = N51. Sends request to N51.</span></div>
+      <div class="solved-step"><span class="step-n">3</span><span>N51 finds that 54 &lt; successor N56. So if (K,V) exists, it's at N56. N51 sends request to N56, asking it to reply to N8.</span></div>
+      <div class="result-box">✓ Found in 3 messages (≤ m = 6 max). Search uses at most m+1 messages for any key.</div>
+    </div>
+
+    <h4>Adding a New Node (Example: N26)</h4>
+    <div class="solved-box">
+      <div class="solved-title">Add node N26 to the circle (N21 ... N32)</div>
+      <div class="solved-step"><span class="step-n">1</span><span>N26 contacts any existing peer. That peer finds N26's successor = N32.</span></div>
+      <div class="solved-step"><span class="step-n">2</span><span>N26 sets successor = N32, predecessor = nil.</span></div>
+      <div class="solved-step"><span class="step-n">3</span><span>N21 runs the stabilization protocol → updates its successor to N26 and N32 updates predecessor to N26.</span></div>
+      <div class="solved-step"><span class="step-n">4</span><span>N32 transfers all (K,V) pairs where h(K) ≤ 26 to N26 (these now belong to N26).</span></div>
+    </div>
+
+    <h4>Node Departure &amp; Failure</h4>
+    <p><strong>Graceful departure:</strong> Node (1) notifies predecessor and successor so they become each other's neighbors, and (2) transfers its data to successor.</p>
+    <p><strong>Node failure handling:</strong></p>
+    <ol>
+      <li>Replicate each (K,V) at 3 nodes: correct node, its predecessor, and its successor.</li>
+      <li>Cluster nodes into groups of 3+ that replicate data and substitute for each other.</li>
+      <li>Large clusters can be split; small clusters can be merged with neighbors.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ═══════════════════ UNIT 4 ═══════════════════ -->
+<div class="unit-divider">
+  <span class="unit-num">Unit 4</span>
+  <h2>Stream Processing, Big Data Architectures &amp; Emerging Technologies</h2>
+</div>
+
+<!-- 4.1 Stream Processing Intro -->
+<div class="section" id="stream-intro">
+  <div class="section-header"><span class="s-num">4.1</span><h3>Stream Processing — Introduction</h3></div>
+  <div class="section-body">
+    <div class="def"><strong>Stream Processing:</strong> The discipline and related techniques used to extract information from <em>unbounded data</em> — datasets that are theoretically infinite in size.</div>
+    <div class="compare">
+      <div class="compare-box">
+        <h5>Bounded Dataset</h5>
+        <p>A dataset of known, finite size. We can count the number of elements. Traditional databases and files are bounded.</p>
+      </div>
+      <div class="compare-box">
+        <h5>Unbounded Dataset</h5>
+        <p>Theoretically infinite. Elements arrive continuously. Processing must happen continuously as long as the stream delivers new data.</p>
+      </div>
+    </div>
+    <p><strong>Business Opportunity:</strong> The need to process data and create actionable insights in a short period from when data was received. Examples: fraud detection, real-time recommendations, IoT monitoring.</p>
+  </div>
+</div>
+
+<!-- 4.2 Batch vs Stream -->
+<div class="section" id="batch-stream">
+  <div class="section-header"><span class="s-num">4.2</span><h3>Batch vs Stream Processing</h3></div>
+  <div class="section-body">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Aspect</th><th>Batch Processing</th><th>Stream Processing</th></tr></thead>
+        <tbody>
+          <tr><td>Data Type</td><td>Bounded datasets (finite, at rest)</td><td>Unbounded datasets (infinite, in motion)</td></tr>
+          <tr><td>Data Access</td><td>Entire dataset available at start</td><td>Only small portion available at any time</td></tr>
+          <tr><td>Processing Mode</td><td>Processes all data at once on schedule</td><td>Processes data as it arrives, runs constantly</td></tr>
+          <tr><td>Latency</td><td>Hours (scheduled jobs)</td><td>Milliseconds to seconds</td></tr>
+          <tr><td>Use Case</td><td>End-of-day reports, ETL pipelines</td><td>Fraud detection, real-time dashboards</td></tr>
+          <tr><td>Examples</td><td>Hadoop MapReduce, nightly ETL</td><td>Apache Flink, Kafka Streams, Spark Streaming</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip"><strong>Key Insight:</strong> All bounded datasets were initially a stream of data collected over time into storage. The difference is whether we process it "at rest" or "in motion."</div>
+  </div>
+</div>
+
+<!-- 4.3 Time Concepts -->
+<div class="section" id="time-concepts">
+  <div class="section-header"><span class="s-num">4.3</span><h3>Notion of Time in Stream Processing</h3></div>
+  <div class="section-body">
+    <div class="compare">
+      <div class="compare-box">
+        <h5>Event Time</h5>
+        <p>The time when the event was <strong>created</strong>. Provided by the local clock of the device generating the event. Reflects the real-world occurrence time.</p>
+        <p><em>Example:</em> A temperature sensor records "25°C at 14:00:05" — 14:00:05 is the event time.</p>
+      </div>
+      <div class="compare-box">
+        <h5>Processing Time</h5>
+        <p>The time when the event is <strong>handled</strong> by the stream-processing system (server clock). Useful for computing processing lag or detecting duplicate output.</p>
+        <p><em>Example:</em> The same temperature reading arrives at the server at 14:00:12 — 14:00:12 is processing time.</p>
+      </div>
+    </div>
+    <div class="warn"><strong>The Gap:</strong> There is always a time difference between event creation and when it becomes available for processing. Events may arrive out of order, late, or get lost entirely. This delta is the <em>delivery delay</em>.</div>
+    <h4>Uncertainty in Stream Processing</h4>
+    <ul>
+      <li>Streaming systems do not require input at regular intervals.</li>
+      <li>Predicting peak load is challenging — sudden bursts may cause delays, resource constriction, or failure.</li>
+      <li>Dealing with uncertainty (late arrivals, out-of-order events, duplicates) is a central challenge.</li>
+    </ul>
+    <div class="def"><strong>Delivery Delay:</strong> The time elapsed between the production of an event and its eventual consumption by the stream processor. Visualized as the vertical distance between the diagonal (ideal) line and the processing time on an event-time vs. processing-time chart.</div>
+  </div>
+</div>
+
+<!-- 4.4 Windows -->
+<div class="section" id="windows">
+  <div class="section-header"><span class="s-num">4.4</span><h3>Window Aggregations (Tumbling &amp; Sliding)</h3></div>
+  <div class="section-body">
+    <div class="def"><strong>Window:</strong> A bounded, recurring time-based aggregation in stream processing. Provides a "view" of a finite portion of an otherwise infinite stream.</div>
+    <div class="compare">
+      <div class="compare-box">
+        <h5>Tumbling Windows</h5>
+        <p>Fixed, non-overlapping, consecutive time periods. Each window is independent from others. Natural grouping of "x events per period."</p>
+        <ul>
+          <li><em>Example:</em> "Max temperature each hour" — 00:00–01:00, 01:00–02:00, 02:00–03:00, etc.</li>
+          <li><em>Example:</em> "Total energy consumption each 15 minutes."</li>
+        </ul>
+        <p>Use when: periods are independent, non-overlapping summaries needed.</p>
+      </div>
+      <div class="compare-box">
+        <h5>Sliding Windows</h5>
+        <p>Windows that <em>overlap</em>. Defined by a window size and a slide interval. Each window moves forward by the slide amount.</p>
+        <ul>
+          <li><em>Example:</em> "Average temperature over the last 10 minutes, updated every 5 minutes" — overlapping windows that share data.</li>
+        </ul>
+        <p>Use when: you need continuous updates and recent data matters across window boundaries.</p>
+      </div>
+    </div>
+
+    <h4>Event Time vs Processing Time in Windowing</h4>
+    <p><strong>Processing-time windows:</strong> Use server clock to define 10-second intervals. All events arriving in that interval belong to the window. Boundaries are well-defined. But window contents are arbitrary — unrelated to when events were generated. A late-arriving event (generated at 00:36 but arriving after 00:40) falls out of the window.</p>
+    <p><strong>Event-time windows:</strong> Use event creation time as window criteria. Window 00:30–00:40 contains all events created in that period — but has no natural upper boundary when it ends. Event created at 00:36 but arriving at 01:00 is "late by 20+ seconds." To close event-time windows, we need <strong>watermarks</strong>.</p>
+  </div>
+</div>
+
+<!-- 4.5 Watermarks -->
+<div class="section" id="watermarks">
+  <div class="section-header"><span class="s-num">4.5</span><h3>Watermarks</h3></div>
+  <div class="section-body">
+    <div class="def"><strong>Watermark:</strong> At any given moment, the <em>oldest timestamp</em> the stream processor will still accept on the data stream. Any events older than the watermark are not included in results (or processed in a late-arrivals channel).</div>
+    <p>The watermark <strong>closes the open boundary</strong> of event-time windows — it provides a deadline that decides what events belong to a window and what are "too late."</p>
+    <h4>Two Processing Modes After Watermark</h4>
+    <ol>
+      <li><strong>Final Output:</strong> All events in the output are older than the watermark → output is final; no further older events will ever change it.</li>
+      <li><strong>Provisional Output:</strong> Output covers data before watermark but a delayed element newer than the watermark could still arrive → output is provisional and may change.</li>
+    </ol>
+    <div class="warn"><strong>Memory Cost:</strong> To handle watermarks, the stream processor stores a lot of intermediate data. Memory needed ≈ watermark length × arrival rate × message size.</div>
+    <p>Stream processors using watermarks that want <strong>unique, final results</strong> for each interval must <strong>delay output</strong> for at least the length of the watermark.</p>
+  </div>
+</div>
+
+<!-- 4.6 Lambda Architecture -->
+<div class="section" id="lambda">
+  <div class="section-header"><span class="s-num">4.6</span><h3>Lambda Architecture</h3></div>
+  <div class="section-body">
+    <div class="def"><strong>Lambda Architecture:</strong> A data-processing architecture designed to handle massive quantities of data using both batch and stream-processing methods. Balances latency, throughput, and fault-tolerance.</div>
+    <h4>Three Layers</h4>
+    <div class="arch-grid">
+      <div class="arch-card">
+        <h5>Batch Layer</h5>
+        <p>Receives all new data. Processes entire dataset on predefined schedule (once/twice a day). Corrects data in the stream layer. Functions: (1) manage master dataset, (2) pre-compute batch views.</p>
+      </div>
+      <div class="arch-card blue">
+        <h5>Speed (Stream) Layer</h5>
+        <p>Handles data not yet in the batch view due to batch latency. Only deals with recent data. Provides real-time views to complement batch views for a complete picture.</p>
+      </div>
+      <div class="arch-card green">
+        <h5>Serving Layer</h5>
+        <p>Receives batch views and near-real-time views. Indexes batch views for low-latency ad-hoc queries. Users query this layer to get combined view of batch + stream results.</p>
+      </div>
+    </div>
+    <h4>Tools Used</h4>
+    <p>Apache Hadoop &amp; HDFS (batch/storage), Apache Spark (streaming, batch, graph), Apache Cassandra (real-time views), Apache Kafka (speed layer streaming), Apache Storm (stream layer), Apache HBase (serving layer).</p>
+    <h4>Benefits &amp; Challenges</h4>
+    <div class="compare">
+      <div class="compare-box">
+        <h5>Benefits</h5>
+        <ul>
+          <li>No server management required.</li>
+          <li>Flexible Scaling (auto-scale).</li>
+          <li>Automated High Availability and fault tolerance.</li>
+          <li>Business Agility — react in real-time.</li>
+        </ul>
+      </div>
+      <div class="compare-box">
+        <h5>Challenges</h5>
+        <ul>
+          <li><strong>Complexity:</strong> Two separate code bases for batch and stream layers.</li>
+          <li>Debugging is difficult — logic duplicated in two systems.</li>
+          <li>Higher maintenance overhead.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4.7 Kappa Architecture -->
+<div class="section" id="kappa">
+  <div class="section-header"><span class="s-num">4.7</span><h3>Kappa Architecture</h3></div>
+  <div class="section-body">
+    <div class="def"><strong>Kappa Architecture:</strong> A streamlined data processing approach focused on real-time stream processing. Treats all data as a stream — both real-time AND historical data processed using a <em>single processing engine</em>. Simpler alternative to Lambda.</div>
+    <h4>Kappa vs Lambda</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Aspect</th><th>Lambda Architecture</th><th>Kappa Architecture</th></tr></thead>
+        <tbody>
+          <tr><td>Batch Layer</td><td>Yes — separate batch processing</td><td>No — stream only</td></tr>
+          <tr><td>Code Bases</td><td>Two (batch + stream)</td><td>One (stream for both)</td></tr>
+          <tr><td>Complexity</td><td>Higher</td><td>Lower</td></tr>
+          <tr><td>Historical Reprocessing</td><td>Via batch layer</td><td>Event replay from stream</td></tr>
+          <tr><td>Latency</td><td>Eventual (batch) + real-time (speed)</td><td>Consistently low latency</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Kappa Architecture Components</h4>
+    <ol>
+      <li><strong>Data Source:</strong> Real-time streams from IoT devices, logs, user interactions.</li>
+      <li><strong>Stream Processing Engine:</strong> Kafka, Flink, or Samza — filter, transform, aggregate on the fly.</li>
+      <li><strong>Data Storage:</strong> NoSQL (Cassandra, HBase) or distributed file systems (HDFS, S3) — also handles event replay.</li>
+      <li><strong>Serving Layer:</strong> Serves processed data to users, dashboards, downstream applications.</li>
+      <li><strong>Reprocessing/Replay Mechanism:</strong> No batch layer — replay past events from original stream if reprocessing needed (e.g., after code changes).</li>
+    </ol>
+    <h4>Benefits of Kappa</h4>
+    <ul>
+      <li><strong>Simplicity:</strong> Single stream-processing logic for both real-time and historical.</li>
+      <li><strong>Low Latency:</strong> All data processed in real-time.</li>
+      <li><strong>Unified Codebase:</strong> Reduces maintenance overhead.</li>
+      <li><strong>Scalability:</strong> Kafka + Flink can distribute across many nodes.</li>
+      <li><strong>Event Replayability:</strong> Easy historical reprocessing without batch jobs.</li>
+      <li><strong>Fault Tolerance:</strong> Built-in replication in stream engines.</li>
+    </ul>
+    <h4>Best Practices</h4>
+    <ol>
+      <li>Choose right engine (Kafka for large-scale, Flink for complex stateful).</li>
+      <li>Implement <strong>event sourcing</strong> — all changes as immutable events.</li>
+      <li>Ensure <strong>idempotency</strong> — handle duplicate events safely.</li>
+      <li>Prefer stateless operations when possible.</li>
+      <li>Use windowing for stateful aggregations.</li>
+      <li>Handle data skew through proper partitioning.</li>
+      <li>Implement fault tolerance via checkpointing.</li>
+      <li>Design for horizontal scaling.</li>
+    </ol>
+    <h4>Real-World Use Cases</h4>
+    <ul>
+      <li><strong>LinkedIn (Kafka):</strong> Processes billions of events/day — activity feeds, messaging, monitoring.</li>
+      <li><strong>Netflix:</strong> Real-time personalization, recommendations, operational monitoring.</li>
+      <li><strong>Uber:</strong> GPS, pricing, routing, demand prediction in real-time.</li>
+      <li><strong>Spotify:</strong> User behavior tracking, music recommendations, real-time ads.</li>
+      <li><strong>Pinterest:</strong> Real-time pin/repin/click processing for analytics and recommendations.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 4.8 Apache Spark -->
+<div class="section" id="spark">
+  <div class="section-header"><span class="s-num">4.8</span><h3>Apache Spark</h3></div>
+  <div class="section-body">
+    <h4>MapReduce Limitations (Why Spark?)</h4>
+    <ul>
+      <li><strong>Performance:</strong> MapReduce query execution often takes hours — orders of magnitude slower than modern DBMSs. Prevents interactive analysis.</li>
+      <li><strong>Programming Model:</strong> Requires advanced skills and deep understanding of system architecture.</li>
+      <li><strong>Configuration:</strong> Numerous sensitive configuration parameters.</li>
+      <li><strong>Batch Only:</strong> No support for streaming, iterative algorithms, or interactive queries.</li>
+    </ul>
+    <div class="def"><strong>Apache Spark:</strong> A cluster-computing platform developed at UC Berkeley (AMPLab). Replaces MapReduce execution framework. Provides API for distributed programming but designed for fast interactive queries and iterative algorithms by <em>caching data in memory</em>. <strong>10–20× faster than MapReduce.</strong></div>
+    <h4>Resilient Distributed Datasets (RDDs)</h4>
+    <div class="def"><strong>RDD:</strong> Spark's core data model. Distributed, immutable collections stored in memory across cluster nodes. Eliminates expensive intermediate disk writes of MapReduce. Because Spark knows the data source and all operations performed, it can <em>reconstitute lost data</em> from a crashed executor from scratch.</div>
+    <p><strong>Typical Spark data flow:</strong></p>
+    <ol>
+      <li><strong>Define RDDs</strong> — access stored data (HDFS, Cassandra, S3), parallelize collections, transform existing RDDs, or cache.</li>
+      <li><strong>Invoke operations</strong> — pass closures (functions) to each element. Spark offers many high-level operators beyond map and reduce.</li>
+      <li><strong>Aggregate results</strong> — actions like count, collect, save trigger actual cluster computation.</li>
+    </ol>
+    <h4>Key Spark Features</h4>
+    <div class="compare">
+      <div class="compare-box">
+        <h5>Lazy Evaluation</h5>
+        <p>Most operations are lazy — no computation happens until a final eager output (action) is called. This allows optimization of the entire execution plan. Intermediate results disappear after being consumed by the next step.</p>
+      </div>
+      <div class="compare-box">
+        <h5>Cache Hints</h5>
+        <p>Users can specify that an intermediate RDD should be cached for later reuse. Spark can spill the cache to secondary storage if memory runs out, preserving functional aspects even under peak loads.</p>
+      </div>
+    </div>
+    <p><strong>Polyglot API:</strong> Scala, Java, Python, and R. Built-in modules for machine learning (MLlib), streaming data (Spark Streaming), graph algorithms (GraphX), and SQL-like queries (Spark SQL).</p>
+  </div>
+</div>
+
+<!-- 4.9 Spark Streaming -->
+<div class="section" id="spark-streaming">
+  <div class="section-header"><span class="s-num">4.9</span><h3>Spark Streaming &amp; DStreams</h3></div>
+  <div class="section-body">
+    <div class="def"><strong>Spark Streaming:</strong> First stream-processing framework built on Spark. Uses <strong>microbatching</strong> — converts a continuous stream into small discrete batches (at fixed time intervals) that Spark can process using its batch engine.</div>
+    <h4>DStream (Discretized Stream)</h4>
+    <div class="def"><strong>DStream:</strong> Represents a stream in terms of discrete blocks of data, represented as RDDs over time. A DStream is a sequence of RDDs — each RDD contains data from a specific time interval.</div>
+    <ul>
+      <li>DStreams are <strong>immutable</strong> — only through transformations can we process them.</li>
+      <li>All DStream transformations are <strong>lazy</strong> — they define a plan of action for when streaming starts.</li>
+      <li>DStream programming requires ending with an <strong>output operation</strong> (e.g., pprint(), saveAsTextFiles()) to materialize results.</li>
+    </ul>
+    <h4>Structure of a Spark Streaming Application (4 Steps)</h4>
+    <ol>
+      <li>Create a <strong>SparkStreamingContext</strong></li>
+      <li>Define one or more <strong>DStreams</strong> from data sources or other DStreams</li>
+      <li>Define one or more <strong>output operations</strong> to materialize results</li>
+      <li><strong>Start</strong> the SparkStreamingContext</li>
+    </ol>
+    <h4>Solved Example: Stateless Spark Streaming (Word Count)</h4>
+    <div class="solved-box">
+      <div class="solved-title">Streaming Word Count — processes each batch independently (stateless)</div>
+      <pre class="code">from pyspark.streaming import StreamingContext
+
+# Step 1: Create StreamingContext with 2 threads, 1-second batch interval
+ssc = StreamingContext(sparkContext, 1)
+
+# Step 2: Create DStream from socket (hostname:port)
+lines = ssc.socketTextStream("localhost", 9999)
+
+# Step 3: Split each line into words (flatMap: one-to-many)
+words = lines.flatMap(lambda line: line.split(" "))
+
+# Step 4: Count words in each batch (stateless - resets each batch)
+pairs = words.map(lambda word: (word, 1))
+wordCounts = pairs.reduceByKey(lambda a, b: a + b)
+
+# Step 5: Print output (output operation to materialize DStream)
+wordCounts.pprint()
+
+# Step 6: Start computation
+ssc.start()
+
+# Step 7: Wait for termination
+ssc.awaitTermination()</pre>
+    </div>
+    <h4>Solved Example: Stateful Spark Streaming (Running Word Count)</h4>
+    <div class="solved-box">
+      <div class="solved-title">Maintains state across batches using updateStateByKey</div>
+      <pre class="code">from pyspark.streaming import StreamingContext
+
+# Step 1: StreamingContext, 1-second interval
+ssc = StreamingContext(sparkContext, 1)
+
+# Step 2: Set checkpoint directory for state recovery on failure
+ssc.checkpoint("/tmp/spark_streaming_checkpoint")
+
+# Step 3: Define state update function
+def update_function(new_values, running_count):
+    if running_count is None:
+        running_count = 0
+    return sum(new_values, running_count)
+
+# Step 4: Create DStream from socket
+lines = ssc.socketTextStream("localhost", 9999)
+
+# Steps 5-8: Process and maintain state
+words = lines.flatMap(lambda line: line.split(" "))
+pairs = words.map(lambda word: (word, 1))
+running_counts = pairs.updateStateByKey(update_function)
+
+running_counts.pprint()
+ssc.start()
+ssc.awaitTermination()</pre>
+    </div>
+    <h4>Latency Characteristics</h4>
+    <ul>
+      <li><strong>Microbatching</strong> creates a baseline latency — any event in a batch is delayed by at least the batch interval. Common lower bound: <strong>1 second</strong>.</li>
+      <li>Spark excels at <strong>throughput-oriented</strong> processing — large amounts of data per unit time, not ultra-low latency.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 4.10 Structured Streaming -->
+<div class="section" id="structured-streaming">
+  <div class="section-header"><span class="s-num">4.10</span><h3>Structured Streaming</h3></div>
+  <div class="section-body">
+    <div class="def"><strong>Structured Streaming:</strong> Extension of Spark's Dataset/DataFrame SQL-oriented model to handle data in motion. Treats streaming data as rows continuously appended to an <em>unbounded table</em>. Queries over this table produce an output stream.</div>
+    <h4>Model Concepts</h4>
+    <ul>
+      <li>Data arrives from a source stream with a <strong>defined schema</strong>.</li>
+      <li>Stream events = rows appended to an unbounded table.</li>
+      <li>Apply SQL-like queries to the table → output stream of processed events.</li>
+      <li>Results offered to an <strong>output sink</strong> (storage, another stream, or application).</li>
+      <li>Introduces support for <strong>event time</strong>, <strong>watermarking</strong>, and different output modes.</li>
+    </ul>
+    <h4>Solved Example: Structured Streaming in PySpark</h4>
+    <div class="solved-box">
+      <div class="solved-title">Streaming DataFrame with Schema</div>
+      <pre class="code">from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType, StringType, IntegerType
+
+# Step 1: Start SparkSession
+spark = SparkSession.builder.appName("StructuredStreaming").getOrCreate()
+
+# Step 2: Define schema (REQUIRED for structured streaming)
+schema = StructType().add("name", StringType()).add("age", IntegerType())
+
+# Step 3: Load data into streaming DataFrame using readStream
+streamingDF = spark.readStream.schema(schema).json("/path/to/source")
+
+# Step 4: Check if stream is active
+print(streamingDF.isStreaming)  # True
+
+# Step 5: Apply transformations (SQL-like)
+result = streamingDF.select("name").where("age > 25")
+
+# Step 6: Write to sink with output mode
+query = result.writeStream \
+    .format("console") \
+    .outputMode("append") \
+    .start()
+
+query.awaitTermination()</pre>
+    </div>
+  </div>
+</div>
+
+<!-- 4.11 Kafka -->
+<div class="section" id="kafka">
+  <div class="section-header"><span class="s-num">4.11</span><h3>Apache Kafka</h3></div>
+  <div class="section-body">
+    <h4>The Data Pipeline Problem</h4>
+    <p>In modern systems, many data sources stream at varied rates, and many backends need to process the same data. Direct point-to-point connections create a fragile "maze" — O(M×N) connections for M sources and N backends. Kafka acts as an intermediary that <strong>decouples producers and consumers</strong>.</p>
+    <div class="def"><strong>Apache Kafka:</strong> An open-source distributed event streaming platform. Combines three key capabilities: (1) publish and subscribe to event streams, (2) store streams durably and reliably, (3) process streams in real-time or retrospectively.</div>
+    <h4>Three Essential Components</h4>
+    <div class="arch-grid">
+      <div class="arch-card">
+        <h5>Producer (Publisher)</h5>
+        <p>Defines what data to send. Packages data into messages and publishes them to the communication infrastructure. Does not need to know who the consumers are.</p>
+      </div>
+      <div class="arch-card blue">
+        <h5>Consumer (Subscriber)</h5>
+        <p>Tells infrastructure <em>what type</em> of messages it wants to receive (not who to receive from). Messages delivered by infrastructure. Often organized into consumer groups for load balancing.</p>
+      </div>
+      <div class="arch-card green">
+        <h5>Communication Infrastructure (Broker)</h5>
+        <p>Most complex part. Routes messages to subscribers. Supports topic-based routing. Kafka uses a cluster of brokers with distributed partitioned logs.</p>
+      </div>
+    </div>
+    <h4>Routing Models</h4>
+    <div class="compare">
+      <div class="compare-box">
+        <h5>Topic-Based Routing</h5>
+        <p>Publishers send messages with topic labels. Subscribers subscribe to topics and receive all messages on that topic.</p>
+        <p><em>Example:</em> "Subscribe to all fire sensors in B block" → topic = "fire-sensors-B".</p>
+        <p><strong>Kafka supports this natively.</strong> Also supports pattern-based (wildcard) topic matching.</p>
+      </div>
+      <div class="compare-box">
+        <h5>Content-Based Routing</h5>
+        <p>Subscribers define matching criteria and receive all messages matching those criteria. More expressive but more complex.</p>
+        <p><em>Example:</em> "Subscribe to all ads featuring Virat Kohli".</p>
+        <p><strong>NOT supported natively by Kafka.</strong> Kafka only supports topic-based and pattern-based routing.</p>
+      </div>
+    </div>
+    <h4>Kafka Performance</h4>
+    <ul>
+      <li><strong>Sequential I/O:</strong> Sequential reads by consumers and sequential writes by producers — much faster than random I/O.</li>
+      <li><strong>Zero-Copy I/O:</strong> Uses DMA (Direct Memory Access) — no copy from kernel to user space.</li>
+      <li><strong>Write Batching:</strong> Batches multiple messages together for efficiency.</li>
+    </ul>
+    <h4>Consumer Groups &amp; Partitions</h4>
+    <p>A topic with multiple partitions can be consumed by a <strong>consumer group</strong> (multiple instances of the same application). Each partition delivers messages to <strong>one member</strong> of the consumer group — achieving <em>load balancing</em>. Different consumer groups each get their own copy of all messages.</p>
+  </div>
+</div>
+
+<!-- 4.12 Multi-model Databases -->
+<div class="section" id="multimodel">
+  <div class="section-header"><span class="s-num">4.12</span><h3>Multi-model Databases</h3></div>
+  <div class="section-body">
+    <div class="def"><strong>Multi-model Database:</strong> A database that can store, index, and query data in more than one model (relational, document, graph, key-value, object). Combines multiple data models in a single backend.</div>
+    <div class="def"><strong>Polyglot Persistence:</strong> Using multiple data storage technologies for varying data storage needs within a single application. Different data requires different stores — pick the right tool for each use case.</div>
+    <h4>Comparison of Multi-model Databases</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Database</th><th>Relational</th><th>Document</th><th>Graph</th><th>Object</th><th>Transactions</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ArangoDB</strong></td><td>No</td><td>Yes</td><td>Yes</td><td>No</td><td>Full ACID, pessimistic locking</td></tr>
+          <tr><td><strong>Azure Cosmos DB</strong></td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Full ACID, multiple consistency models</td></tr>
+          <tr><td><strong>OrientDB</strong></td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Full ACID, even distributed</td></tr>
+          <tr><td><strong>Oracle</strong></td><td>Yes</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Full ACID</td></tr>
+          <tr><td><strong>MarkLogic</strong></td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td><td>Full ACID</td></tr>
+          <tr><td><strong>SAP HANA</strong></td><td>Yes</td><td>Yes</td><td>Yes</td><td>No</td><td>Full ACID</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>OrientDB (Key Multi-model Database)</h4>
+    <ul>
+      <li>Open-source, written in Java. Supports graph, document, key/value, and object models.</li>
+      <li>Relationships managed as in graph databases with direct connections between records.</li>
+      <li>Supports schema-less, schema-full, and schema-mixed modes.</li>
+      <li>Uses B-tree and Extendible hashing for indexing.</li>
+      <li>Each record has a <strong>Surrogate Key</strong> (position in array list). Links stored as single record position or B-tree of RIDs — O(1) one-to-many traversal.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 4.13 Data Warehousing -->
+<div class="section" id="datawarehouse">
+  <div class="section-header"><span class="s-num">4.13</span><h3>Data Warehousing &amp; OLAP</h3></div>
+  <div class="section-body">
+    <div class="def"><strong>Data Warehouse:</strong> A storage architecture designed to hold data extracted from transaction systems, operational stores, and external sources. Combines data in aggregate/summary form for enterprise-wide analysis. It is <em>subject-oriented, integrated, nonvolatile, time-variant</em>.</div>
+    <div class="def"><strong>OLAP (Online Analytical Processing):</strong> The analysis of complex data from the data warehouse, as opposed to OLTP (transactional processing).</div>
+    <h4>Building a Data Warehouse</h4>
+    <p><strong>Data Acquisition Steps:</strong> Extraction from heterogeneous sources → Data formatting for consistency → Data cleaning for validity → Fit into data model → Load into warehouse.</p>
+    <p><strong>Design Considerations:</strong> Usage projections, data model fit, source characteristics, metadata component design, modular component design, manageability, distributed/parallel architecture.</p>
+    <h4>Multi-Dimensional Modeling</h4>
+    <ul>
+      <li>Takes advantage of inherent relationships in data to populate <strong>data cubes</strong>.</li>
+      <li><strong>Dimension Tables:</strong> Consist of tuples of attributes of a dimension (e.g., Time, Location, Product).</li>
+      <li><strong>Fact Tables:</strong> Contain measured/observed variables with pointers to dimension tables. One tuple per recorded fact.</li>
+    </ul>
+    <div class="compare">
+      <div class="compare-box">
+        <h5>Star Schema</h5>
+        <p>Fact table at center with a single table for each dimension. Simple, fast queries. A <strong>fact constellation</strong> is a set of fact tables sharing some dimension tables. Uses bitmap indexing for high-performance access.</p>
+      </div>
+      <div class="compare-box">
+        <h5>Snowflake Schema</h5>
+        <p>Variation of star schema where dimensional tables are organized into a hierarchy by <em>normalizing</em> them. Reduces data redundancy but requires more joins — may be slower for some queries.</p>
+      </div>
+    </div>
+    <h4>OLAP Operations</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Operation</th><th>Description</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Roll-up</strong></td><td>Data summarized with increasing generalization (aggregation)</td><td>Daily sales → Monthly sales → Yearly sales</td></tr>
+          <tr><td><strong>Drill-down</strong></td><td>Increasing levels of detail (complement of roll-up)</td><td>Yearly → Quarterly → Monthly → Daily</td></tr>
+          <tr><td><strong>Pivot</strong></td><td>Cross tabulation / rotation</td><td>View sales by region-product instead of time-product</td></tr>
+          <tr><td><strong>Slice &amp; Dice</strong></td><td>Projection operations on dimensions (filtering)</td><td>Sales in Q1 2024, in region West, for product X</td></tr>
+          <tr><td><strong>Sorting</strong></td><td>Sort data by ordinal value</td><td>Top 10 products by revenue</td></tr>
+          <tr><td><strong>Selection</strong></td><td>Filter data by value or range</td><td>All transactions above $1000</td></tr>
+          <tr><td><strong>Derived Attributes</strong></td><td>Computed attributes from stored/derived values</td><td>Profit = Revenue − Cost</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- 4.14 Data Mining -->
+<div class="section" id="datamining">
+  <div class="section-header"><span class="s-num">4.14</span><h3>Data Mining</h3></div>
+  <div class="section-body">
+    <div class="def"><strong>Data Mining:</strong> The process of discovering meaningful correlations, patterns, and trends by sifting through large amounts of data stored in repositories. Employs pattern recognition, statistical, and mathematical techniques.</div>
+    <h4>Why Mine Data?</h4>
+    <ul>
+      <li>Data collected at enormous speeds (GB/hour) — remote sensors, telescopes, gene expression arrays, scientific simulations.</li>
+      <li>Traditional techniques infeasible for raw data at this scale.</li>
+      <li>Data mining helps classify, segment data, and formulate hypotheses.</li>
+    </ul>
+    <h4>KDD Process (Knowledge Discovery in Databases)</h4>
+    <p>Input Data → Data Preprocessing → Data Mining → Pattern Evaluation → Knowledge Output. The mining step discovers: association rules, sequential patterns, classification trees, clustering, etc.</p>
+    <h4>Types of Knowledge Discovered</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Type</th><th>Description</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Association Rules</strong></td><td>Correlate presence of items with other variables</td><td>"Customer buys video equipment → also buys another electronic gadget" (if-then rules with confidence/support)</td></tr>
+          <tr><td><strong>Sequential Patterns</strong></td><td>Time-ordered sequences of item purchases</td><td>"Buys camera → within 3 months buys photo supplies → within 6 months buys accessory"</td></tr>
+          <tr><td><strong>Classification Trees</strong></td><td>Classify customers by frequency, financing, purchase amount</td><td>Decision tree to categorize shoppers: discount-seeking, loyal, name-brand attached</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Goals of Data Mining</h4>
+    <ul>
+      <li><strong>Prediction:</strong> Analyze buying transactions to predict what consumers buy under certain discounts.</li>
+      <li><strong>Identification:</strong> Identify intruders by programs executed, files accessed, CPU time per session.</li>
+      <li><strong>Classification:</strong> Categorize customers (discount-seeking, rush shoppers, loyal, brand-attached).</li>
+      <li><strong>Optimization:</strong> Optimize limited resources (time, space, money) to maximize output (sales, profits) under constraints.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- 4.15 Data Lakes, Lakehouse, Data Fabric -->
+<div class="section" id="datalake">
+  <div class="section-header"><span class="s-num">4.15</span><h3>Data Lakes, Lakehouse &amp; Data Fabric</h3></div>
+  <div class="section-body">
+    <h4>Data Lake</h4>
+    <div class="def"><strong>Data Lake:</strong> A centralized data repository storing both traditional structured (row/column) data AND unstructured/non-tabular raw data in its native format (videos, images, binary files). Uses inexpensive object storage and open formats.</div>
+    <ul>
+      <li>Optimized for quick ingestion of raw, detailed source data.</li>
+      <li>Supports on-the-fly processing for exploration, analytics, and operations.</li>
+      <li>Collection of data organized by user-designed patterns.</li>
+    </ul>
+    <h4>Data Lake vs Data Warehouse</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Aspect</th><th>Data Warehouse</th><th>Data Lake</th></tr></thead>
+        <tbody>
+          <tr><td>Data Format</td><td>Structured (schema-on-write)</td><td>Raw, native format (schema-on-read)</td></tr>
+          <tr><td>Storage</td><td>Relational, optimized for queries</td><td>Cheap object storage (HDFS, S3)</td></tr>
+          <tr><td>Users</td><td>Business analysts</td><td>Data scientists, ML engineers</td></tr>
+          <tr><td>Processing</td><td>Pre-defined reports, OLAP</td><td>Ad-hoc, ML, data exploration</td></tr>
+          <tr><td>Agility</td><td>Less agile (fixed schema)</td><td>Highly flexible (raw data)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Key Data Lake Tools</h4>
+    <ul>
+      <li><strong>Apache Kafka:</strong> Real-time data ingestion — publishes, subscribes, and stores event streams durably.</li>
+      <li><strong>Apache Hudi:</strong> Incremental processing framework for data lakes. Joined Apache incubator 2019, top project 2020.</li>
+      <li><strong>AWS Data Lake:</strong> Amazon S3 (core storage) + Athena (ad-hoc SQL queries on S3) + Redshift (data warehousing) + CloudWatch (monitoring) + Cognito (auth).</li>
+      <li><strong>Apache Iceberg:</strong> Open-source table format for large datasets. Metadata-driven (snapshot-based), separates physical storage from logical table structure. Supports transactional ACID operations on data lakes.</li>
+    </ul>
+    <h4>Data Lakehouse</h4>
+    <div class="def"><strong>Data Lakehouse:</strong> A new paradigm combining the best of data lakes and data warehouses — flexible data storage of data lakes + high-performance analytics and data management features of data warehouses — implemented directly on low-cost lake storage.</div>
+
+    <h4>Data Fabric</h4>
+    <div class="def"><strong>Data Fabric:</strong> A modern data architecture designed to democratize data access across an organization. A loosely coupled collection of distributed services enabling the right data to be available in the right shape, at the right time, from heterogeneous sources, across any cloud and on-premises platform — via self-service.</div>
+    <ul>
+      <li>A network of data nodes (platforms + databases) interacting to provide greater value across the enterprise's hybrid/multicloud ecosystem.</li>
+      <li>Security and governance policies enforced whenever data travels or is accessed.</li>
+      <li>Promotes data discoverability through an enterprise-wide data marketplace with metadata and knowledge graph search.</li>
+    </ul>
+    <div class="tip"><strong>Evolution:</strong> Data Lakes → Data Warehouses → Data Lakehouse → Data Fabric (next stage). Data fabrics simplify management of lakehouses and improve access, sharing, automation, governance, and self-service.</div>
+  </div>
+</div>
+
+<!-- 4.16 Netflix Case Study -->
+<div class="section" id="netflix">
+  <div class="section-header"><span class="s-num">4.16</span><h3>Case Study: Netflix Architecture</h3></div>
+  <div class="section-body">
+    <div class="exam-box">The Netflix case study synthesizes all topics from Unit 4 — streaming, Kafka, Spark, NoSQL, CDN, microservices. Know the data flow end to end.</div>
+    <h4>Scale Facts</h4>
+    <ul>
+      <li>222+ million subscribers in 190 countries.</li>
+      <li>6 billion hours of content per month globally.</li>
+      <li>~15% of the world's internet bandwidth traffic.</li>
+      <li>Average 3.2 hours/day per subscriber.</li>
+      <li>Engineering goal: <strong>"Delivering content at scale."</strong></li>
+    </ul>
+    <h4>CDN Architecture (Open Connect)</h4>
+    <ol>
+      <li>Netflix performs compression and transcoding of original video files.</li>
+      <li>Files split into chunks using parallel workers in AWS for faster processing.</li>
+      <li>Each chunk subdivided across several resolutions and internet speeds.</li>
+      <li>Chunks stored on Amazon S3.</li>
+      <li>During off-peak periods, files transferred to Open Connect boxes (Netflix's custom CDN spread globally).</li>
+      <li>Open Connect boxes can communicate and share content between themselves.</li>
+    </ol>
+    <h4>Backend Architecture</h4>
+    <p>Netflix operates across two clouds: <strong>AWS</strong> (backend) and <strong>Open Connect</strong> (CDN). All user-facing requests (login, recommendations, home page, history, billing) handled by AWS backend.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Component</th><th>Technology</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>Load Balancing</td><td>AWS Elastic Load Balancer (ELB)</td><td>Routes traffic across zones then instances</td></tr>
+          <tr><td>API Gateway</td><td>Zuul</td><td>Dynamic routing, traffic monitoring, security at cloud edge. Handles 1M+ requests/second across 80+ clusters.</td></tr>
+          <tr><td>Microservices</td><td>Custom (Java/Node)</td><td>Each component is a loosely coupled service. Application API = core business logic (e.g., Play API).</td></tr>
+          <tr><td>Container Management</td><td>Titus (Mesos-based)</td><td>Manages thousands of EC2 instances, launches hundreds of thousands of containers daily. ~3M containers/week.</td></tr>
+          <tr><td>Caching</td><td>EVCache</td><td>In-memory key-value store for EC2. Ephemeral (TTL-based), Volatile (can evict), Cache.</td></tr>
+          <tr><td>Billing Database</td><td>MySQL (AWS EC2)</td><td>ACID-compliant billing and payment processing.</td></tr>
+          <tr><td>User Data / Events</td><td>Apache Cassandra</td><td>Scalable, no SPOF, cross-regional. Stores all user-collected event metrics.</td></tr>
+          <tr><td>Event Streaming</td><td>Apache Kafka</td><td>De-facto standard for eventing, messaging, stream processing. Bridge for all communications.</td></tr>
+          <tr><td>Log/Event Collection</td><td>Apache Chukwe</td><td>Collects logs/events from distributed system. Built on HDFS + MapReduce.</td></tr>
+          <tr><td>Recommendations</td><td>Apache Spark + ML</td><td>Movie recommendation using machine learning on streaming data.</td></tr>
+          <tr><td>Persistent Storage</td><td>AWS S3, Hadoop HDFS, Cassandra</td><td>Stream processing pipeline output stored here.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h4>Request Flow: User Clicks "Play"</h4>
+    <div class="solved-box">
+      <div class="solved-title">Example: User clicks "Play" on latest episode of Peaky Blinders</div>
+      <div class="solved-step"><span class="step-n">1</span><span>Request → AWS ELB (load balancing across zones and instances)</span></div>
+      <div class="solved-step"><span class="step-n">2</span><span>ELB → <strong>Zuul API Gateway</strong> (dynamic routing, monitoring, edge security)</span></div>
+      <div class="solved-step"><span class="step-n">3</span><span>Zuul → <strong>Play API</strong> (application-level microservice)</span></div>
+      <div class="solved-step"><span class="step-n">4</span><span>Play API calls several microservices in parallel and sequence (device doesn't know about this orchestration):
+        <ul>
+          <li>License check microservice</li>
+          <li>Content location microservice (find best Open Connect server)</li>
+          <li>User history microservice</li>
+          <li>Streaming quality microservice</li>
+        </ul>
+      </span></div>
+      <div class="solved-step"><span class="step-n">5</span><span>Content served from nearest <strong>Open Connect</strong> CDN box (pre-loaded with chunks at appropriate resolution).</span></div>
+      <div class="solved-step"><span class="step-n">6</span><span>Viewing events logged → <strong>Kafka</strong> → <strong>Spark</strong> → processed for real-time recommendations and analytics → stored in <strong>Cassandra / HDFS / S3</strong>.</span></div>
+      <div class="result-box">✓ The device never knows about the complex orchestration under the hood</div>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .container -->
+
+<div class="footer">
+  Database Technologies — Units 3 &amp; 4 Revision Notes &nbsp;·&nbsp; Prof. Suresh Jamadagni, PES University &nbsp;·&nbsp; All solved examples included
+</div>
+</body>
+</html>
