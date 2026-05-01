@@ -1,1038 +1,2071 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DBT Units 3 & 4 — Exam Prep Quiz</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #0c0f14;
-  --surface: #151921;
-  --surface2: #1c2230;
-  --border: #2a3142;
-  --text: #e2e8f0;
-  --text-dim: #8892a8;
-  --accent: #6c8cff;
-  --accent-glow: rgba(108,140,255,0.15);
-  --correct: #34d399;
-  --correct-bg: rgba(52,211,153,0.08);
-  --wrong: #f87171;
-  --wrong-bg: rgba(248,113,113,0.08);
-  --written: #fbbf24;
-  --written-bg: rgba(251,191,36,0.06);
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'Outfit', sans-serif;
-  line-height: 1.7;
-  min-height: 100vh;
-}
-
-.container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 6rem; }
-
-header {
-  text-align: center;
-  padding: 3rem 0 2rem;
-  border-bottom: 1px solid var(--border);
-  margin-bottom: 2rem;
-}
-header h1 {
-  font-size: 2rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--accent), #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: .5rem;
-}
-header p { color: var(--text-dim); font-size: .95rem; }
-
-.score-bar {
-  position: sticky; top: 0; z-index: 100;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  padding: .75rem 1.5rem;
-  display: flex; justify-content: space-between; align-items: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .85rem;
-  backdrop-filter: blur(12px);
-}
-.score-bar span { color: var(--text-dim); }
-#score-display { color: var(--correct); font-weight: 700; }
-#progress-display { color: var(--accent); }
-
-.section-title {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: var(--accent);
-  margin: 2.5rem 0 1rem;
-  padding: .5rem 0;
-  border-bottom: 1px solid var(--border);
-  display: flex; align-items: center; gap: .5rem;
-}
-.section-title .badge {
-  font-size: .65rem;
-  background: var(--accent-glow);
-  border: 1px solid rgba(108,140,255,0.3);
-  padding: 2px 8px;
-  border-radius: 99px;
-  font-family: 'JetBrains Mono', monospace;
-}
-
-.q-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  margin-bottom: 1.25rem;
-  transition: border-color .2s;
-}
-.q-card:hover { border-color: rgba(108,140,255,0.25); }
-.q-card.answered-correct { border-color: var(--correct); background: var(--correct-bg); }
-.q-card.answered-wrong { border-color: var(--wrong); background: var(--wrong-bg); }
-.q-card.written-card { border-left: 3px solid var(--written); }
-
-.q-header {
-  display: flex; justify-content: space-between; align-items: flex-start;
-  margin-bottom: .75rem;
-}
-.q-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .75rem;
-  color: var(--text-dim);
-}
-.q-marks {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: .7rem;
-  background: var(--surface2);
-  padding: 2px 8px;
-  border-radius: 4px;
-  color: var(--text-dim);
-}
-.q-text {
-  font-weight: 400;
-  font-size: .95rem;
-  margin-bottom: 1rem;
-  color: var(--text);
-}
-
-.options { display: flex; flex-direction: column; gap: .5rem; }
-.option-btn {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: .65rem 1rem;
-  color: var(--text);
-  font-family: 'Outfit', sans-serif;
-  font-size: .9rem;
-  cursor: pointer;
-  text-align: left;
-  transition: all .15s;
-  display: flex; align-items: flex-start; gap: .6rem;
-}
-.option-btn:hover:not(.disabled) {
-  border-color: var(--accent);
-  background: var(--accent-glow);
-}
-.option-btn .opt-letter {
-  font-family: 'JetBrains Mono', monospace;
-  font-weight: 700;
-  font-size: .8rem;
-  min-width: 1.4rem;
-  color: var(--accent);
-}
-.option-btn.disabled { cursor: default; opacity: .7; }
-.option-btn.selected-correct {
-  border-color: var(--correct);
-  background: var(--correct-bg);
-  opacity: 1 !important;
-}
-.option-btn.selected-correct .opt-letter { color: var(--correct); }
-.option-btn.selected-wrong {
-  border-color: var(--wrong);
-  background: var(--wrong-bg);
-  opacity: 1 !important;
-}
-.option-btn.selected-wrong .opt-letter { color: var(--wrong); }
-.option-btn.show-correct {
-  border-color: var(--correct);
-  opacity: 1 !important;
-}
-
-.feedback {
-  margin-top: .75rem;
-  font-size: .85rem;
-  font-family: 'JetBrains Mono', monospace;
-  padding: .5rem .75rem;
-  border-radius: 6px;
-  display: none;
-}
-.feedback.correct { display: block; color: var(--correct); background: var(--correct-bg); }
-.feedback.wrong { display: block; color: var(--wrong); background: var(--wrong-bg); }
-
-textarea.written-input {
-  width: 100%;
-  min-height: 100px;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: .75rem;
-  color: var(--text);
-  font-family: 'Outfit', sans-serif;
-  font-size: .9rem;
-  resize: vertical;
-}
-textarea.written-input:focus { outline: none; border-color: var(--written); }
-
-.model-toggle {
-  margin-top: 1rem;
-  background: var(--surface2);
-  border: 1px solid rgba(251,191,36,0.25);
-  border-radius: 8px;
-  padding: .6rem 1rem;
-  color: var(--written);
-  font-family: 'Outfit', sans-serif;
-  font-size: .85rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all .15s;
-  display: inline-flex; align-items: center; gap: .4rem;
-}
-.model-toggle:hover { background: var(--written-bg); border-color: var(--written); }
-.model-toggle .arrow { transition: transform .2s; display: inline-block; }
-.model-toggle.open .arrow { transform: rotate(90deg); }
-
-.model-answer {
-  display: none;
-  margin-top: .75rem;
-  padding: 1rem 1.25rem;
-  background: var(--written-bg);
-  border: 1px solid rgba(251,191,36,0.15);
-  border-radius: 8px;
-  font-size: .88rem;
-  line-height: 1.8;
-  color: var(--text);
-}
-.model-answer.visible { display: block; }
-.model-answer p { margin-bottom: .6rem; }
-.model-answer p:last-child { margin-bottom: 0; }
-.model-answer strong { color: var(--written); font-weight: 600; }
-
-@media (max-width: 600px) {
-  .container { padding: 1rem 1rem 4rem; }
-  header h1 { font-size: 1.5rem; }
-  .q-card { padding: 1rem; }
-}
-</style>
-</head>
-<body>
-
-<div class="score-bar">
-  <span>Score: <span id="score-display">0 / 0</span></span>
-  <span>Answered: <span id="progress-display">0 / 42</span></span>
-</div>
-
-<div class="container">
-<header>
-  <h1>Database Technologies — Units 3 & 4</h1>
-  <p>42 MCQs + 8 Written · Parallel & Distributed DBs · Stream Processing · Kafka · Data Warehousing</p>
-</header>
-
-<!-- ===== SECTION: PARALLEL DATABASES ===== -->
-<div class="section-title">Parallel Databases <span class="badge">Unit 3</span></div>
-
-<div class="q-card" id="q1">
-  <div class="q-header"><span class="q-num">Q1</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In a shared-memory architecture, large machines are typically of the _____ type.</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(1,'a','b')"><span class="opt-letter">A</span>UMA</button>
-    <button class="option-btn" onclick="check(1,'b','b')"><span class="opt-letter">B</span>NUMA</button>
-    <button class="option-btn" onclick="check(1,'c','b')"><span class="opt-letter">C</span>SMP</button>
-    <button class="option-btn" onclick="check(1,'d','b')"><span class="opt-letter">D</span>MPP</button>
-  </div>
-  <div class="feedback" id="fb1"></div>
-</div>
-
-<div class="q-card" id="q2">
-  <div class="q-header"><span class="q-num">Q2</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Which parallel architecture is the most commonly used for database systems?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(2,'a','c')"><span class="opt-letter">A</span>Shared-memory</button>
-    <button class="option-btn" onclick="check(2,'b','c')"><span class="opt-letter">B</span>Shared-disk</button>
-    <button class="option-btn" onclick="check(2,'c','c')"><span class="opt-letter">C</span>Shared-nothing</button>
-    <button class="option-btn" onclick="check(2,'d','c')"><span class="opt-letter">D</span>Hybrid</button>
-  </div>
-  <div class="feedback" id="fb2"></div>
-</div>
-
-<div class="q-card" id="q3">
-  <div class="q-header"><span class="q-num">Q3</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In a shared-disk architecture, which two forms of storage are commonly used?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(3,'a','d')"><span class="opt-letter">A</span>HDFS and GFS</button>
-    <button class="option-btn" onclick="check(3,'b','d')"><span class="opt-letter">B</span>RAID and LVM</button>
-    <button class="option-btn" onclick="check(3,'c','d')"><span class="opt-letter">C</span>SSD and HDD</button>
-    <button class="option-btn" onclick="check(3,'d','d')"><span class="opt-letter">D</span>NAS and SAN</button>
-  </div>
-  <div class="feedback" id="fb3"></div>
-</div>
-
-<div class="q-card" id="q4">
-  <div class="q-header"><span class="q-num">Q4</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Intra-query parallelism is primarily used to reduce:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(4,'a','a')"><span class="opt-letter">A</span>Response time of a single complex query</button>
-    <button class="option-btn" onclick="check(4,'b','a')"><span class="opt-letter">B</span>Overall system throughput</button>
-    <button class="option-btn" onclick="check(4,'c','a')"><span class="opt-letter">C</span>Disk storage requirements</button>
-    <button class="option-btn" onclick="check(4,'d','a')"><span class="opt-letter">D</span>Network bandwidth usage</button>
-  </div>
-  <div class="feedback" id="fb4"></div>
-</div>
-
-<div class="q-card" id="q5">
-  <div class="q-header"><span class="q-num">Q5</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Inter-query parallelism targets which type of workload?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(5,'a','b')"><span class="opt-letter">A</span>OLAP</button>
-    <button class="option-btn" onclick="check(5,'b','b')"><span class="opt-letter">B</span>OLTP</button>
-    <button class="option-btn" onclick="check(5,'c','b')"><span class="opt-letter">C</span>Data mining</button>
-    <button class="option-btn" onclick="check(5,'d','b')"><span class="opt-letter">D</span>ETL</button>
-  </div>
-  <div class="feedback" id="fb5"></div>
-</div>
-
-<div class="q-card" id="q6">
-  <div class="q-header"><span class="q-num">Q6</span><span class="q-marks">2M</span></div>
-  <div class="q-text">In a shared-nothing machine with p processors, a unary operation σ<sub>C</sub>(R) on an evenly distributed relation R can be completed in what fraction of the uniprocessor time?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(6,'a','b')"><span class="opt-letter">A</span>1/(p-1)</button>
-    <button class="option-btn" onclick="check(6,'b','b')"><span class="opt-letter">B</span>1/p</button>
-    <button class="option-btn" onclick="check(6,'c','b')"><span class="opt-letter">C</span>p</button>
-    <button class="option-btn" onclick="check(6,'d','b')"><span class="opt-letter">D</span>log(p)</button>
-  </div>
-  <div class="feedback" id="fb6"></div>
-</div>
-
-<div class="q-card" id="q7">
-  <div class="q-header"><span class="q-num">Q7</span><span class="q-marks">2M</span></div>
-  <div class="q-text">For a parallel hash-join of R ⋈ S with p processors, how many blocks of data must be shipped across the network?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(7,'a','c')"><span class="opt-letter">A</span>B(R) + B(S)</button>
-    <button class="option-btn" onclick="check(7,'b','c')"><span class="opt-letter">B</span>(B(R) + B(S)) / p</button>
-    <button class="option-btn" onclick="check(7,'c','c')"><span class="opt-letter">C</span>((p−1)/p) × (B(R) + B(S))</button>
-    <button class="option-btn" onclick="check(7,'d','c')"><span class="opt-letter">D</span>p × (B(R) + B(S))</button>
-  </div>
-  <div class="feedback" id="fb7"></div>
-</div>
-
-<div class="q-card" id="q8">
-  <div class="q-header"><span class="q-num">Q8</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In the parallel join example with B(R)=1000, B(S)=500, p=10, what is the total disk I/O cost of the join?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(8,'a','b')"><span class="opt-letter">A</span>150</button>
-    <button class="option-btn" onclick="check(8,'b','b')"><span class="opt-letter">B</span>1500</button>
-    <button class="option-btn" onclick="check(8,'c','b')"><span class="opt-letter">C</span>1350</button>
-    <button class="option-btn" onclick="check(8,'d','b')"><span class="opt-letter">D</span>7500</button>
-  </div>
-  <div class="feedback" id="fb8"></div>
-</div>
-
-<div class="q-card" id="q9">
-  <div class="q-header"><span class="q-num">Q9</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In a parallel hash-join, which relation's tuples are shipped first and stored in memory at each processor?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(9,'a','a')"><span class="opt-letter">A</span>The smaller relation (S)</button>
-    <button class="option-btn" onclick="check(9,'b','a')"><span class="opt-letter">B</span>The larger relation (R)</button>
-    <button class="option-btn" onclick="check(9,'c','a')"><span class="opt-letter">C</span>Both simultaneously</button>
-    <button class="option-btn" onclick="check(9,'d','a')"><span class="opt-letter">D</span>Neither — both go to disk first</button>
-  </div>
-  <div class="feedback" id="fb9"></div>
-</div>
-
-<div class="q-card" id="q10">
-  <div class="q-header"><span class="q-num">Q10</span><span class="q-marks">1M</span></div>
-  <div class="q-text">For parallel duplicate elimination δ(R), which technique ensures duplicate tuples land at the same processor?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(10,'a','b')"><span class="opt-letter">A</span>Round-robin distribution</button>
-    <button class="option-btn" onclick="check(10,'b','b')"><span class="opt-letter">B</span>Hash-based distribution</button>
-    <button class="option-btn" onclick="check(10,'c','b')"><span class="opt-letter">C</span>Range partitioning</button>
-    <button class="option-btn" onclick="check(10,'d','b')"><span class="opt-letter">D</span>Random distribution</button>
-  </div>
-  <div class="feedback" id="fb10"></div>
-</div>
-
-<!-- ===== SECTION: MAPREDUCE & HADOOP ===== -->
-<div class="section-title">MapReduce & Hadoop <span class="badge">Unit 3</span></div>
-
-<div class="q-card" id="q11">
-  <div class="q-header"><span class="q-num">Q11</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In MapReduce, the three processing phases in order are:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(11,'a','c')"><span class="opt-letter">A</span>Reduce → Shuffle → Map</button>
-    <button class="option-btn" onclick="check(11,'b','c')"><span class="opt-letter">B</span>Shuffle → Map → Reduce</button>
-    <button class="option-btn" onclick="check(11,'c','c')"><span class="opt-letter">C</span>Map → Shuffle → Reduce</button>
-    <button class="option-btn" onclick="check(11,'d','c')"><span class="opt-letter">D</span>Map → Reduce → Shuffle</button>
-  </div>
-  <div class="feedback" id="fb11"></div>
-</div>
-
-<div class="q-card" id="q12">
-  <div class="q-header"><span class="q-num">Q12</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In Hadoop's architecture, which node manages metadata about file locations and replicas?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(12,'a','a')"><span class="opt-letter">A</span>NameNode</button>
-    <button class="option-btn" onclick="check(12,'b','a')"><span class="opt-letter">B</span>DataNode</button>
-    <button class="option-btn" onclick="check(12,'c','a')"><span class="opt-letter">C</span>TaskTracker</button>
-    <button class="option-btn" onclick="check(12,'d','a')"><span class="opt-letter">D</span>JobTracker</button>
-  </div>
-  <div class="feedback" id="fb12"></div>
-</div>
-
-<div class="q-card" id="q13">
-  <div class="q-header"><span class="q-num">Q13</span><span class="q-marks">1M</span></div>
-  <div class="q-text">For resiliency in the MapReduce storage model, each chunk of data is:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(13,'a','c')"><span class="opt-letter">A</span>Compressed and encrypted</button>
-    <button class="option-btn" onclick="check(13,'b','c')"><span class="opt-letter">B</span>Stored on SSD only</button>
-    <button class="option-btn" onclick="check(13,'c','c')"><span class="opt-letter">C</span>Replicated several times</button>
-    <button class="option-btn" onclick="check(13,'d','c')"><span class="opt-letter">D</span>Cached in memory permanently</button>
-  </div>
-  <div class="feedback" id="fb13"></div>
-</div>
-
-<div class="q-card" id="q14">
-  <div class="q-header"><span class="q-num">Q14</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Which Hadoop ecosystem component provides SQL-like querying capabilities?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(14,'a','d')"><span class="opt-letter">A</span>Pig</button>
-    <button class="option-btn" onclick="check(14,'b','d')"><span class="opt-letter">B</span>Mahout</button>
-    <button class="option-btn" onclick="check(14,'c','d')"><span class="opt-letter">C</span>Oozie</button>
-    <button class="option-btn" onclick="check(14,'d','d')"><span class="opt-letter">D</span>Hive</button>
-  </div>
-  <div class="feedback" id="fb14"></div>
-</div>
-
-<div class="q-card" id="q15">
-  <div class="q-header"><span class="q-num">Q15</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Which component in the Hadoop ecosystem handles coordination among distributed processes?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(15,'a','b')"><span class="opt-letter">A</span>Sqoop</button>
-    <button class="option-btn" onclick="check(15,'b','b')"><span class="opt-letter">B</span>ZooKeeper</button>
-    <button class="option-btn" onclick="check(15,'c','b')"><span class="opt-letter">C</span>Flume</button>
-    <button class="option-btn" onclick="check(15,'d','b')"><span class="opt-letter">D</span>Ambari</button>
-  </div>
-  <div class="feedback" id="fb15"></div>
-</div>
-
-<!-- ===== SECTION: DISTRIBUTED DATABASES ===== -->
-<div class="section-title">Distributed Databases <span class="badge">Unit 3</span></div>
-
-<div class="q-card" id="q16">
-  <div class="q-header"><span class="q-num">Q16</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In a homogeneous distributed database:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(16,'a','a')"><span class="opt-letter">A</span>All sites have identical software and cooperate in processing</button>
-    <button class="option-btn" onclick="check(16,'b','a')"><span class="opt-letter">B</span>Different sites use different schemas</button>
-    <button class="option-btn" onclick="check(16,'c','a')"><span class="opt-letter">C</span>Sites may not be aware of each other</button>
-    <button class="option-btn" onclick="check(16,'d','a')"><span class="opt-letter">D</span>Each site uses a different DBMS</button>
-  </div>
-  <div class="feedback" id="fb16"></div>
-</div>
-
-<div class="q-card" id="q17">
-  <div class="q-header"><span class="q-num">Q17</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Which type of fragmentation selects a subset of rows from a relation?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(17,'a','b')"><span class="opt-letter">A</span>Vertical</button>
-    <button class="option-btn" onclick="check(17,'b','b')"><span class="opt-letter">B</span>Horizontal</button>
-    <button class="option-btn" onclick="check(17,'c','b')"><span class="opt-letter">C</span>Mixed</button>
-    <button class="option-btn" onclick="check(17,'d','b')"><span class="opt-letter">D</span>Derived</button>
-  </div>
-  <div class="feedback" id="fb17"></div>
-</div>
-
-<div class="q-card" id="q18">
-  <div class="q-header"><span class="q-num">Q18</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Which transparency type makes users unaware that data is replicated across sites?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(18,'a','c')"><span class="opt-letter">A</span>Location transparency</button>
-    <button class="option-btn" onclick="check(18,'b','c')"><span class="opt-letter">B</span>Fragmentation transparency</button>
-    <button class="option-btn" onclick="check(18,'c','c')"><span class="opt-letter">C</span>Replication transparency</button>
-    <button class="option-btn" onclick="check(18,'d','c')"><span class="opt-letter">D</span>Network transparency</button>
-  </div>
-  <div class="feedback" id="fb18"></div>
-</div>
-
-<div class="q-card" id="q19">
-  <div class="q-header"><span class="q-num">Q19</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Snapshot replication is best used when:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(19,'a','b')"><span class="opt-letter">A</span>Data changes very frequently</button>
-    <button class="option-btn" onclick="check(19,'b','b')"><span class="opt-letter">B</span>Data changes are infrequent</button>
-    <button class="option-btn" onclick="check(19,'c','b')"><span class="opt-letter">C</span>Bidirectional updates are needed</button>
-    <button class="option-btn" onclick="check(19,'d','b')"><span class="opt-letter">D</span>Real-time consistency is critical</button>
-  </div>
-  <div class="feedback" id="fb19"></div>
-</div>
-
-<div class="q-card" id="q20">
-  <div class="q-header"><span class="q-num">Q20</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Which replication type allows both publisher and subscriber to independently make changes?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(20,'a','c')"><span class="opt-letter">A</span>Transactional</button>
-    <button class="option-btn" onclick="check(20,'b','c')"><span class="opt-letter">B</span>Snapshot</button>
-    <button class="option-btn" onclick="check(20,'c','c')"><span class="opt-letter">C</span>Merge</button>
-    <button class="option-btn" onclick="check(20,'d','c')"><span class="opt-letter">D</span>Synchronous</button>
-  </div>
-  <div class="feedback" id="fb20"></div>
-</div>
-
-<!-- ===== SECTION: DISTRIBUTED QUERY PROCESSING ===== -->
-<div class="section-title">Distributed Query Processing & Semi-Join <span class="badge">Unit 3</span></div>
-
-<div class="q-card" id="q21">
-  <div class="q-header"><span class="q-num">Q21</span><span class="q-marks">2M</span></div>
-  <div class="q-text">In the distributed join example, EMPLOYEE (100 bytes × 10,000 rows) at site 1, DEPARTMENT (35 bytes × 100 rows) at site 2, query at site 3. Which option transfers the fewest bytes?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(21,'a','c')"><span class="opt-letter">A</span>Send both to site 3 (1,003,500 bytes)</button>
-    <button class="option-btn" onclick="check(21,'b','c')"><span class="opt-letter">B</span>Send EMPLOYEE to site 2, result to site 3 (1,400,000 bytes)</button>
-    <button class="option-btn" onclick="check(21,'c','c')"><span class="opt-letter">C</span>Send DEPARTMENT to site 1, result to site 3 (403,500 bytes)</button>
-    <button class="option-btn" onclick="check(21,'d','c')"><span class="opt-letter">D</span>Send result only to site 3 (400,000 bytes)</button>
-  </div>
-  <div class="feedback" id="fb21"></div>
-</div>
-
-<div class="q-card" id="q22">
-  <div class="q-header"><span class="q-num">Q22</span><span class="q-marks">2M</span></div>
-  <div class="q-text">In the semi-join example for the same EMPLOYEE-DEPARTMENT query, the total bytes transferred are:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(22,'a','b')"><span class="opt-letter">A</span>403,500</button>
-    <button class="option-btn" onclick="check(22,'b','b')"><span class="opt-letter">B</span>340,400</button>
-    <button class="option-btn" onclick="check(22,'c','b')"><span class="opt-letter">C</span>1,003,500</button>
-    <button class="option-btn" onclick="check(22,'d','b')"><span class="opt-letter">D</span>400,000</button>
-  </div>
-  <div class="feedback" id="fb22"></div>
-</div>
-
-<div class="q-card" id="q23">
-  <div class="q-header"><span class="q-num">Q23</span><span class="q-marks">1M</span></div>
-  <div class="q-text">The semi-join technique reduces data transfer by:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(23,'a','a')"><span class="opt-letter">A</span>Projecting join attributes and sending only relevant tuples</button>
-    <button class="option-btn" onclick="check(23,'b','a')"><span class="opt-letter">B</span>Compressing the entire relation before transfer</button>
-    <button class="option-btn" onclick="check(23,'c','a')"><span class="opt-letter">C</span>Using indexes to skip non-matching tuples</button>
-    <button class="option-btn" onclick="check(23,'d','a')"><span class="opt-letter">D</span>Caching frequently accessed tuples locally</button>
-  </div>
-  <div class="feedback" id="fb23"></div>
-</div>
-
-<div class="q-card" id="q24">
-  <div class="q-header"><span class="q-num">Q24</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Which stage of distributed query processing maps the global query to queries on individual fragments?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(24,'a','b')"><span class="opt-letter">A</span>Query Mapping</button>
-    <button class="option-btn" onclick="check(24,'b','b')"><span class="opt-letter">B</span>Localization</button>
-    <button class="option-btn" onclick="check(24,'c','b')"><span class="opt-letter">C</span>Global Query Optimization</button>
-    <button class="option-btn" onclick="check(24,'d','b')"><span class="opt-letter">D</span>Local Query Optimization</button>
-  </div>
-  <div class="feedback" id="fb24"></div>
-</div>
-
-<!-- ===== SECTION: DISTRIBUTED TRANSACTIONS & LOCKING ===== -->
-<div class="section-title">Distributed Transactions & Locking <span class="badge">Unit 3</span></div>
-
-<div class="q-card" id="q25">
-  <div class="q-header"><span class="q-num">Q25</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In 2PC Phase 1, when a site wants to commit its component, it enters a state called:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(25,'a','c')"><span class="opt-letter">A</span>Committed</button>
-    <button class="option-btn" onclick="check(25,'b','c')"><span class="opt-letter">B</span>Ready</button>
-    <button class="option-btn" onclick="check(25,'c','c')"><span class="opt-letter">C</span>Pre-committed</button>
-    <button class="option-btn" onclick="check(25,'d','c')"><span class="opt-letter">D</span>Prepared</button>
-  </div>
-  <div class="feedback" id="fb25"></div>
-</div>
-
-<div class="q-card" id="q26">
-  <div class="q-header"><span class="q-num">Q26</span><span class="q-marks">2M</span></div>
-  <div class="q-text">In 2PC, the coordinator decides to commit T only when:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(26,'a','a')"><span class="opt-letter">A</span>It has received "ready T" from ALL components</button>
-    <button class="option-btn" onclick="check(26,'b','a')"><span class="opt-letter">B</span>It has received "ready T" from a majority of components</button>
-    <button class="option-btn" onclick="check(26,'c','a')"><span class="opt-letter">C</span>At least one component sends "ready T"</button>
-    <button class="option-btn" onclick="check(26,'d','a')"><span class="opt-letter">D</span>A timeout occurs without any "don't commit" message</button>
-  </div>
-  <div class="feedback" id="fb26"></div>
-</div>
-
-<div class="q-card" id="q27">
-  <div class="q-header"><span class="q-num">Q27</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In 3PC, Phase 2 of 2PC is split into two phases. Phase 2 of 3PC records the coordinator's decision at:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(27,'a','c')"><span class="opt-letter">A</span>Only the coordinator site</button>
-    <button class="option-btn" onclick="check(27,'b','c')"><span class="opt-letter">B</span>All sites</button>
-    <button class="option-btn" onclick="check(27,'c','c')"><span class="opt-letter">C</span>At least K sites</button>
-    <button class="option-btn" onclick="check(27,'d','c')"><span class="opt-letter">D</span>A randomly selected site</button>
-  </div>
-  <div class="feedback" id="fb27"></div>
-</div>
-
-<div class="q-card" id="q28">
-  <div class="q-header"><span class="q-num">Q28</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In centralized locking, how many messages are typically needed per lock operation?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(28,'a','b')"><span class="opt-letter">A</span>2 (request, grant)</button>
-    <button class="option-btn" onclick="check(28,'b','b')"><span class="opt-letter">B</span>3 (request, grant, release)</button>
-    <button class="option-btn" onclick="check(28,'c','b')"><span class="opt-letter">C</span>1 (broadcast)</button>
-    <button class="option-btn" onclick="check(28,'d','b')"><span class="opt-letter">D</span>4 (request, grant, ack, release)</button>
-  </div>
-  <div class="feedback" id="fb28"></div>
-</div>
-
-<div class="q-card" id="q29">
-  <div class="q-header"><span class="q-num">Q29</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Primary-copy locking improves on centralized locking by:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(29,'a','b')"><span class="opt-letter">A</span>Eliminating the need for locks entirely</button>
-    <button class="option-btn" onclick="check(29,'b','b')"><span class="opt-letter">B</span>Distributing lock responsibility across sites while maintaining one lock owner per element</button>
-    <button class="option-btn" onclick="check(29,'c','b')"><span class="opt-letter">C</span>Requiring all copies to be locked simultaneously</button>
-    <button class="option-btn" onclick="check(29,'d','b')"><span class="opt-letter">D</span>Using optimistic concurrency control instead</button>
-  </div>
-  <div class="feedback" id="fb29"></div>
-</div>
-
-<div class="q-card" id="q30">
-  <div class="q-header"><span class="q-num">Q30</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In majority locking, a transaction obtains a global lock by:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(30,'a','c')"><span class="opt-letter">A</span>Locking only the primary copy</button>
-    <button class="option-btn" onclick="check(30,'b','c')"><span class="opt-letter">B</span>Locking all copies</button>
-    <button class="option-btn" onclick="check(30,'c','c')"><span class="opt-letter">C</span>Broadcasting a request and obtaining local locks from a majority of sites</button>
-    <button class="option-btn" onclick="check(30,'d','c')"><span class="opt-letter">D</span>Using timestamp ordering</button>
-  </div>
-  <div class="feedback" id="fb30"></div>
-</div>
-
-<!-- ===== SECTION: P2P & CHORD ===== -->
-<div class="section-title">Peer-to-Peer & Chord Circles <span class="badge">Unit 3</span></div>
-
-<div class="q-card" id="q31">
-  <div class="q-header"><span class="q-num">Q31</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Which of the following is NOT a characteristic of a peer-to-peer network?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(31,'a','d')"><span class="opt-letter">A</span>Autonomous — nodes join/leave freely</button>
-    <button class="option-btn" onclick="check(31,'b','d')"><span class="opt-letter">B</span>Loosely coupled via a general-purpose network</button>
-    <button class="option-btn" onclick="check(31,'c','d')"><span class="opt-letter">C</span>Equal in functionality with no leader</button>
-    <button class="option-btn" onclick="check(31,'d','d')"><span class="opt-letter">D</span>Centralized index for all data locations</button>
-  </div>
-  <div class="feedback" id="fb31"></div>
-</div>
-
-<div class="q-card" id="q32">
-  <div class="q-header"><span class="q-num">Q32</span><span class="q-marks">2M</span></div>
-  <div class="q-text">In a Chord circle with m=6, how many positions exist around the circle?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(32,'a','c')"><span class="opt-letter">A</span>6</button>
-    <button class="option-btn" onclick="check(32,'b','c')"><span class="opt-letter">B</span>32</button>
-    <button class="option-btn" onclick="check(32,'c','c')"><span class="opt-letter">C</span>64</button>
-    <button class="option-btn" onclick="check(32,'d','c')"><span class="opt-letter">D</span>128</button>
-  </div>
-  <div class="feedback" id="fb32"></div>
-</div>
-
-<div class="q-card" id="q33">
-  <div class="q-header"><span class="q-num">Q33</span><span class="q-marks">2M</span></div>
-  <div class="q-text">In the Chord circle example, a key-value pair (K,V) with 42 < h(K) ≤ 48 is stored at which node?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(33,'a','b')"><span class="opt-letter">A</span>N<sub>42</sub></button>
-    <button class="option-btn" onclick="check(33,'b','b')"><span class="opt-letter">B</span>N<sub>48</sub></button>
-    <button class="option-btn" onclick="check(33,'c','b')"><span class="opt-letter">C</span>N<sub>51</sub></button>
-    <button class="option-btn" onclick="check(33,'d','b')"><span class="opt-letter">D</span>N<sub>56</sub></button>
-  </div>
-  <div class="feedback" id="fb33"></div>
-</div>
-
-<div class="q-card" id="q34">
-  <div class="q-header"><span class="q-num">Q34</span><span class="q-marks">1M</span></div>
-  <div class="q-text">The maximum number of messages needed for a lookup using finger tables in a Chord circle is:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(34,'a','c')"><span class="opt-letter">A</span>log(m)</button>
-    <button class="option-btn" onclick="check(34,'b','c')"><span class="opt-letter">B</span>m²</button>
-    <button class="option-btn" onclick="check(34,'c','c')"><span class="opt-letter">C</span>m + 1</button>
-    <button class="option-btn" onclick="check(34,'d','c')"><span class="opt-letter">D</span>2<sup>m</sup></button>
-  </div>
-  <div class="feedback" id="fb34"></div>
-</div>
-
-<div class="q-card" id="q35">
-  <div class="q-header"><span class="q-num">Q35</span><span class="q-marks">1M</span></div>
-  <div class="q-text">When a node leaves a Chord circle gracefully, it transfers its data to its:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(35,'a','b')"><span class="opt-letter">A</span>Predecessor</button>
-    <button class="option-btn" onclick="check(35,'b','b')"><span class="opt-letter">B</span>Successor</button>
-    <button class="option-btn" onclick="check(35,'c','b')"><span class="opt-letter">C</span>Nearest finger table entry</button>
-    <button class="option-btn" onclick="check(35,'d','b')"><span class="opt-letter">D</span>A random node</button>
-  </div>
-  <div class="feedback" id="fb35"></div>
-</div>
-
-<!-- ===== SECTION: STREAM PROCESSING ===== -->
-<div class="section-title">Stream Processing <span class="badge">Unit 4</span></div>
-
-<div class="q-card" id="q36">
-  <div class="q-header"><span class="q-num">Q36</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Stream processing deals with _____ datasets while batch processing deals with _____ datasets.</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(36,'a','a')"><span class="opt-letter">A</span>Unbounded; Bounded</button>
-    <button class="option-btn" onclick="check(36,'b','a')"><span class="opt-letter">B</span>Bounded; Unbounded</button>
-    <button class="option-btn" onclick="check(36,'c','a')"><span class="opt-letter">C</span>Structured; Unstructured</button>
-    <button class="option-btn" onclick="check(36,'d','a')"><span class="opt-letter">D</span>Static; Dynamic</button>
-  </div>
-  <div class="feedback" id="fb36"></div>
-</div>
-
-<div class="q-card" id="q37">
-  <div class="q-header"><span class="q-num">Q37</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Non-overlapping, consecutive, fixed-period time windows are called:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(37,'a','b')"><span class="opt-letter">A</span>Sliding windows</button>
-    <button class="option-btn" onclick="check(37,'b','b')"><span class="opt-letter">B</span>Tumbling windows</button>
-    <button class="option-btn" onclick="check(37,'c','b')"><span class="opt-letter">C</span>Session windows</button>
-    <button class="option-btn" onclick="check(37,'d','b')"><span class="opt-letter">D</span>Hopping windows</button>
-  </div>
-  <div class="feedback" id="fb37"></div>
-</div>
-
-<div class="q-card" id="q38">
-  <div class="q-header"><span class="q-num">Q38</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In stream processing, a watermark defines:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(38,'a','c')"><span class="opt-letter">A</span>The maximum processing time allowed</button>
-    <button class="option-btn" onclick="check(38,'b','c')"><span class="opt-letter">B</span>The maximum number of events per window</button>
-    <button class="option-btn" onclick="check(38,'c','c')"><span class="opt-letter">C</span>The oldest event timestamp that will be accepted</button>
-    <button class="option-btn" onclick="check(38,'d','c')"><span class="opt-letter">D</span>The rate at which events are consumed</button>
-  </div>
-  <div class="feedback" id="fb38"></div>
-</div>
-
-<div class="q-card" id="q39">
-  <div class="q-header"><span class="q-num">Q39</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Tumbling windows are a special case of sliding windows where:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(39,'a','a')"><span class="opt-letter">A</span>Reporting frequency equals window size</button>
-    <button class="option-btn" onclick="check(39,'b','a')"><span class="opt-letter">B</span>Window size is always 1 second</button>
-    <button class="option-btn" onclick="check(39,'c','a')"><span class="opt-letter">C</span>Windows overlap by 50%</button>
-    <button class="option-btn" onclick="check(39,'d','a')"><span class="opt-letter">D</span>There is no reporting frequency</button>
-  </div>
-  <div class="feedback" id="fb39"></div>
-</div>
-
-<!-- ===== SECTION: LAMBDA & KAPPA ===== -->
-<div class="section-title">Lambda & Kappa Architecture <span class="badge">Unit 4</span></div>
-
-<div class="q-card" id="q40">
-  <div class="q-header"><span class="q-num">Q40</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Lambda architecture uses both _____ and _____ processing layers.</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(40,'a','c')"><span class="opt-letter">A</span>Online and Offline</button>
-    <button class="option-btn" onclick="check(40,'b','c')"><span class="opt-letter">B</span>Query and Transaction</button>
-    <button class="option-btn" onclick="check(40,'c','c')"><span class="opt-letter">C</span>Batch and Stream</button>
-    <button class="option-btn" onclick="check(40,'d','c')"><span class="opt-letter">D</span>Map and Reduce</button>
-  </div>
-  <div class="feedback" id="fb40"></div>
-</div>
-
-<div class="q-card" id="q41">
-  <div class="q-header"><span class="q-num">Q41</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Kappa architecture differs from Lambda primarily because it:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(41,'a','b')"><span class="opt-letter">A</span>Adds an additional batch processing layer</button>
-    <button class="option-btn" onclick="check(41,'b','b')"><span class="opt-letter">B</span>Eliminates the batch layer and treats all data as a stream</button>
-    <button class="option-btn" onclick="check(41,'c','b')"><span class="opt-letter">C</span>Uses only disk-based processing</button>
-    <button class="option-btn" onclick="check(41,'d','b')"><span class="opt-letter">D</span>Requires three separate codebases</button>
-  </div>
-  <div class="feedback" id="fb41"></div>
-</div>
-
-<div class="q-card" id="q42">
-  <div class="q-header"><span class="q-num">Q42</span><span class="q-marks">1M</span></div>
-  <div class="q-text">A major drawback of Lambda architecture is:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(42,'a','b')"><span class="opt-letter">A</span>It cannot handle real-time data</button>
-    <button class="option-btn" onclick="check(42,'b','b')"><span class="opt-letter">B</span>Maintaining two separate codebases for batch and streaming layers</button>
-    <button class="option-btn" onclick="check(42,'c','b')"><span class="opt-letter">C</span>It does not support fault tolerance</button>
-    <button class="option-btn" onclick="check(42,'d','b')"><span class="opt-letter">D</span>It cannot scale horizontally</button>
-  </div>
-  <div class="feedback" id="fb42"></div>
-</div>
-
-<!-- ===== SECTION: SPARK & KAFKA ===== -->
-<div class="section-title">Spark Streaming & Kafka <span class="badge">Unit 4</span></div>
-
-<div class="q-card" id="q43">
-  <div class="q-header"><span class="q-num">Q43</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Spark achieves its speed advantage over MapReduce primarily through:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(43,'a','c')"><span class="opt-letter">A</span>Faster network I/O</button>
-    <button class="option-btn" onclick="check(43,'b','c')"><span class="opt-letter">B</span>Better compression algorithms</button>
-    <button class="option-btn" onclick="check(43,'c','c')"><span class="opt-letter">C</span>In-memory caching using RDDs</button>
-    <button class="option-btn" onclick="check(43,'d','c')"><span class="opt-letter">D</span>Smaller cluster sizes</button>
-  </div>
-  <div class="feedback" id="fb43"></div>
-</div>
-
-<div class="q-card" id="q44">
-  <div class="q-header"><span class="q-num">Q44</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Spark Streaming transforms a continuous stream into discrete data collections called:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(44,'a','a')"><span class="opt-letter">A</span>Microbatches</button>
-    <button class="option-btn" onclick="check(44,'b','a')"><span class="opt-letter">B</span>Chunks</button>
-    <button class="option-btn" onclick="check(44,'c','a')"><span class="opt-letter">C</span>Segments</button>
-    <button class="option-btn" onclick="check(44,'d','a')"><span class="opt-letter">D</span>Frames</button>
-  </div>
-  <div class="feedback" id="fb44"></div>
-</div>
-
-<div class="q-card" id="q45">
-  <div class="q-header"><span class="q-num">Q45</span><span class="q-marks">1M</span></div>
-  <div class="q-text">DStream in Spark Streaming represents a stream in terms of:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(45,'a','b')"><span class="opt-letter">A</span>DataFrames over time</button>
-    <button class="option-btn" onclick="check(45,'b','b')"><span class="opt-letter">B</span>RDDs over time</button>
-    <button class="option-btn" onclick="check(45,'c','b')"><span class="opt-letter">C</span>Key-value pairs over time</button>
-    <button class="option-btn" onclick="check(45,'d','b')"><span class="opt-letter">D</span>SQL tables over time</button>
-  </div>
-  <div class="feedback" id="fb45"></div>
-</div>
-
-<div class="q-card" id="q46">
-  <div class="q-header"><span class="q-num">Q46</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Kafka uses which routing model by default?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(46,'a','a')"><span class="opt-letter">A</span>Topic-based</button>
-    <button class="option-btn" onclick="check(46,'b','a')"><span class="opt-letter">B</span>Content-based</button>
-    <button class="option-btn" onclick="check(46,'c','a')"><span class="opt-letter">C</span>Broadcast</button>
-    <button class="option-btn" onclick="check(46,'d','a')"><span class="opt-letter">D</span>Multicast</button>
-  </div>
-  <div class="feedback" id="fb46"></div>
-</div>
-
-<div class="q-card" id="q47">
-  <div class="q-header"><span class="q-num">Q47</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In Kafka, a partition delivers each message to _____ member(s) of a consumer group.</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(47,'a','b')"><span class="opt-letter">A</span>All</button>
-    <button class="option-btn" onclick="check(47,'b','b')"><span class="opt-letter">B</span>Exactly one</button>
-    <button class="option-btn" onclick="check(47,'c','b')"><span class="opt-letter">C</span>A random subset</button>
-    <button class="option-btn" onclick="check(47,'d','b')"><span class="opt-letter">D</span>At least two</button>
-  </div>
-  <div class="feedback" id="fb47"></div>
-</div>
-
-<!-- ===== SECTION: DATA WAREHOUSING ===== -->
-<div class="section-title">Data Warehousing & Mining <span class="badge">Unit 4</span></div>
-
-<div class="q-card" id="q48">
-  <div class="q-header"><span class="q-num">Q48</span><span class="q-marks">1M</span></div>
-  <div class="q-text">A star schema consists of a fact table with:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(48,'a','a')"><span class="opt-letter">A</span>A single table for each dimension</button>
-    <button class="option-btn" onclick="check(48,'b','a')"><span class="opt-letter">B</span>Normalized dimension tables in a hierarchy</button>
-    <button class="option-btn" onclick="check(48,'c','a')"><span class="opt-letter">C</span>No dimension tables</button>
-    <button class="option-btn" onclick="check(48,'d','a')"><span class="opt-letter">D</span>Multiple fact tables per dimension</button>
-  </div>
-  <div class="feedback" id="fb48"></div>
-</div>
-
-<div class="q-card" id="q49">
-  <div class="q-header"><span class="q-num">Q49</span><span class="q-marks">1M</span></div>
-  <div class="q-text">Snowflake schema differs from star schema because its dimension tables are:</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(49,'a','c')"><span class="opt-letter">A</span>Denormalized</button>
-    <button class="option-btn" onclick="check(49,'b','c')"><span class="opt-letter">B</span>Compressed</button>
-    <button class="option-btn" onclick="check(49,'c','c')"><span class="opt-letter">C</span>Normalized into a hierarchy</button>
-    <button class="option-btn" onclick="check(49,'d','c')"><span class="opt-letter">D</span>Stored in-memory only</button>
-  </div>
-  <div class="feedback" id="fb49"></div>
-</div>
-
-<div class="q-card" id="q50">
-  <div class="q-header"><span class="q-num">Q50</span><span class="q-marks">1M</span></div>
-  <div class="q-text">In OLAP, which operation reveals increasing levels of detail (the complement of roll-up)?</div>
-  <div class="options">
-    <button class="option-btn" onclick="check(50,'a','b')"><span class="opt-letter">A</span>Pivot</button>
-    <button class="option-btn" onclick="check(50,'b','b')"><span class="opt-letter">B</span>Drill-down</button>
-    <button class="option-btn" onclick="check(50,'c','b')"><span class="opt-letter">C</span>Slice</button>
-    <button class="option-btn" onclick="check(50,'d','b')"><span class="opt-letter">D</span>Dice</button>
-  </div>
-  <div class="feedback" id="fb50"></div>
-</div>
-
-<!-- ===== WRITTEN QUESTIONS ===== -->
-<div class="section-title" style="color: var(--written);">Written Questions <span class="badge" style="border-color:rgba(251,191,36,0.3);background:var(--written-bg);">4M each</span></div>
-
-<div class="q-card written-card" id="w1">
-  <div class="q-header"><span class="q-num">W1</span><span class="q-marks">4M</span></div>
-  <div class="q-text">Compare shared-memory, shared-disk, and shared-nothing architectures for parallel databases. For each, describe the architecture and mention one advantage and one disadvantage.</div>
-  <textarea class="written-input" placeholder="Write your answer here..."></textarea>
-  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
-  <div class="model-answer">
-    <p><strong>Shared-Memory:</strong> All processors access a single shared physical address space. Each processor has local main memory but can directly access other processors' memory. Large machines are NUMA type (non-uniform memory access). Advantage: simple programming model since all data is in a common address space. Disadvantage: limited scalability — the shared bus/interconnect becomes a bottleneck as processors increase, and cache coherence overhead grows.</p>
-    <p><strong>Shared-Disk:</strong> Each processor has its own private memory (not accessible to others), but all processors can access all disks through a communication network. Disk controllers manage competing requests. Two forms: NAS (file-level transfers) and SAN (block-level transfers). Advantage: good fault tolerance — if a processor fails, others can still access all data. Disadvantage: disk contention and the overhead of distributed cache coherence across processors.</p>
-    <p><strong>Shared-Nothing:</strong> Each processor has its own private memory and its own disk(s). All communication is via network messages between processors. Advantage: highly scalable and inexpensive to build using commodity hardware in racks. Disadvantage: data transfer between processors is costly, and algorithms must be carefully designed to minimize inter-node communication.</p>
-  </div>
-</div>
-
-<div class="q-card written-card" id="w2">
-  <div class="q-header"><span class="q-num">W2</span><span class="q-marks">4M</span></div>
-  <div class="q-text">Explain the Two-Phase Commit (2PC) protocol in detail. Cover both phases, the role of the coordinator and participants, and the log records involved at each step.</div>
-  <textarea class="written-input" placeholder="Write your answer here..."></textarea>
-  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
-  <div class="model-answer">
-    <p><strong>Phase 1 (Voting/Prepare):</strong> (1) The coordinator writes &lt;Prepare T&gt; to its log. (2) It sends a "prepare T" message to all participant sites. (3) Each participant decides whether it can commit its local component. (4) If yes, the participant enters a pre-committed state — it ensures no local abort will be needed, writes &lt;Ready T&gt; to its local log, flushes the log to disk, and sends "ready T" to the coordinator. Once pre-committed, a site cannot unilaterally abort. (5) If a site wants to abort, it logs &lt;Don't Commit T&gt; and sends "don't commit T" to the coordinator.</p>
-    <p><strong>Phase 2 (Decision):</strong> (1) If the coordinator receives "ready T" from ALL participants, it decides to commit — logs &lt;Commit T&gt; and sends "commit T" to all sites. (2) If even one participant sends "don't commit T", the coordinator logs &lt;Abort T&gt; and sends "abort T" to all sites. (3) Each site receiving "commit T" commits locally and logs &lt;Commit T&gt;. (4) Each site receiving "abort T" aborts and logs &lt;Abort T&gt;.</p>
-    <p><strong>Key property:</strong> Atomicity is guaranteed — the transaction is either committed at all sites or aborted at all sites. The protocol is blocking: if the coordinator crashes after Phase 1 but before Phase 2, participants in the pre-committed state must wait until the coordinator recovers.</p>
-  </div>
-</div>
-
-<div class="q-card written-card" id="w3">
-  <div class="q-header"><span class="q-num">W3</span><span class="q-marks">4M</span></div>
-  <div class="q-text">Using the EMPLOYEE-DEPARTMENT distributed join example from the slides, compute and compare the total bytes transferred for: (a) sending both relations to the result site, (b) sending DEPARTMENT to EMPLOYEE's site and forwarding the result. Show your calculations.</div>
-  <textarea class="written-input" placeholder="Write your answer here..."></textarea>
-  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
-  <div class="model-answer">
-    <p><strong>Given:</strong> EMPLOYEE at Site 1: 10,000 records × 100 bytes = 1,000,000 bytes. DEPARTMENT at Site 2: 100 records × 35 bytes = 3,500 bytes. Result has 10,000 records × 40 bytes (Fname 15 + Lname 15 + Dname 10) = 400,000 bytes. Query submitted at Site 3.</p>
-    <p><strong>(a) Send both to Site 3:</strong> Transfer EMPLOYEE (1,000,000) + DEPARTMENT (3,500) = 1,003,500 bytes. Join is performed at Site 3.</p>
-    <p><strong>(b) Send DEPARTMENT to Site 1, join there, send result to Site 3:</strong> Transfer DEPARTMENT to Site 1 = 3,500 bytes. Join at Site 1 produces 10,000 result tuples. Transfer result to Site 3 = 400,000 bytes. Total = 3,500 + 400,000 = 403,500 bytes.</p>
-    <p><strong>Comparison:</strong> Option (b) transfers only 403,500 bytes vs 1,003,500 for option (a) — about 60% less. The key insight: always move the smaller relation to the larger one's site, then ship only the (projected) result to the query site. There's also option (c): send EMPLOYEE to Site 2 and result to Site 3 = 1,000,000 + 400,000 = 1,400,000 bytes — the worst option.</p>
-  </div>
-</div>
-
-<div class="q-card written-card" id="w4">
-  <div class="q-header"><span class="q-num">W4</span><span class="q-marks">4M</span></div>
-  <div class="q-text">Describe how a key lookup works in a Chord circle using finger tables. Use the example from the slides where N<sub>8</sub> looks up a key K with h(K) = 54. Trace each hop.</div>
-  <textarea class="written-input" placeholder="Write your answer here..."></textarea>
-  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
-  <div class="model-answer">
-    <p><strong>Setup:</strong> m = 6, so 64 positions (0–63). Nodes: N₁, N₈, N₁₄, N₂₁, N₃₂, N₃₈, N₄₂, N₄₈, N₅₁, N₅₆. Each node has a finger table with entries at distances 1, 2, 4, 8, 16, 32.</p>
-    <p><strong>Hop 1 — N₈:</strong> N₈'s successor is N₁₄. Since 54 is not in range [9, 14], the key is not at N₁₄. N₈ checks its finger table: {1→N₁₄, 2→N₁₄, 4→N₁₄, 8→N₂₁, 16→N₃₂, 32→N₄₂}. The largest entry ≤ 54 (in circular sense) is N₄₂. N₈ forwards the request to N₄₂.</p>
-    <p><strong>Hop 2 — N₄₂:</strong> N₄₂'s successor is N₄₈. 54 is not in [43, 48]. N₄₂ checks its finger table: {1→N₄₈, 2→N₄₈, 4→N₄₈, 8→N₅₁, 16→N₁, 32→N₁₄}. The largest entry ≤ 54 is N₅₁. N₄₂ forwards to N₅₁.</p>
-    <p><strong>Hop 3 — N₅₁:</strong> N₅₁'s successor is N₅₆. Since 54 ≤ 56, if (K,V) exists it must be at N₅₆. N₅₁ sends a request to N₅₆ asking it to reply directly to the originator N₈.</p>
-    <p><strong>Hop 4 — N₅₆:</strong> N₅₆ looks up key K locally and sends the value V (or "not found") back to N₈. Total: 3 forwarding messages + 1 response = 4 messages. In general, at most m+1 messages are needed.</p>
-  </div>
-</div>
-
-<div class="q-card written-card" id="w5">
-  <div class="q-header"><span class="q-num">W5</span><span class="q-marks">4M</span></div>
-  <div class="q-text">Compare Lambda and Kappa architectures. Discuss their layers, data flow, advantages, and when you would choose one over the other. Give one real-world example for each.</div>
-  <textarea class="written-input" placeholder="Write your answer here..."></textarea>
-  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
-  <div class="model-answer">
-    <p><strong>Lambda Architecture:</strong> Has three layers — (1) Batch layer: manages the master dataset (immutable, append-only) and pre-computes batch views using tools like Hadoop/HDFS; runs on a schedule (e.g., daily). (2) Speed/Stream layer: processes only recent data not yet in batch views, creating real-time views using tools like Apache Storm or Kafka. (3) Serving layer: indexes batch views for low-latency ad-hoc queries (e.g., HBase). New data is fed to both batch and stream layers simultaneously. Advantages: comprehensive accuracy from batch + low latency from stream; fault-tolerant. Disadvantage: complexity of maintaining two separate codebases with different logic for batch and stream.</p>
-    <p><strong>Kappa Architecture:</strong> Eliminates the batch layer entirely. All data is treated as a stream processed by a single stream processing engine (e.g., Kafka, Flink, Samza). Historical reprocessing is done by replaying events from the immutable log. Results go to a serving layer or storage. Advantages: simpler unified codebase, lower latency, easier maintenance. Disadvantage: reprocessing large historical data can be resource-intensive; not ideal for workloads that are inherently batch-oriented.</p>
-    <p><strong>When to choose:</strong> Lambda when you need both highly accurate historical analysis and real-time views, and can afford the operational complexity. Kappa when real-time processing dominates and you want simplicity. Example — Lambda: a data warehouse that runs nightly batch jobs for reporting while also showing live dashboards. Example — Kappa: LinkedIn's activity feed processing (billions of events/day via Kafka, all stream-based).</p>
-  </div>
-</div>
-
-<div class="q-card written-card" id="w6">
-  <div class="q-header"><span class="q-num">W6</span><span class="q-marks">4M</span></div>
-  <div class="q-text">Explain the concept of watermarks in stream processing. How do they resolve the open-boundary problem of event-time windows? What are the trade-offs between watermark length and output freshness?</div>
-  <textarea class="written-input" placeholder="Write your answer here..."></textarea>
-  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
-  <div class="model-answer">
-    <p><strong>The problem:</strong> When using event-time windows (e.g., aggregate events from 00:30–00:40 based on when they were created), there is no natural upper boundary for when the window closes. Events can arrive late due to network delays — an event created at 00:36 might not arrive until 01:00. Without a cutoff, the system would wait indefinitely for stragglers.</p>
-    <p><strong>Watermark definition:</strong> A watermark is an arbitrary deadline — at any given moment, it represents the oldest event timestamp the system will still accept. Any event older than the current watermark is considered "too late" and is either discarded or routed to a late-arrivals side channel.</p>
-    <p><strong>How it resolves the open boundary:</strong> The watermark closes the event-time window by defining which events belong to the window and which are too late. Once the watermark passes the window's end time, the window can be finalized and results emitted. Without it, event-time windows would never close.</p>
-    <p><strong>Two modes of output:</strong> (1) If all data being processed is older than the watermark → output is final and definitive. (2) If data before the watermark boundary is still arriving → output is provisional and may be revised when delayed events arrive.</p>
-    <p><strong>Trade-offs:</strong> Longer watermark → more complete results (fewer missed late events), but higher latency (output is delayed by at least the watermark length) and higher memory consumption (memory ≈ watermark_length × arrival_rate × message_size, as intermediate state must be stored). Shorter watermark → fresher output with lower latency, but more events will be classified as "late" and potentially dropped, leading to less accurate results.</p>
-  </div>
-</div>
-
-<div class="q-card written-card" id="w7">
-  <div class="q-header"><span class="q-num">W7</span><span class="q-marks">4M</span></div>
-  <div class="q-text">Explain the three distributed locking strategies: centralized, primary-copy, and majority locking. For each, state the number of messages required per lock and discuss bottleneck/failure implications.</div>
-  <textarea class="written-input" placeholder="Write your answer here..."></textarea>
-  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
-  <div class="model-answer">
-    <p><strong>1. Centralized Locking:</strong> A single designated site maintains the lock table for all logical elements across the system. To lock element X, a transaction sends a request to the lock site, which grants or denies it. Messages: 3 per lock (request → grant → release), unless the transaction is at the lock site itself (then 0 messages). Bottleneck: the single lock site can become a performance bottleneck under heavy load. Failure: if the lock site crashes, no transaction anywhere can obtain locks — single point of failure.</p>
-    <p><strong>2. Primary-Copy Locking:</strong> Each logical element X has one of its physical copies designated as the "primary copy." The site holding the primary copy is responsible for X's lock. This distributes lock management across multiple sites. Messages: still 3 per lock (request → grant → release), except when the transaction is at the primary copy's site. Bottleneck: avoided because different elements have primaries at different sites, spreading the load. Failure: if a primary copy's site crashes, only locks for elements whose primary is at that site are affected — partial rather than total failure.</p>
-    <p><strong>3. Majority Locking:</strong> No copy is "primary." A transaction broadcasts a lock request to all sites holding a copy of X. It obtains a global lock only after receiving local locks from a majority (more than half) of the sites. Messages: 1 broadcast request + responses from majority + 1 broadcast release — approximately 2n+1 messages for n sites (more expensive). Bottleneck: no single bottleneck since all copies are symmetric. Failure: tolerates minority of site failures — as long as a majority is reachable, locks can still be obtained. Drawback: higher message overhead and potential for deadlocks if two transactions each obtain locks from different non-overlapping majorities (though this is prevented by the majority quorum intersection property).</p>
-  </div>
-</div>
-
-<div class="q-card written-card" id="w8">
-  <div class="q-header"><span class="q-num">W8</span><span class="q-marks">4M</span></div>
-  <div class="q-text">Explain the MapReduce execution flow in Hadoop. Describe each step from job submission to final output, including the roles of JobTracker, TaskTracker, NameNode, and DataNode.</div>
-  <textarea class="written-input" placeholder="Write your answer here..."></textarea>
-  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
-  <div class="model-answer">
-    <p><strong>Step 1 — Job Submission:</strong> The client submits a job to the cluster, which includes the JAR file containing the Mapper and Reducer logic, the input data path, and the output data path.</p>
-    <p><strong>Step 2 — Job Scheduling (JobTracker):</strong> The JobTracker (running on the master node alongside the NameNode) accepts the job, splits it into individual tasks, and assigns Map and Reduce tasks to TaskTrackers on slave nodes. Assignment is based on data locality — tasks are preferentially sent to nodes that already hold the relevant data blocks.</p>
-    <p><strong>Step 3 — Map Phase (TaskTrackers + DataNodes):</strong> Each TaskTracker (on a slave node) executes its assigned Map task on the input split stored locally on its DataNode. The Map function processes each record and emits key-value pairs. DataNodes store the actual data blocks of HDFS files; the NameNode stores metadata (file names, block locations, replication info).</p>
-    <p><strong>Step 4 — Shuffle and Sort:</strong> The intermediate key-value pairs output by mappers are shuffled across the network — all values for the same key are grouped together and sent to the same reducer. This involves sorting by key and transferring data between nodes.</p>
-    <p><strong>Step 5 — Reduce Phase:</strong> TaskTrackers execute Reduce tasks on the grouped intermediate data. Each reducer processes all values for a given key and produces the final output key-value pairs.</p>
-    <p><strong>Step 6 — Output:</strong> The final output from all reducers is written back to HDFS. The NameNode manages the metadata for these output files, and DataNodes store the actual output blocks with replication for fault tolerance (default replication factor is 3).</p>
-    <p><strong>Fault tolerance:</strong> If a TaskTracker fails, the JobTracker reassigns its tasks to another node. Data is resilient because HDFS replicates each block across multiple DataNodes.</p>
-  </div>
-</div>
-
-</div>
-
-<script>
-let score = 0;
-let answered = 0;
-const total = 42;
-const answered_set = new Set();
-
-function toggleModel(btn) {
-  btn.classList.toggle('open');
-  const answer = btn.nextElementSibling;
-  answer.classList.toggle('visible');
-  const arrow = btn.querySelector('.arrow');
-  btn.querySelector('.arrow').textContent = btn.classList.contains('open') ? '\u25BC' : '\u25B6';
-}
-
-function check(qNum, chosen, correct) {
-  if (answered_set.has(qNum)) return;
-  answered_set.add(qNum);
-
-  const card = document.getElementById('q' + qNum);
-  const btns = card.querySelectorAll('.option-btn');
-  const fb = document.getElementById('fb' + qNum);
-
-  btns.forEach(btn => {
-    btn.classList.add('disabled');
-    const letter = btn.querySelector('.opt-letter').textContent.trim().toLowerCase();
-    if (letter === correct) {
-      btn.classList.add('show-correct');
-    }
-  });
-
-  const chosenBtn = btns[chosen.charCodeAt(0) - 97];
-
-  if (chosen === correct) {
-    score++;
-    chosenBtn.classList.add('selected-correct');
-    card.classList.add('answered-correct');
-    fb.textContent = '✓ Correct';
-    fb.classList.add('correct');
-  } else {
-    chosenBtn.classList.add('selected-wrong');
-    card.classList.add('answered-wrong');
-    const correctLetter = correct.toUpperCase();
-    const correctText = btns[correct.charCodeAt(0) - 97].textContent.trim();
-    fb.textContent = '✗ Correct answer: ' + correctText;
-    fb.classList.add('wrong');
-  }
-
-  answered++;
-  document.getElementById('score-display').textContent = score + ' / ' + answered;
-  document.getElementById('progress-display').textContent = answered + ' / ' + total;
-}
-</script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DBT Units 3 & 4 — Exam Prep Quiz</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Outfit:wght@300;400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0c0f14;
+        --surface: #151921;
+        --surface2: #1c2230;
+        --border: #2a3142;
+        --text: #e2e8f0;
+        --text-dim: #8892a8;
+        --accent: #6c8cff;
+        --accent-glow: rgba(108,140,255,0.15);
+        --correct: #34d399;
+        --correct-bg: rgba(52,211,153,0.08);
+        --wrong: #f87171;
+        --wrong-bg: rgba(248,113,113,0.08);
+        --written: #fbbf24;
+        --written-bg: rgba(251,191,36,0.06);
+      }
+
+      * { margin:0; padding:0; box-sizing:border-box; }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: 'Outfit', sans-serif;
+        line-height: 1.7;
+        min-height: 100vh;
+      }
+
+      .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 6rem; }
+
+      header {
+        text-align: center;
+        padding: 3rem 0 2rem;
+        border-bottom: 1px solid var(--border);
+        margin-bottom: 2rem;
+      }
+      header h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--accent), #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: .5rem;
+      }
+      header p { color: var(--text-dim); font-size: .95rem; }
+
+      .score-bar {
+        position: sticky; top: 0; z-index: 100;
+        background: var(--surface);
+        border-bottom: 1px solid var(--border);
+        padding: .75rem 1.5rem;
+        display: flex; justify-content: space-between; align-items: center;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .85rem;
+        backdrop-filter: blur(12px);
+      }
+      .score-bar span { color: var(--text-dim); }
+      #score-display { color: var(--correct); font-weight: 700; }
+      #progress-display { color: var(--accent); }
+
+      .section-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--accent);
+        margin: 2.5rem 0 1rem;
+        padding: .5rem 0;
+        border-bottom: 1px solid var(--border);
+        display: flex; align-items: center; gap: .5rem;
+      }
+      .section-title .badge {
+        font-size: .65rem;
+        background: var(--accent-glow);
+        border: 1px solid rgba(108,140,255,0.3);
+        padding: 2px 8px;
+        border-radius: 99px;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      .q-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.25rem;
+        transition: border-color .2s;
+      }
+      .q-card:hover { border-color: rgba(108,140,255,0.25); }
+      .q-card.answered-correct { border-color: var(--correct); background: var(--correct-bg); }
+      .q-card.answered-wrong { border-color: var(--wrong); background: var(--wrong-bg); }
+      .q-card.written-card { border-left: 3px solid var(--written); }
+
+      .q-header {
+        display: flex; justify-content: space-between; align-items: flex-start;
+        margin-bottom: .75rem;
+      }
+      .q-num {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .75rem;
+        color: var(--text-dim);
+      }
+      .q-marks {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: .7rem;
+        background: var(--surface2);
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: var(--text-dim);
+      }
+      .q-text {
+        font-weight: 400;
+        font-size: .95rem;
+        margin-bottom: 1rem;
+        color: var(--text);
+      }
+
+      .options { display: flex; flex-direction: column; gap: .5rem; }
+      .option-btn {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: .65rem 1rem;
+        color: var(--text);
+        font-family: 'Outfit', sans-serif;
+        font-size: .9rem;
+        cursor: pointer;
+        text-align: left;
+        transition: all .15s;
+        display: flex; align-items: flex-start; gap: .6rem;
+      }
+      .option-btn:hover:not(.disabled) {
+        border-color: var(--accent);
+        background: var(--accent-glow);
+      }
+      .option-btn .opt-letter {
+        font-family: 'JetBrains Mono', monospace;
+        font-weight: 700;
+        font-size: .8rem;
+        min-width: 1.4rem;
+        color: var(--accent);
+      }
+      .option-btn.disabled { cursor: default; opacity: .7; }
+      .option-btn.selected-correct {
+        border-color: var(--correct);
+        background: var(--correct-bg);
+        opacity: 1 !important;
+      }
+      .option-btn.selected-correct .opt-letter { color: var(--correct); }
+      .option-btn.selected-wrong {
+        border-color: var(--wrong);
+        background: var(--wrong-bg);
+        opacity: 1 !important;
+      }
+      .option-btn.selected-wrong .opt-letter { color: var(--wrong); }
+      .option-btn.show-correct {
+        border-color: var(--correct);
+        opacity: 1 !important;
+      }
+
+      .feedback {
+        margin-top: .75rem;
+        font-size: .85rem;
+        font-family: 'JetBrains Mono', monospace;
+        padding: .5rem .75rem;
+        border-radius: 6px;
+        display: none;
+      }
+      .feedback.correct { display: block; color: var(--correct); background: var(--correct-bg); }
+      .feedback.wrong { display: block; color: var(--wrong); background: var(--wrong-bg); }
+
+      textarea.written-input {
+        width: 100%;
+        min-height: 100px;
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: .75rem;
+        color: var(--text);
+        font-family: 'Outfit', sans-serif;
+        font-size: .9rem;
+        resize: vertical;
+      }
+      textarea.written-input:focus { outline: none; border-color: var(--written); }
+
+      .model-toggle {
+        margin-top: 1rem;
+        background: var(--surface2);
+        border: 1px solid rgba(251,191,36,0.25);
+        border-radius: 8px;
+        padding: .6rem 1rem;
+        color: var(--written);
+        font-family: 'Outfit', sans-serif;
+        font-size: .85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all .15s;
+        display: inline-flex; align-items: center; gap: .4rem;
+      }
+      .model-toggle:hover { background: var(--written-bg); border-color: var(--written); }
+      .model-toggle .arrow { transition: transform .2s; display: inline-block; }
+      .model-toggle.open .arrow { transform: rotate(90deg); }
+
+      .model-answer {
+        display: none;
+        margin-top: .75rem;
+        padding: 1rem 1.25rem;
+        background: var(--written-bg);
+        border: 1px solid rgba(251,191,36,0.15);
+        border-radius: 8px;
+        font-size: .88rem;
+        line-height: 1.8;
+        color: var(--text);
+      }
+      .model-answer.visible { display: block; }
+      .model-answer p { margin-bottom: .6rem; }
+      .model-answer p:last-child { margin-bottom: 0; }
+      .model-answer strong { color: var(--written); font-weight: 600; }
+
+      @media (max-width: 600px) {
+        .container { padding: 1rem 1rem 4rem; }
+        header h1 { font-size: 1.5rem; }
+        .q-card { padding: 1rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="score-bar">
+      <span>Score: <span id="score-display">0 / 0</span></span>
+      <span>Answered: <span id="progress-display">0 / 50</span></span>
+    </div>
+
+    <div class="container">
+      <header>
+        <h1>Database Technologies — Units 3 & 4</h1>
+        <p>
+          50 MCQs + 8 Written · Heavy on U3 distributed/semi-join numericals ·
+          Stream Processing · Kafka
+        </p>
+      </header>
+
+      <!-- ===== SECTION: PARALLEL DATABASES ===== -->
+      <div class="section-title">
+        Parallel Databases <span class="badge">Unit 3</span>
+      </div>
+
+      <div class="q-card" id="q1">
+        <div class="q-header">
+          <span class="q-num">Q1</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          In a shared-memory architecture, large machines are typically of the
+          _____ type.
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(1,'a','b')">
+            <span class="opt-letter">A</span>UMA
+          </button>
+          <button class="option-btn" onclick="check(1,'b','b')">
+            <span class="opt-letter">B</span>NUMA
+          </button>
+          <button class="option-btn" onclick="check(1,'c','b')">
+            <span class="opt-letter">C</span>SMP
+          </button>
+          <button class="option-btn" onclick="check(1,'d','b')">
+            <span class="opt-letter">D</span>MPP
+          </button>
+        </div>
+        <div class="feedback" id="fb1"></div>
+      </div>
+
+      <div class="q-card" id="q2">
+        <div class="q-header">
+          <span class="q-num">Q2</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Which parallel architecture is the most commonly used for database
+          systems?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(2,'a','c')">
+            <span class="opt-letter">A</span>Shared-memory
+          </button>
+          <button class="option-btn" onclick="check(2,'b','c')">
+            <span class="opt-letter">B</span>Shared-disk
+          </button>
+          <button class="option-btn" onclick="check(2,'c','c')">
+            <span class="opt-letter">C</span>Shared-nothing
+          </button>
+          <button class="option-btn" onclick="check(2,'d','c')">
+            <span class="opt-letter">D</span>Hybrid
+          </button>
+        </div>
+        <div class="feedback" id="fb2"></div>
+      </div>
+
+      <div class="q-card" id="q3">
+        <div class="q-header">
+          <span class="q-num">Q3</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          In a shared-disk architecture, which two forms of storage are commonly
+          used?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(3,'a','d')">
+            <span class="opt-letter">A</span>HDFS and GFS
+          </button>
+          <button class="option-btn" onclick="check(3,'b','d')">
+            <span class="opt-letter">B</span>RAID and LVM
+          </button>
+          <button class="option-btn" onclick="check(3,'c','d')">
+            <span class="opt-letter">C</span>SSD and HDD
+          </button>
+          <button class="option-btn" onclick="check(3,'d','d')">
+            <span class="opt-letter">D</span>NAS and SAN
+          </button>
+        </div>
+        <div class="feedback" id="fb3"></div>
+      </div>
+
+      <div class="q-card" id="q4">
+        <div class="q-header">
+          <span class="q-num">Q4</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Intra-query parallelism is primarily used to reduce:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(4,'a','a')">
+            <span class="opt-letter">A</span>Response time of a single complex
+            query
+          </button>
+          <button class="option-btn" onclick="check(4,'b','a')">
+            <span class="opt-letter">B</span>Overall system throughput
+          </button>
+          <button class="option-btn" onclick="check(4,'c','a')">
+            <span class="opt-letter">C</span>Disk storage requirements
+          </button>
+          <button class="option-btn" onclick="check(4,'d','a')">
+            <span class="opt-letter">D</span>Network bandwidth usage
+          </button>
+        </div>
+        <div class="feedback" id="fb4"></div>
+      </div>
+
+      <div class="q-card" id="q5">
+        <div class="q-header">
+          <span class="q-num">Q5</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Inter-query parallelism targets which type of workload?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(5,'a','b')">
+            <span class="opt-letter">A</span>OLAP
+          </button>
+          <button class="option-btn" onclick="check(5,'b','b')">
+            <span class="opt-letter">B</span>OLTP
+          </button>
+          <button class="option-btn" onclick="check(5,'c','b')">
+            <span class="opt-letter">C</span>Data mining
+          </button>
+          <button class="option-btn" onclick="check(5,'d','b')">
+            <span class="opt-letter">D</span>ETL
+          </button>
+        </div>
+        <div class="feedback" id="fb5"></div>
+      </div>
+
+      <div class="q-card" id="q6">
+        <div class="q-header">
+          <span class="q-num">Q6</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          In a shared-nothing machine with p processors, a unary operation
+          σ<sub>C</sub>(R) on an evenly distributed relation R can be completed
+          in what fraction of the uniprocessor time?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(6,'a','b')">
+            <span class="opt-letter">A</span>1/(p-1)
+          </button>
+          <button class="option-btn" onclick="check(6,'b','b')">
+            <span class="opt-letter">B</span>1/p
+          </button>
+          <button class="option-btn" onclick="check(6,'c','b')">
+            <span class="opt-letter">C</span>p
+          </button>
+          <button class="option-btn" onclick="check(6,'d','b')">
+            <span class="opt-letter">D</span>log(p)
+          </button>
+        </div>
+        <div class="feedback" id="fb6"></div>
+      </div>
+
+      <div class="q-card" id="q7">
+        <div class="q-header">
+          <span class="q-num">Q7</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          For a parallel hash-join of R ⋈ S with p processors, how many blocks
+          of data must be shipped across the network?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(7,'a','c')">
+            <span class="opt-letter">A</span>B(R) + B(S)
+          </button>
+          <button class="option-btn" onclick="check(7,'b','c')">
+            <span class="opt-letter">B</span>(B(R) + B(S)) / p
+          </button>
+          <button class="option-btn" onclick="check(7,'c','c')">
+            <span class="opt-letter">C</span>((p−1)/p) × (B(R) + B(S))
+          </button>
+          <button class="option-btn" onclick="check(7,'d','c')">
+            <span class="opt-letter">D</span>p × (B(R) + B(S))
+          </button>
+        </div>
+        <div class="feedback" id="fb7"></div>
+      </div>
+
+      <div class="q-card" id="q8">
+        <div class="q-header">
+          <span class="q-num">Q8</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          In the parallel join example with B(R)=1000, B(S)=500, p=10, what is
+          the total disk I/O cost of the join?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(8,'a','b')">
+            <span class="opt-letter">A</span>150
+          </button>
+          <button class="option-btn" onclick="check(8,'b','b')">
+            <span class="opt-letter">B</span>1500
+          </button>
+          <button class="option-btn" onclick="check(8,'c','b')">
+            <span class="opt-letter">C</span>1350
+          </button>
+          <button class="option-btn" onclick="check(8,'d','b')">
+            <span class="opt-letter">D</span>7500
+          </button>
+        </div>
+        <div class="feedback" id="fb8"></div>
+      </div>
+
+      <div class="q-card" id="q9">
+        <div class="q-header">
+          <span class="q-num">Q9</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          In a parallel hash-join, which relation's tuples are shipped first and
+          stored in memory at each processor?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(9,'a','a')">
+            <span class="opt-letter">A</span>The smaller relation (S)
+          </button>
+          <button class="option-btn" onclick="check(9,'b','a')">
+            <span class="opt-letter">B</span>The larger relation (R)
+          </button>
+          <button class="option-btn" onclick="check(9,'c','a')">
+            <span class="opt-letter">C</span>Both simultaneously
+          </button>
+          <button class="option-btn" onclick="check(9,'d','a')">
+            <span class="opt-letter">D</span>Neither — both go to disk first
+          </button>
+        </div>
+        <div class="feedback" id="fb9"></div>
+      </div>
+
+      <div class="q-card" id="q10">
+        <div class="q-header">
+          <span class="q-num">Q10</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          For a parallel join of R ⋈ S with B(R)=1000, B(S)=500, if we use p=5
+          processors instead of 10, how many blocks are shipped across the
+          internal network?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(10,'a','b')">
+            <span class="opt-letter">A</span>1500
+          </button>
+          <button class="option-btn" onclick="check(10,'b','b')">
+            <span class="opt-letter">B</span>1200
+          </button>
+          <button class="option-btn" onclick="check(10,'c','b')">
+            <span class="opt-letter">C</span>1350
+          </button>
+          <button class="option-btn" onclick="check(10,'d','b')">
+            <span class="opt-letter">D</span>750
+          </button>
+        </div>
+        <div class="feedback" id="fb10"></div>
+      </div>
+
+      <!-- ===== SECTION: MAPREDUCE + TRICKY NUMERICALS ===== -->
+      <div class="section-title">
+        MapReduce & More Parallel/Join Numericals
+        <span class="badge">Unit 3</span>
+      </div>
+
+      <div class="q-card" id="q11">
+        <div class="q-header">
+          <span class="q-num">Q11</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          In MapReduce, the three processing phases in order are:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(11,'a','c')">
+            <span class="opt-letter">A</span>Reduce → Shuffle → Map
+          </button>
+          <button class="option-btn" onclick="check(11,'b','c')">
+            <span class="opt-letter">B</span>Shuffle → Map → Reduce
+          </button>
+          <button class="option-btn" onclick="check(11,'c','c')">
+            <span class="opt-letter">C</span>Map → Shuffle → Reduce
+          </button>
+          <button class="option-btn" onclick="check(11,'d','c')">
+            <span class="opt-letter">D</span>Map → Reduce → Shuffle
+          </button>
+        </div>
+        <div class="feedback" id="fb11"></div>
+      </div>
+
+      <div class="q-card" id="q12">
+        <div class="q-header">
+          <span class="q-num">Q12</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          In Hadoop's architecture, which node manages metadata about file
+          locations and replicas?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(12,'a','a')">
+            <span class="opt-letter">A</span>NameNode
+          </button>
+          <button class="option-btn" onclick="check(12,'b','a')">
+            <span class="opt-letter">B</span>DataNode
+          </button>
+          <button class="option-btn" onclick="check(12,'c','a')">
+            <span class="opt-letter">C</span>TaskTracker
+          </button>
+          <button class="option-btn" onclick="check(12,'d','a')">
+            <span class="opt-letter">D</span>JobTracker
+          </button>
+        </div>
+        <div class="feedback" id="fb12"></div>
+      </div>
+
+      <div class="q-card" id="q13">
+        <div class="q-header">
+          <span class="q-num">Q13</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          EMPLOYEE-DEPARTMENT semi-join: if the Dno field were 8 bytes (instead
+          of 4), the projected join attributes F =
+          π<sub>Dnumber</sub>(DEPARTMENT) transferred to site 1 would be:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(13,'a','b')">
+            <span class="opt-letter">A</span>400 bytes
+          </button>
+          <button class="option-btn" onclick="check(13,'b','b')">
+            <span class="opt-letter">B</span>800 bytes
+          </button>
+          <button class="option-btn" onclick="check(13,'c','b')">
+            <span class="opt-letter">C</span>1600 bytes
+          </button>
+          <button class="option-btn" onclick="check(13,'d','b')">
+            <span class="opt-letter">D</span>3500 bytes
+          </button>
+        </div>
+        <div class="feedback" id="fb13"></div>
+      </div>
+
+      <div class="q-card" id="q14">
+        <div class="q-header">
+          <span class="q-num">Q14</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          Relation R (200 bytes × 5000 rows) at site 1, S (50 bytes × 200 rows)
+          at site 2, result at site 3. Result = 5000 rows × 30 bytes. What is
+          the minimum transfer if we send the smaller relation to the larger,
+          join there, then ship result?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(14,'a','a')">
+            <span class="opt-letter">A</span>160,000 bytes
+          </button>
+          <button class="option-btn" onclick="check(14,'b','a')">
+            <span class="opt-letter">B</span>1,010,000 bytes
+          </button>
+          <button class="option-btn" onclick="check(14,'c','a')">
+            <span class="opt-letter">C</span>1,150,000 bytes
+          </button>
+          <button class="option-btn" onclick="check(14,'d','a')">
+            <span class="opt-letter">D</span>150,000 bytes
+          </button>
+        </div>
+        <div class="feedback" id="fb14"></div>
+      </div>
+
+      <div class="q-card" id="q15">
+        <div class="q-header">
+          <span class="q-num">Q15</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          In the parallel join example (B(R)=1000, B(S)=500, M=101, p=10), each
+          processor receives ~50 blocks of S. The one-pass join works because:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(15,'a','c')">
+            <span class="opt-letter">A</span>R fits entirely in memory at each
+            processor
+          </button>
+          <button class="option-btn" onclick="check(15,'b','c')">
+            <span class="opt-letter">B</span>The hash function guarantees zero
+            collisions
+          </button>
+          <button class="option-btn" onclick="check(15,'c','c')">
+            <span class="opt-letter">C</span>B(S)/p = 50 fits within the M=101
+            available memory buffers
+          </button>
+          <button class="option-btn" onclick="check(15,'d','c')">
+            <span class="opt-letter">D</span>Processors share memory in a NUMA
+            architecture
+          </button>
+        </div>
+        <div class="feedback" id="fb15"></div>
+      </div>
+
+      <!-- ===== SECTION: DISTRIBUTED DATABASES ===== -->
+      <div class="section-title">
+        Distributed Databases <span class="badge">Unit 3</span>
+      </div>
+
+      <div class="q-card" id="q16">
+        <div class="q-header">
+          <span class="q-num">Q16</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">In a homogeneous distributed database:</div>
+        <div class="options">
+          <button class="option-btn" onclick="check(16,'a','a')">
+            <span class="opt-letter">A</span>All sites have identical software
+            and cooperate in processing
+          </button>
+          <button class="option-btn" onclick="check(16,'b','a')">
+            <span class="opt-letter">B</span>Different sites use different
+            schemas
+          </button>
+          <button class="option-btn" onclick="check(16,'c','a')">
+            <span class="opt-letter">C</span>Sites may not be aware of each
+            other
+          </button>
+          <button class="option-btn" onclick="check(16,'d','a')">
+            <span class="opt-letter">D</span>Each site uses a different DBMS
+          </button>
+        </div>
+        <div class="feedback" id="fb16"></div>
+      </div>
+
+      <div class="q-card" id="q17">
+        <div class="q-header">
+          <span class="q-num">Q17</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Which type of fragmentation selects a subset of rows from a relation?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(17,'a','b')">
+            <span class="opt-letter">A</span>Vertical
+          </button>
+          <button class="option-btn" onclick="check(17,'b','b')">
+            <span class="opt-letter">B</span>Horizontal
+          </button>
+          <button class="option-btn" onclick="check(17,'c','b')">
+            <span class="opt-letter">C</span>Mixed
+          </button>
+          <button class="option-btn" onclick="check(17,'d','b')">
+            <span class="opt-letter">D</span>Derived
+          </button>
+        </div>
+        <div class="feedback" id="fb17"></div>
+      </div>
+
+      <div class="q-card" id="q18">
+        <div class="q-header">
+          <span class="q-num">Q18</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Which transparency type makes users unaware that data is replicated
+          across sites?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(18,'a','c')">
+            <span class="opt-letter">A</span>Location transparency
+          </button>
+          <button class="option-btn" onclick="check(18,'b','c')">
+            <span class="opt-letter">B</span>Fragmentation transparency
+          </button>
+          <button class="option-btn" onclick="check(18,'c','c')">
+            <span class="opt-letter">C</span>Replication transparency
+          </button>
+          <button class="option-btn" onclick="check(18,'d','c')">
+            <span class="opt-letter">D</span>Network transparency
+          </button>
+        </div>
+        <div class="feedback" id="fb18"></div>
+      </div>
+
+      <div class="q-card" id="q19">
+        <div class="q-header">
+          <span class="q-num">Q19</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">Snapshot replication is best used when:</div>
+        <div class="options">
+          <button class="option-btn" onclick="check(19,'a','b')">
+            <span class="opt-letter">A</span>Data changes very frequently
+          </button>
+          <button class="option-btn" onclick="check(19,'b','b')">
+            <span class="opt-letter">B</span>Data changes are infrequent
+          </button>
+          <button class="option-btn" onclick="check(19,'c','b')">
+            <span class="opt-letter">C</span>Bidirectional updates are needed
+          </button>
+          <button class="option-btn" onclick="check(19,'d','b')">
+            <span class="opt-letter">D</span>Real-time consistency is critical
+          </button>
+        </div>
+        <div class="feedback" id="fb19"></div>
+      </div>
+
+      <div class="q-card" id="q20">
+        <div class="q-header">
+          <span class="q-num">Q20</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Which replication type allows both publisher and subscriber to
+          independently make changes?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(20,'a','c')">
+            <span class="opt-letter">A</span>Transactional
+          </button>
+          <button class="option-btn" onclick="check(20,'b','c')">
+            <span class="opt-letter">B</span>Snapshot
+          </button>
+          <button class="option-btn" onclick="check(20,'c','c')">
+            <span class="opt-letter">C</span>Merge
+          </button>
+          <button class="option-btn" onclick="check(20,'d','c')">
+            <span class="opt-letter">D</span>Synchronous
+          </button>
+        </div>
+        <div class="feedback" id="fb20"></div>
+      </div>
+
+      <!-- ===== SECTION: DISTRIBUTED QUERY PROCESSING ===== -->
+      <div class="section-title">
+        Distributed Query Processing & Semi-Join
+        <span class="badge">Unit 3</span>
+      </div>
+
+      <div class="q-card" id="q21">
+        <div class="q-header">
+          <span class="q-num">Q21</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          In the distributed join example, EMPLOYEE (100 bytes × 10,000 rows) at
+          site 1, DEPARTMENT (35 bytes × 100 rows) at site 2, query at site 3.
+          Which option transfers the fewest bytes?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(21,'a','c')">
+            <span class="opt-letter">A</span>Send both to site 3 (1,003,500
+            bytes)
+          </button>
+          <button class="option-btn" onclick="check(21,'b','c')">
+            <span class="opt-letter">B</span>Send EMPLOYEE to site 2, result to
+            site 3 (1,400,000 bytes)
+          </button>
+          <button class="option-btn" onclick="check(21,'c','c')">
+            <span class="opt-letter">C</span>Send DEPARTMENT to site 1, result
+            to site 3 (403,500 bytes)
+          </button>
+          <button class="option-btn" onclick="check(21,'d','c')">
+            <span class="opt-letter">D</span>Send result only to site 3 (400,000
+            bytes)
+          </button>
+        </div>
+        <div class="feedback" id="fb21"></div>
+      </div>
+
+      <div class="q-card" id="q22">
+        <div class="q-header">
+          <span class="q-num">Q22</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          In the semi-join example for the same EMPLOYEE-DEPARTMENT query, the
+          total bytes transferred are:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(22,'a','b')">
+            <span class="opt-letter">A</span>403,500
+          </button>
+          <button class="option-btn" onclick="check(22,'b','b')">
+            <span class="opt-letter">B</span>340,400
+          </button>
+          <button class="option-btn" onclick="check(22,'c','b')">
+            <span class="opt-letter">C</span>1,003,500
+          </button>
+          <button class="option-btn" onclick="check(22,'d','b')">
+            <span class="opt-letter">D</span>400,000
+          </button>
+        </div>
+        <div class="feedback" id="fb22"></div>
+      </div>
+
+      <div class="q-card" id="q23">
+        <div class="q-header">
+          <span class="q-num">Q23</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          The semi-join technique reduces data transfer by:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(23,'a','a')">
+            <span class="opt-letter">A</span>Projecting join attributes and
+            sending only relevant tuples
+          </button>
+          <button class="option-btn" onclick="check(23,'b','a')">
+            <span class="opt-letter">B</span>Compressing the entire relation
+            before transfer
+          </button>
+          <button class="option-btn" onclick="check(23,'c','a')">
+            <span class="opt-letter">C</span>Using indexes to skip non-matching
+            tuples
+          </button>
+          <button class="option-btn" onclick="check(23,'d','a')">
+            <span class="opt-letter">D</span>Caching frequently accessed tuples
+            locally
+          </button>
+        </div>
+        <div class="feedback" id="fb23"></div>
+      </div>
+
+      <div class="q-card" id="q24">
+        <div class="q-header">
+          <span class="q-num">Q24</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Which stage of distributed query processing maps the global query to
+          queries on individual fragments?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(24,'a','b')">
+            <span class="opt-letter">A</span>Query Mapping
+          </button>
+          <button class="option-btn" onclick="check(24,'b','b')">
+            <span class="opt-letter">B</span>Localization
+          </button>
+          <button class="option-btn" onclick="check(24,'c','b')">
+            <span class="opt-letter">C</span>Global Query Optimization
+          </button>
+          <button class="option-btn" onclick="check(24,'d','b')">
+            <span class="opt-letter">D</span>Local Query Optimization
+          </button>
+        </div>
+        <div class="feedback" id="fb24"></div>
+      </div>
+
+      <!-- ===== SECTION: DISTRIBUTED TRANSACTIONS & LOCKING ===== -->
+      <div class="section-title">
+        Distributed Transactions & Locking <span class="badge">Unit 3</span>
+      </div>
+
+      <div class="q-card" id="q25">
+        <div class="q-header">
+          <span class="q-num">Q25</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          In 2PC Phase 1, when a site wants to commit its component, it enters a
+          state called:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(25,'a','c')">
+            <span class="opt-letter">A</span>Committed
+          </button>
+          <button class="option-btn" onclick="check(25,'b','c')">
+            <span class="opt-letter">B</span>Ready
+          </button>
+          <button class="option-btn" onclick="check(25,'c','c')">
+            <span class="opt-letter">C</span>Pre-committed
+          </button>
+          <button class="option-btn" onclick="check(25,'d','c')">
+            <span class="opt-letter">D</span>Prepared
+          </button>
+        </div>
+        <div class="feedback" id="fb25"></div>
+      </div>
+
+      <div class="q-card" id="q26">
+        <div class="q-header">
+          <span class="q-num">Q26</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          In 2PC, the coordinator decides to commit T only when:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(26,'a','a')">
+            <span class="opt-letter">A</span>It has received "ready T" from ALL
+            components
+          </button>
+          <button class="option-btn" onclick="check(26,'b','a')">
+            <span class="opt-letter">B</span>It has received "ready T" from a
+            majority of components
+          </button>
+          <button class="option-btn" onclick="check(26,'c','a')">
+            <span class="opt-letter">C</span>At least one component sends "ready
+            T"
+          </button>
+          <button class="option-btn" onclick="check(26,'d','a')">
+            <span class="opt-letter">D</span>A timeout occurs without any "don't
+            commit" message
+          </button>
+        </div>
+        <div class="feedback" id="fb26"></div>
+      </div>
+
+      <div class="q-card" id="q27">
+        <div class="q-header">
+          <span class="q-num">Q27</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          In 3PC, Phase 2 of 2PC is split into two phases. Phase 2 of 3PC
+          records the coordinator's decision at:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(27,'a','c')">
+            <span class="opt-letter">A</span>Only the coordinator site
+          </button>
+          <button class="option-btn" onclick="check(27,'b','c')">
+            <span class="opt-letter">B</span>All sites
+          </button>
+          <button class="option-btn" onclick="check(27,'c','c')">
+            <span class="opt-letter">C</span>At least K sites
+          </button>
+          <button class="option-btn" onclick="check(27,'d','c')">
+            <span class="opt-letter">D</span>A randomly selected site
+          </button>
+        </div>
+        <div class="feedback" id="fb27"></div>
+      </div>
+
+      <div class="q-card" id="q28">
+        <div class="q-header">
+          <span class="q-num">Q28</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          In centralized locking, how many messages are typically needed per
+          lock operation?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(28,'a','b')">
+            <span class="opt-letter">A</span>2 (request, grant)
+          </button>
+          <button class="option-btn" onclick="check(28,'b','b')">
+            <span class="opt-letter">B</span>3 (request, grant, release)
+          </button>
+          <button class="option-btn" onclick="check(28,'c','b')">
+            <span class="opt-letter">C</span>1 (broadcast)
+          </button>
+          <button class="option-btn" onclick="check(28,'d','b')">
+            <span class="opt-letter">D</span>4 (request, grant, ack, release)
+          </button>
+        </div>
+        <div class="feedback" id="fb28"></div>
+      </div>
+
+      <div class="q-card" id="q29">
+        <div class="q-header">
+          <span class="q-num">Q29</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Primary-copy locking improves on centralized locking by:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(29,'a','b')">
+            <span class="opt-letter">A</span>Eliminating the need for locks
+            entirely
+          </button>
+          <button class="option-btn" onclick="check(29,'b','b')">
+            <span class="opt-letter">B</span>Distributing lock responsibility
+            across sites while maintaining one lock owner per element
+          </button>
+          <button class="option-btn" onclick="check(29,'c','b')">
+            <span class="opt-letter">C</span>Requiring all copies to be locked
+            simultaneously
+          </button>
+          <button class="option-btn" onclick="check(29,'d','b')">
+            <span class="opt-letter">D</span>Using optimistic concurrency
+            control instead
+          </button>
+        </div>
+        <div class="feedback" id="fb29"></div>
+      </div>
+
+      <div class="q-card" id="q30">
+        <div class="q-header">
+          <span class="q-num">Q30</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          In majority locking, a transaction obtains a global lock by:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(30,'a','c')">
+            <span class="opt-letter">A</span>Locking only the primary copy
+          </button>
+          <button class="option-btn" onclick="check(30,'b','c')">
+            <span class="opt-letter">B</span>Locking all copies
+          </button>
+          <button class="option-btn" onclick="check(30,'c','c')">
+            <span class="opt-letter">C</span>Broadcasting a request and
+            obtaining local locks from a majority of sites
+          </button>
+          <button class="option-btn" onclick="check(30,'d','c')">
+            <span class="opt-letter">D</span>Using timestamp ordering
+          </button>
+        </div>
+        <div class="feedback" id="fb30"></div>
+      </div>
+
+      <!-- ===== SECTION: P2P & CHORD ===== -->
+      <div class="section-title">
+        Peer-to-Peer & Chord Circles <span class="badge">Unit 3</span>
+      </div>
+
+      <div class="q-card" id="q31">
+        <div class="q-header">
+          <span class="q-num">Q31</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Which of the following is NOT a characteristic of a peer-to-peer
+          network?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(31,'a','d')">
+            <span class="opt-letter">A</span>Autonomous — nodes join/leave
+            freely
+          </button>
+          <button class="option-btn" onclick="check(31,'b','d')">
+            <span class="opt-letter">B</span>Loosely coupled via a
+            general-purpose network
+          </button>
+          <button class="option-btn" onclick="check(31,'c','d')">
+            <span class="opt-letter">C</span>Equal in functionality with no
+            leader
+          </button>
+          <button class="option-btn" onclick="check(31,'d','d')">
+            <span class="opt-letter">D</span>Centralized index for all data
+            locations
+          </button>
+        </div>
+        <div class="feedback" id="fb31"></div>
+      </div>
+
+      <div class="q-card" id="q32">
+        <div class="q-header">
+          <span class="q-num">Q32</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          In a Chord circle with m=6, how many positions exist around the
+          circle?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(32,'a','c')">
+            <span class="opt-letter">A</span>6
+          </button>
+          <button class="option-btn" onclick="check(32,'b','c')">
+            <span class="opt-letter">B</span>32
+          </button>
+          <button class="option-btn" onclick="check(32,'c','c')">
+            <span class="opt-letter">C</span>64
+          </button>
+          <button class="option-btn" onclick="check(32,'d','c')">
+            <span class="opt-letter">D</span>128
+          </button>
+        </div>
+        <div class="feedback" id="fb32"></div>
+      </div>
+
+      <div class="q-card" id="q33">
+        <div class="q-header">
+          <span class="q-num">Q33</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          In the Chord circle example, a key-value pair (K,V) with 42 < h(K) ≤
+          48 is stored at which node?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(33,'a','b')">
+            <span class="opt-letter">A</span>N<sub>42</sub>
+          </button>
+          <button class="option-btn" onclick="check(33,'b','b')">
+            <span class="opt-letter">B</span>N<sub>48</sub>
+          </button>
+          <button class="option-btn" onclick="check(33,'c','b')">
+            <span class="opt-letter">C</span>N<sub>51</sub>
+          </button>
+          <button class="option-btn" onclick="check(33,'d','b')">
+            <span class="opt-letter">D</span>N<sub>56</sub>
+          </button>
+        </div>
+        <div class="feedback" id="fb33"></div>
+      </div>
+
+      <div class="q-card" id="q34">
+        <div class="q-header">
+          <span class="q-num">Q34</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          The maximum number of messages needed for a lookup using finger tables
+          in a Chord circle is:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(34,'a','c')">
+            <span class="opt-letter">A</span>log(m)
+          </button>
+          <button class="option-btn" onclick="check(34,'b','c')">
+            <span class="opt-letter">B</span>m²
+          </button>
+          <button class="option-btn" onclick="check(34,'c','c')">
+            <span class="opt-letter">C</span>m + 1
+          </button>
+          <button class="option-btn" onclick="check(34,'d','c')">
+            <span class="opt-letter">D</span>2<sup>m</sup>
+          </button>
+        </div>
+        <div class="feedback" id="fb34"></div>
+      </div>
+
+      <div class="q-card" id="q35">
+        <div class="q-header">
+          <span class="q-num">Q35</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          When a node leaves a Chord circle gracefully, it transfers its data to
+          its:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(35,'a','b')">
+            <span class="opt-letter">A</span>Predecessor
+          </button>
+          <button class="option-btn" onclick="check(35,'b','b')">
+            <span class="opt-letter">B</span>Successor
+          </button>
+          <button class="option-btn" onclick="check(35,'c','b')">
+            <span class="opt-letter">C</span>Nearest finger table entry
+          </button>
+          <button class="option-btn" onclick="check(35,'d','b')">
+            <span class="opt-letter">D</span>A random node
+          </button>
+        </div>
+        <div class="feedback" id="fb35"></div>
+      </div>
+
+      <!-- ===== SECTION: STREAM PROCESSING ===== -->
+      <div class="section-title">
+        Stream Processing <span class="badge">Unit 4</span>
+      </div>
+
+      <div class="q-card" id="q36">
+        <div class="q-header">
+          <span class="q-num">Q36</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Stream processing deals with _____ datasets while batch processing
+          deals with _____ datasets.
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(36,'a','a')">
+            <span class="opt-letter">A</span>Unbounded; Bounded
+          </button>
+          <button class="option-btn" onclick="check(36,'b','a')">
+            <span class="opt-letter">B</span>Bounded; Unbounded
+          </button>
+          <button class="option-btn" onclick="check(36,'c','a')">
+            <span class="opt-letter">C</span>Structured; Unstructured
+          </button>
+          <button class="option-btn" onclick="check(36,'d','a')">
+            <span class="opt-letter">D</span>Static; Dynamic
+          </button>
+        </div>
+        <div class="feedback" id="fb36"></div>
+      </div>
+
+      <div class="q-card" id="q37">
+        <div class="q-header">
+          <span class="q-num">Q37</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Non-overlapping, consecutive, fixed-period time windows are called:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(37,'a','b')">
+            <span class="opt-letter">A</span>Sliding windows
+          </button>
+          <button class="option-btn" onclick="check(37,'b','b')">
+            <span class="opt-letter">B</span>Tumbling windows
+          </button>
+          <button class="option-btn" onclick="check(37,'c','b')">
+            <span class="opt-letter">C</span>Session windows
+          </button>
+          <button class="option-btn" onclick="check(37,'d','b')">
+            <span class="opt-letter">D</span>Hopping windows
+          </button>
+        </div>
+        <div class="feedback" id="fb37"></div>
+      </div>
+
+      <div class="q-card" id="q38">
+        <div class="q-header">
+          <span class="q-num">Q38</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">In stream processing, a watermark defines:</div>
+        <div class="options">
+          <button class="option-btn" onclick="check(38,'a','c')">
+            <span class="opt-letter">A</span>The maximum processing time allowed
+          </button>
+          <button class="option-btn" onclick="check(38,'b','c')">
+            <span class="opt-letter">B</span>The maximum number of events per
+            window
+          </button>
+          <button class="option-btn" onclick="check(38,'c','c')">
+            <span class="opt-letter">C</span>The oldest event timestamp that
+            will be accepted
+          </button>
+          <button class="option-btn" onclick="check(38,'d','c')">
+            <span class="opt-letter">D</span>The rate at which events are
+            consumed
+          </button>
+        </div>
+        <div class="feedback" id="fb38"></div>
+      </div>
+
+      <div class="q-card" id="q39">
+        <div class="q-header">
+          <span class="q-num">Q39</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Tumbling windows are a special case of sliding windows where:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(39,'a','a')">
+            <span class="opt-letter">A</span>Reporting frequency equals window
+            size
+          </button>
+          <button class="option-btn" onclick="check(39,'b','a')">
+            <span class="opt-letter">B</span>Window size is always 1 second
+          </button>
+          <button class="option-btn" onclick="check(39,'c','a')">
+            <span class="opt-letter">C</span>Windows overlap by 50%
+          </button>
+          <button class="option-btn" onclick="check(39,'d','a')">
+            <span class="opt-letter">D</span>There is no reporting frequency
+          </button>
+        </div>
+        <div class="feedback" id="fb39"></div>
+      </div>
+
+      <!-- ===== SECTION: LAMBDA & KAPPA ===== -->
+      <div class="section-title">
+        Lambda & Kappa Architecture <span class="badge">Unit 4</span>
+      </div>
+
+      <div class="q-card" id="q40">
+        <div class="q-header">
+          <span class="q-num">Q40</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Lambda architecture uses both _____ and _____ processing layers.
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(40,'a','c')">
+            <span class="opt-letter">A</span>Online and Offline
+          </button>
+          <button class="option-btn" onclick="check(40,'b','c')">
+            <span class="opt-letter">B</span>Query and Transaction
+          </button>
+          <button class="option-btn" onclick="check(40,'c','c')">
+            <span class="opt-letter">C</span>Batch and Stream
+          </button>
+          <button class="option-btn" onclick="check(40,'d','c')">
+            <span class="opt-letter">D</span>Map and Reduce
+          </button>
+        </div>
+        <div class="feedback" id="fb40"></div>
+      </div>
+
+      <div class="q-card" id="q41">
+        <div class="q-header">
+          <span class="q-num">Q41</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Kappa architecture differs from Lambda primarily because it:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(41,'a','b')">
+            <span class="opt-letter">A</span>Adds an additional batch processing
+            layer
+          </button>
+          <button class="option-btn" onclick="check(41,'b','b')">
+            <span class="opt-letter">B</span>Eliminates the batch layer and
+            treats all data as a stream
+          </button>
+          <button class="option-btn" onclick="check(41,'c','b')">
+            <span class="opt-letter">C</span>Uses only disk-based processing
+          </button>
+          <button class="option-btn" onclick="check(41,'d','b')">
+            <span class="opt-letter">D</span>Requires three separate codebases
+          </button>
+        </div>
+        <div class="feedback" id="fb41"></div>
+      </div>
+
+      <div class="q-card" id="q42">
+        <div class="q-header">
+          <span class="q-num">Q42</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">A major drawback of Lambda architecture is:</div>
+        <div class="options">
+          <button class="option-btn" onclick="check(42,'a','b')">
+            <span class="opt-letter">A</span>It cannot handle real-time data
+          </button>
+          <button class="option-btn" onclick="check(42,'b','b')">
+            <span class="opt-letter">B</span>Maintaining two separate codebases
+            for batch and streaming layers
+          </button>
+          <button class="option-btn" onclick="check(42,'c','b')">
+            <span class="opt-letter">C</span>It does not support fault tolerance
+          </button>
+          <button class="option-btn" onclick="check(42,'d','b')">
+            <span class="opt-letter">D</span>It cannot scale horizontally
+          </button>
+        </div>
+        <div class="feedback" id="fb42"></div>
+      </div>
+
+      <!-- ===== SECTION: SPARK & KAFKA ===== -->
+      <div class="section-title">
+        Spark Streaming & Kafka <span class="badge">Unit 4</span>
+      </div>
+
+      <div class="q-card" id="q43">
+        <div class="q-header">
+          <span class="q-num">Q43</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Spark achieves its speed advantage over MapReduce primarily through:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(43,'a','c')">
+            <span class="opt-letter">A</span>Faster network I/O
+          </button>
+          <button class="option-btn" onclick="check(43,'b','c')">
+            <span class="opt-letter">B</span>Better compression algorithms
+          </button>
+          <button class="option-btn" onclick="check(43,'c','c')">
+            <span class="opt-letter">C</span>In-memory caching using RDDs
+          </button>
+          <button class="option-btn" onclick="check(43,'d','c')">
+            <span class="opt-letter">D</span>Smaller cluster sizes
+          </button>
+        </div>
+        <div class="feedback" id="fb43"></div>
+      </div>
+
+      <div class="q-card" id="q44">
+        <div class="q-header">
+          <span class="q-num">Q44</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          Spark Streaming transforms a continuous stream into discrete data
+          collections called:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(44,'a','a')">
+            <span class="opt-letter">A</span>Microbatches
+          </button>
+          <button class="option-btn" onclick="check(44,'b','a')">
+            <span class="opt-letter">B</span>Chunks
+          </button>
+          <button class="option-btn" onclick="check(44,'c','a')">
+            <span class="opt-letter">C</span>Segments
+          </button>
+          <button class="option-btn" onclick="check(44,'d','a')">
+            <span class="opt-letter">D</span>Frames
+          </button>
+        </div>
+        <div class="feedback" id="fb44"></div>
+      </div>
+
+      <div class="q-card" id="q45">
+        <div class="q-header">
+          <span class="q-num">Q45</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          DStream in Spark Streaming represents a stream in terms of:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(45,'a','b')">
+            <span class="opt-letter">A</span>DataFrames over time
+          </button>
+          <button class="option-btn" onclick="check(45,'b','b')">
+            <span class="opt-letter">B</span>RDDs over time
+          </button>
+          <button class="option-btn" onclick="check(45,'c','b')">
+            <span class="opt-letter">C</span>Key-value pairs over time
+          </button>
+          <button class="option-btn" onclick="check(45,'d','b')">
+            <span class="opt-letter">D</span>SQL tables over time
+          </button>
+        </div>
+        <div class="feedback" id="fb45"></div>
+      </div>
+
+      <div class="q-card" id="q46">
+        <div class="q-header">
+          <span class="q-num">Q46</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">Kafka uses which routing model by default?</div>
+        <div class="options">
+          <button class="option-btn" onclick="check(46,'a','a')">
+            <span class="opt-letter">A</span>Topic-based
+          </button>
+          <button class="option-btn" onclick="check(46,'b','a')">
+            <span class="opt-letter">B</span>Content-based
+          </button>
+          <button class="option-btn" onclick="check(46,'c','a')">
+            <span class="opt-letter">C</span>Broadcast
+          </button>
+          <button class="option-btn" onclick="check(46,'d','a')">
+            <span class="opt-letter">D</span>Multicast
+          </button>
+        </div>
+        <div class="feedback" id="fb46"></div>
+      </div>
+
+      <div class="q-card" id="q47">
+        <div class="q-header">
+          <span class="q-num">Q47</span><span class="q-marks">1M</span>
+        </div>
+        <div class="q-text">
+          In Kafka, a partition delivers each message to _____ member(s) of a
+          consumer group.
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(47,'a','b')">
+            <span class="opt-letter">A</span>All
+          </button>
+          <button class="option-btn" onclick="check(47,'b','b')">
+            <span class="opt-letter">B</span>Exactly one
+          </button>
+          <button class="option-btn" onclick="check(47,'c','b')">
+            <span class="opt-letter">C</span>A random subset
+          </button>
+          <button class="option-btn" onclick="check(47,'d','b')">
+            <span class="opt-letter">D</span>At least two
+          </button>
+        </div>
+        <div class="feedback" id="fb47"></div>
+      </div>
+
+      <!-- ===== SECTION: TRICKY NUMERICALS ===== -->
+      <div class="section-title">
+        Tricky Numericals — Distributed Join & Parallel Algorithms
+        <span class="badge">Unit 3 HIGH PRIORITY</span>
+      </div>
+
+      <div class="q-card" id="q48">
+        <div class="q-header">
+          <span class="q-num">Q48</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          Same EMPLOYEE-DEPARTMENT setup (EMP: 100B × 10,000 at site 1, DEPT:
+          35B × 100 at site 2), but the query is now submitted at site 1 (not a
+          separate site 3). What is the minimum bytes transferred?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(48,'a','a')">
+            <span class="opt-letter">A</span>3,500 — just send DEPARTMENT to
+            site 1
+          </button>
+          <button class="option-btn" onclick="check(48,'b','a')">
+            <span class="opt-letter">B</span>340,400 — semi-join approach
+          </button>
+          <button class="option-btn" onclick="check(48,'c','a')">
+            <span class="opt-letter">C</span>403,500 — same as before
+          </button>
+          <button class="option-btn" onclick="check(48,'d','a')">
+            <span class="opt-letter">D</span>41,400 — reverse semi-join
+          </button>
+        </div>
+        <div class="feedback" id="fb48"></div>
+      </div>
+
+      <div class="q-card" id="q49">
+        <div class="q-header">
+          <span class="q-num">Q49</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          For the parallel join with B(R)=1000, B(S)=500, p=10, the total disk
+          I/Os performed at EACH processor (including hash-distribute read/write
+          + local join) is:
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(49,'a','c')">
+            <span class="opt-letter">A</span>150
+          </button>
+          <button class="option-btn" onclick="check(49,'b','c')">
+            <span class="opt-letter">B</span>450
+          </button>
+          <button class="option-btn" onclick="check(49,'c','c')">
+            <span class="opt-letter">C</span>750
+          </button>
+          <button class="option-btn" onclick="check(49,'d','c')">
+            <span class="opt-letter">D</span>1500
+          </button>
+        </div>
+        <div class="feedback" id="fb49"></div>
+      </div>
+
+      <div class="q-card" id="q50">
+        <div class="q-header">
+          <span class="q-num">Q50</span><span class="q-marks">2M</span>
+        </div>
+        <div class="q-text">
+          R (150B × 8000 rows) at site 1, S (60B × 300 rows) at site 2. Join
+          attr B = 6B. Result = 8000 rows × 40B at site 3. Compare: (A) send S
+          to site 1, join, ship result = 60×300 + 40×8000 = 338,000. (B)
+          Semi-join: send π<sub>B</sub>(S)=6×300=1800 to site 1, ship projected
+          R columns (34B × 8000)=272,000 to site 2, join with S, ship result to
+          site 3=40×8000=320,000. Total for B = 1800+272,000+320,000. Which is
+          cheaper?
+        </div>
+        <div class="options">
+          <button class="option-btn" onclick="check(50,'a','a')">
+            <span class="opt-letter">A</span>Option A (338,000 bytes) — sending
+            full S + result is cheaper here
+          </button>
+          <button class="option-btn" onclick="check(50,'b','a')">
+            <span class="opt-letter">B</span>Option B (593,800 bytes) —
+            semi-join saves more
+          </button>
+          <button class="option-btn" onclick="check(50,'c','a')">
+            <span class="opt-letter">C</span>Both are equal
+          </button>
+          <button class="option-btn" onclick="check(50,'d','a')">
+            <span class="opt-letter">D</span>Cannot be determined without
+            knowing M
+          </button>
+        </div>
+        <div class="feedback" id="fb50"></div>
+      </div>
+
+      <!-- ===== WRITTEN QUESTIONS ===== -->
+      <div class="section-title" style="color: var(--written);">
+        Written Questions
+        <span
+          class="badge"
+          style="border-color:rgba(251,191,36,0.3);background:var(--written-bg);"
+          >4M each</span
+        >
+      </div>
+
+      <div class="q-card written-card" id="w1">
+        <div class="q-header">
+          <span class="q-num">W1</span><span class="q-marks">4M</span>
+        </div>
+        <div class="q-text">
+          Compare shared-memory, shared-disk, and shared-nothing architectures
+          for parallel databases. For each, describe the architecture and
+          mention one advantage and one disadvantage.
+        </div>
+        <textarea
+          class="written-input"
+          placeholder="Write your answer here..."
+        ></textarea>
+        <button class="model-toggle" onclick="toggleModel(this)">
+          <span class="arrow">&#9654;</span> Show Model Answer
+        </button>
+        <div class="model-answer">
+          <p>
+            <strong>Shared-Memory:</strong> All processors access a single
+            shared physical address space. Each processor has local main memory
+            but can directly access other processors' memory. Large machines are
+            NUMA type (non-uniform memory access). Advantage: simple programming
+            model since all data is in a common address space. Disadvantage:
+            limited scalability — the shared bus/interconnect becomes a
+            bottleneck as processors increase, and cache coherence overhead
+            grows.
+          </p>
+          <p>
+            <strong>Shared-Disk:</strong> Each processor has its own private
+            memory (not accessible to others), but all processors can access all
+            disks through a communication network. Disk controllers manage
+            competing requests. Two forms: NAS (file-level transfers) and SAN
+            (block-level transfers). Advantage: good fault tolerance — if a
+            processor fails, others can still access all data. Disadvantage:
+            disk contention and the overhead of distributed cache coherence
+            across processors.
+          </p>
+          <p>
+            <strong>Shared-Nothing:</strong> Each processor has its own private
+            memory and its own disk(s). All communication is via network
+            messages between processors. Advantage: highly scalable and
+            inexpensive to build using commodity hardware in racks.
+            Disadvantage: data transfer between processors is costly, and
+            algorithms must be carefully designed to minimize inter-node
+            communication.
+          </p>
+        </div>
+      </div>
+
+      <div class="q-card written-card" id="w2">
+        <div class="q-header">
+          <span class="q-num">W2</span><span class="q-marks">4M</span>
+        </div>
+        <div class="q-text">
+          Explain the Two-Phase Commit (2PC) protocol in detail. Cover both
+          phases, the role of the coordinator and participants, and the log
+          records involved at each step.
+        </div>
+        <textarea
+          class="written-input"
+          placeholder="Write your answer here..."
+        ></textarea>
+        <button class="model-toggle" onclick="toggleModel(this)">
+          <span class="arrow">&#9654;</span> Show Model Answer
+        </button>
+        <div class="model-answer">
+          <p>
+            <strong>Phase 1 (Voting/Prepare):</strong> (1) The coordinator
+            writes &lt;Prepare T&gt; to its log. (2) It sends a "prepare T"
+            message to all participant sites. (3) Each participant decides
+            whether it can commit its local component. (4) If yes, the
+            participant enters a pre-committed state — it ensures no local abort
+            will be needed, writes &lt;Ready T&gt; to its local log, flushes the
+            log to disk, and sends "ready T" to the coordinator. Once
+            pre-committed, a site cannot unilaterally abort. (5) If a site wants
+            to abort, it logs &lt;Don't Commit T&gt; and sends "don't commit T"
+            to the coordinator.
+          </p>
+          <p>
+            <strong>Phase 2 (Decision):</strong> (1) If the coordinator receives
+            "ready T" from ALL participants, it decides to commit — logs
+            &lt;Commit T&gt; and sends "commit T" to all sites. (2) If even one
+            participant sends "don't commit T", the coordinator logs &lt;Abort
+            T&gt; and sends "abort T" to all sites. (3) Each site receiving
+            "commit T" commits locally and logs &lt;Commit T&gt;. (4) Each site
+            receiving "abort T" aborts and logs &lt;Abort T&gt;.
+          </p>
+          <p>
+            <strong>Key property:</strong> Atomicity is guaranteed — the
+            transaction is either committed at all sites or aborted at all
+            sites. The protocol is blocking: if the coordinator crashes after
+            Phase 1 but before Phase 2, participants in the pre-committed state
+            must wait until the coordinator recovers.
+          </p>
+        </div>
+      </div>
+
+      <div class="q-card written-card" id="w3">
+        <div class="q-header">
+          <span class="q-num">W3</span><span class="q-marks">4M</span>
+        </div>
+        <div class="q-text">
+          Using the EMPLOYEE-DEPARTMENT distributed join example from the
+          slides, compute and compare the total bytes transferred for: (a)
+          sending both relations to the result site, (b) sending DEPARTMENT to
+          EMPLOYEE's site and forwarding the result. Show your calculations.
+        </div>
+        <textarea
+          class="written-input"
+          placeholder="Write your answer here..."
+        ></textarea>
+        <button class="model-toggle" onclick="toggleModel(this)">
+          <span class="arrow">&#9654;</span> Show Model Answer
+        </button>
+        <div class="model-answer">
+          <p>
+            <strong>Given:</strong> EMPLOYEE at Site 1: 10,000 records × 100
+            bytes = 1,000,000 bytes. DEPARTMENT at Site 2: 100 records × 35
+            bytes = 3,500 bytes. Result has 10,000 records × 40 bytes (Fname 15
+            + Lname 15 + Dname 10) = 400,000 bytes. Query submitted at Site 3.
+          </p>
+          <p>
+            <strong>(a) Send both to Site 3:</strong> Transfer EMPLOYEE
+            (1,000,000) + DEPARTMENT (3,500) = 1,003,500 bytes. Join is
+            performed at Site 3.
+          </p>
+          <p>
+            <strong
+              >(b) Send DEPARTMENT to Site 1, join there, send result to Site
+              3:</strong
+            >
+            Transfer DEPARTMENT to Site 1 = 3,500 bytes. Join at Site 1 produces
+            10,000 result tuples. Transfer result to Site 3 = 400,000 bytes.
+            Total = 3,500 + 400,000 = 403,500 bytes.
+          </p>
+          <p>
+            <strong>Comparison:</strong> Option (b) transfers only 403,500 bytes
+            vs 1,003,500 for option (a) — about 60% less. The key insight:
+            always move the smaller relation to the larger one's site, then ship
+            only the (projected) result to the query site. There's also option
+            (c): send EMPLOYEE to Site 2 and result to Site 3 = 1,000,000 +
+            400,000 = 1,400,000 bytes — the worst option.
+          </p>
+        </div>
+      </div>
+
+      <div class="q-card written-card" id="w4">
+        <div class="q-header">
+          <span class="q-num">W4</span><span class="q-marks">4M</span>
+        </div>
+        <div class="q-text">
+          Describe how a key lookup works in a Chord circle using finger tables.
+          Use the example from the slides where N<sub>8</sub> looks up a key K
+          with h(K) = 54. Trace each hop.
+        </div>
+        <textarea
+          class="written-input"
+          placeholder="Write your answer here..."
+        ></textarea>
+        <button class="model-toggle" onclick="toggleModel(this)">
+          <span class="arrow">&#9654;</span> Show Model Answer
+        </button>
+        <div class="model-answer">
+          <p>
+            <strong>Setup:</strong> m = 6, so 64 positions (0–63). Nodes: N₁,
+            N₈, N₁₄, N₂₁, N₃₂, N₃₈, N₄₂, N₄₈, N₅₁, N₅₆. Each node has a finger
+            table with entries at distances 1, 2, 4, 8, 16, 32.
+          </p>
+          <p>
+            <strong>Hop 1 — N₈:</strong> N₈'s successor is N₁₄. Since 54 is not
+            in range [9, 14], the key is not at N₁₄. N₈ checks its finger table:
+            {1→N₁₄, 2→N₁₄, 4→N₁₄, 8→N₂₁, 16→N₃₂, 32→N₄₂}. The largest entry ≤ 54
+            (in circular sense) is N₄₂. N₈ forwards the request to N₄₂.
+          </p>
+          <p>
+            <strong>Hop 2 — N₄₂:</strong> N₄₂'s successor is N₄₈. 54 is not in
+            [43, 48]. N₄₂ checks its finger table: {1→N₄₈, 2→N₄₈, 4→N₄₈, 8→N₅₁,
+            16→N₁, 32→N₁₄}. The largest entry ≤ 54 is N₅₁. N₄₂ forwards to N₅₁.
+          </p>
+          <p>
+            <strong>Hop 3 — N₅₁:</strong> N₅₁'s successor is N₅₆. Since 54 ≤ 56,
+            if (K,V) exists it must be at N₅₆. N₅₁ sends a request to N₅₆ asking
+            it to reply directly to the originator N₈.
+          </p>
+          <p>
+            <strong>Hop 4 — N₅₆:</strong> N₅₆ looks up key K locally and sends
+            the value V (or "not found") back to N₈. Total: 3 forwarding
+            messages + 1 response = 4 messages. In general, at most m+1 messages
+            are needed.
+          </p>
+        </div>
+      </div>
+
+      <div class="q-card written-card" id="w5">
+        <div class="q-header">
+          <span class="q-num">W5</span><span class="q-marks">4M</span>
+        </div>
+        <div class="q-text">
+          Compare Lambda and Kappa architectures. Discuss their layers, data
+          flow, advantages, and when you would choose one over the other. Give
+          one real-world example for each.
+        </div>
+        <textarea
+          class="written-input"
+          placeholder="Write your answer here..."
+        ></textarea>
+        <button class="model-toggle" onclick="toggleModel(this)">
+          <span class="arrow">&#9654;</span> Show Model Answer
+        </button>
+        <div class="model-answer">
+          <p>
+            <strong>Lambda Architecture:</strong> Has three layers — (1) Batch
+            layer: manages the master dataset (immutable, append-only) and
+            pre-computes batch views using tools like Hadoop/HDFS; runs on a
+            schedule (e.g., daily). (2) Speed/Stream layer: processes only
+            recent data not yet in batch views, creating real-time views using
+            tools like Apache Storm or Kafka. (3) Serving layer: indexes batch
+            views for low-latency ad-hoc queries (e.g., HBase). New data is fed
+            to both batch and stream layers simultaneously. Advantages:
+            comprehensive accuracy from batch + low latency from stream;
+            fault-tolerant. Disadvantage: complexity of maintaining two separate
+            codebases with different logic for batch and stream.
+          </p>
+          <p>
+            <strong>Kappa Architecture:</strong> Eliminates the batch layer
+            entirely. All data is treated as a stream processed by a single
+            stream processing engine (e.g., Kafka, Flink, Samza). Historical
+            reprocessing is done by replaying events from the immutable log.
+            Results go to a serving layer or storage. Advantages: simpler
+            unified codebase, lower latency, easier maintenance. Disadvantage:
+            reprocessing large historical data can be resource-intensive; not
+            ideal for workloads that are inherently batch-oriented.
+          </p>
+          <p>
+            <strong>When to choose:</strong> Lambda when you need both highly
+            accurate historical analysis and real-time views, and can afford the
+            operational complexity. Kappa when real-time processing dominates
+            and you want simplicity. Example — Lambda: a data warehouse that
+            runs nightly batch jobs for reporting while also showing live
+            dashboards. Example — Kappa: LinkedIn's activity feed processing
+            (billions of events/day via Kafka, all stream-based).
+          </p>
+        </div>
+      </div>
+
+      <div class="q-card written-card" id="w6">
+        <div class="q-header">
+          <span class="q-num">W6</span><span class="q-marks">4M</span>
+        </div>
+        <div class="q-text">
+          Explain the concept of watermarks in stream processing. How do they
+          resolve the open-boundary problem of event-time windows? What are the
+          trade-offs between watermark length and output freshness?
+        </div>
+        <textarea
+          class="written-input"
+          placeholder="Write your answer here..."
+        ></textarea>
+        <button class="model-toggle" onclick="toggleModel(this)">
+          <span class="arrow">&#9654;</span> Show Model Answer
+        </button>
+        <div class="model-answer">
+          <p>
+            <strong>The problem:</strong> When using event-time windows (e.g.,
+            aggregate events from 00:30–00:40 based on when they were created),
+            there is no natural upper boundary for when the window closes.
+            Events can arrive late due to network delays — an event created at
+            00:36 might not arrive until 01:00. Without a cutoff, the system
+            would wait indefinitely for stragglers.
+          </p>
+          <p>
+            <strong>Watermark definition:</strong> A watermark is an arbitrary
+            deadline — at any given moment, it represents the oldest event
+            timestamp the system will still accept. Any event older than the
+            current watermark is considered "too late" and is either discarded
+            or routed to a late-arrivals side channel.
+          </p>
+          <p>
+            <strong>How it resolves the open boundary:</strong> The watermark
+            closes the event-time window by defining which events belong to the
+            window and which are too late. Once the watermark passes the
+            window's end time, the window can be finalized and results emitted.
+            Without it, event-time windows would never close.
+          </p>
+          <p>
+            <strong>Two modes of output:</strong> (1) If all data being
+            processed is older than the watermark → output is final and
+            definitive. (2) If data before the watermark boundary is still
+            arriving → output is provisional and may be revised when delayed
+            events arrive.
+          </p>
+          <p>
+            <strong>Trade-offs:</strong> Longer watermark → more complete
+            results (fewer missed late events), but higher latency (output is
+            delayed by at least the watermark length) and higher memory
+            consumption (memory ≈ watermark_length × arrival_rate ×
+            message_size, as intermediate state must be stored). Shorter
+            watermark → fresher output with lower latency, but more events will
+            be classified as "late" and potentially dropped, leading to less
+            accurate results.
+          </p>
+        </div>
+      </div>
+
+      <div class="q-card written-card" id="w7">
+        <div class="q-header">
+          <span class="q-num">W7</span><span class="q-marks">4M</span>
+        </div>
+        <div class="q-text">
+          Explain the three distributed locking strategies: centralized,
+          primary-copy, and majority locking. For each, state the number of
+          messages required per lock and discuss bottleneck/failure
+          implications.
+        </div>
+        <textarea
+          class="written-input"
+          placeholder="Write your answer here..."
+        ></textarea>
+        <button class="model-toggle" onclick="toggleModel(this)">
+          <span class="arrow">&#9654;</span> Show Model Answer
+        </button>
+        <div class="model-answer">
+          <p>
+            <strong>1. Centralized Locking:</strong> A single designated site
+            maintains the lock table for all logical elements across the system.
+            To lock element X, a transaction sends a request to the lock site,
+            which grants or denies it. Messages: 3 per lock (request → grant →
+            release), unless the transaction is at the lock site itself (then 0
+            messages). Bottleneck: the single lock site can become a performance
+            bottleneck under heavy load. Failure: if the lock site crashes, no
+            transaction anywhere can obtain locks — single point of failure.
+          </p>
+          <p>
+            <strong>2. Primary-Copy Locking:</strong> Each logical element X has
+            one of its physical copies designated as the "primary copy." The
+            site holding the primary copy is responsible for X's lock. This
+            distributes lock management across multiple sites. Messages: still 3
+            per lock (request → grant → release), except when the transaction is
+            at the primary copy's site. Bottleneck: avoided because different
+            elements have primaries at different sites, spreading the load.
+            Failure: if a primary copy's site crashes, only locks for elements
+            whose primary is at that site are affected — partial rather than
+            total failure.
+          </p>
+          <p>
+            <strong>3. Majority Locking:</strong> No copy is "primary." A
+            transaction broadcasts a lock request to all sites holding a copy of
+            X. It obtains a global lock only after receiving local locks from a
+            majority (more than half) of the sites. Messages: 1 broadcast
+            request + responses from majority + 1 broadcast release —
+            approximately 2n+1 messages for n sites (more expensive).
+            Bottleneck: no single bottleneck since all copies are symmetric.
+            Failure: tolerates minority of site failures — as long as a majority
+            is reachable, locks can still be obtained. Drawback: higher message
+            overhead and potential for deadlocks if two transactions each obtain
+            locks from different non-overlapping majorities (though this is
+            prevented by the majority quorum intersection property).
+          </p>
+        </div>
+      </div>
+
+      <div class="q-card written-card" id="w8">
+        <div class="q-header">
+          <span class="q-num">W8</span><span class="q-marks">4M</span>
+        </div>
+        <div class="q-text">
+          Consider ORDERS (120 bytes × 50,000 rows) at site 1 and PRODUCTS (80
+          bytes × 2,000 rows) at site 2. Join attribute ProdID = 8 bytes. The
+          projected result columns are OrderID(8) + ProdName(20) + Qty(4) = 32
+          bytes, with 50,000 result rows. The query is issued at site 3. Compute
+          the total bytes transferred for: (a) Sending both full relations to
+          site 3, (b) Sending PRODUCTS to site 1, joining, sending result to
+          site 3, (c) Semi-join: project ProdID from PRODUCTS, send to site 1,
+          compute the semi-join projection (OrderID+ProdID+Qty = 20 bytes per
+          row), send matched tuples to site 2, join with PRODUCTS, send result
+          to site 3. Which strategy is cheapest? Would the answer change if the
+          query were issued at site 1?
+        </div>
+        <textarea
+          class="written-input"
+          placeholder="Write your answer here..."
+        ></textarea>
+        <button class="model-toggle" onclick="toggleModel(this)">
+          <span class="arrow">&#9654;</span> Show Model Answer
+        </button>
+        <div class="model-answer">
+          <p>
+            <strong>Given:</strong> ORDERS = 120 × 50,000 = 6,000,000 bytes.
+            PRODUCTS = 80 × 2,000 = 160,000 bytes. Result = 32 × 50,000 =
+            1,600,000 bytes. ProdID = 8 bytes.
+          </p>
+          <p>
+            <strong>(a) Both to site 3:</strong> 6,000,000 + 160,000 = 6,160,000
+            bytes.
+          </p>
+          <p>
+            <strong>(b) PRODUCTS → site 1, result → site 3:</strong> 160,000 +
+            1,600,000 = 1,760,000 bytes.
+          </p>
+          <p>
+            <strong>(c) Semi-join:</strong> Step 1: Send π_ProdID(PRODUCTS) to
+            site 1 = 8 × 2,000 = 16,000 bytes. Step 2: At site 1, join ORDERS
+            with the projected ProdIDs, then project (OrderID + ProdID + Qty) =
+            20 × 50,000 = 1,000,000 bytes. Send these to site 2. Step 3: At site
+            2, join with full PRODUCTS to get ProdName. Send final result (32 ×
+            50,000 = 1,600,000) to site 3. Total = 16,000 + 1,000,000 +
+            1,600,000 = 2,616,000 bytes.
+          </p>
+          <p>
+            <strong>Comparison:</strong> (a) = 6.16M, (b) = 1.76M, (c) = 2.62M.
+            <strong>Option (b) is cheapest</strong> — sending the smaller full
+            relation to the larger one's site and forwarding the result.
+            Semi-join is actually worse here because the extra hop to site 2 and
+            back to site 3 outweighs the savings from projecting join
+            attributes. Semi-join helps most when the join is highly selective
+            (many tuples of the larger relation are eliminated).
+          </p>
+          <p>
+            <strong>If query at site 1:</strong> Option (b) becomes: send
+            PRODUCTS to site 1 = 160,000 bytes only (no result transfer needed
+            since site 1 IS the result site). Total = 160,000 bytes —
+            dramatically cheaper. The semi-join would be: send
+            π_ProdID(PRODUCTS) = 16,000, but then we still need Dname from site
+            2, so we'd send matched ProdIDs back = at least 16,000 + PRODUCTS
+            subset transfer. Sending the full small relation (160,000) remains
+            simpler and cheapest.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let score = 0;
+      let answered = 0;
+      const total = 50;
+      const answered_set = new Set();
+
+      function toggleModel(btn) {
+        btn.classList.toggle('open');
+        const answer = btn.nextElementSibling;
+        answer.classList.toggle('visible');
+        const arrow = btn.querySelector('.arrow');
+        btn.querySelector('.arrow').textContent = btn.classList.contains('open') ? '\u25BC' : '\u25B6';
+      }
+
+      function check(qNum, chosen, correct) {
+        if (answered_set.has(qNum)) return;
+        answered_set.add(qNum);
+
+        const card = document.getElementById('q' + qNum);
+        const btns = card.querySelectorAll('.option-btn');
+        const fb = document.getElementById('fb' + qNum);
+
+        btns.forEach(btn => {
+          btn.classList.add('disabled');
+          const letter = btn.querySelector('.opt-letter').textContent.trim().toLowerCase();
+          if (letter === correct) {
+            btn.classList.add('show-correct');
+          }
+        });
+
+        const chosenBtn = btns[chosen.charCodeAt(0) - 97];
+
+        if (chosen === correct) {
+          score++;
+          chosenBtn.classList.add('selected-correct');
+          card.classList.add('answered-correct');
+          fb.textContent = '✓ Correct';
+          fb.classList.add('correct');
+        } else {
+          chosenBtn.classList.add('selected-wrong');
+          card.classList.add('answered-wrong');
+          const correctLetter = correct.toUpperCase();
+          const correctText = btns[correct.charCodeAt(0) - 97].textContent.trim();
+          fb.textContent = '✗ Correct answer: ' + correctText;
+          fb.classList.add('wrong');
+        }
+
+        answered++;
+        document.getElementById('score-display').textContent = score + ' / ' + answered;
+        document.getElementById('progress-display').textContent = answered + ' / ' + total;
+      }
+    </script>
+  </body>
 </html>
