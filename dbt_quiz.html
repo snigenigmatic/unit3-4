@@ -188,6 +188,40 @@ textarea.written-input {
 }
 textarea.written-input:focus { outline: none; border-color: var(--written); }
 
+.model-toggle {
+  margin-top: 1rem;
+  background: var(--surface2);
+  border: 1px solid rgba(251,191,36,0.25);
+  border-radius: 8px;
+  padding: .6rem 1rem;
+  color: var(--written);
+  font-family: 'Outfit', sans-serif;
+  font-size: .85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  display: inline-flex; align-items: center; gap: .4rem;
+}
+.model-toggle:hover { background: var(--written-bg); border-color: var(--written); }
+.model-toggle .arrow { transition: transform .2s; display: inline-block; }
+.model-toggle.open .arrow { transform: rotate(90deg); }
+
+.model-answer {
+  display: none;
+  margin-top: .75rem;
+  padding: 1rem 1.25rem;
+  background: var(--written-bg);
+  border: 1px solid rgba(251,191,36,0.15);
+  border-radius: 8px;
+  font-size: .88rem;
+  line-height: 1.8;
+  color: var(--text);
+}
+.model-answer.visible { display: block; }
+.model-answer p { margin-bottom: .6rem; }
+.model-answer p:last-child { margin-bottom: 0; }
+.model-answer strong { color: var(--written); font-weight: 600; }
+
 @media (max-width: 600px) {
   .container { padding: 1rem 1rem 4rem; }
   header h1 { font-size: 1.5rem; }
@@ -845,48 +879,105 @@ textarea.written-input:focus { outline: none; border-color: var(--written); }
   <div class="q-header"><span class="q-num">W1</span><span class="q-marks">4M</span></div>
   <div class="q-text">Compare shared-memory, shared-disk, and shared-nothing architectures for parallel databases. For each, describe the architecture and mention one advantage and one disadvantage.</div>
   <textarea class="written-input" placeholder="Write your answer here..."></textarea>
+  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
+  <div class="model-answer">
+    <p><strong>Shared-Memory:</strong> All processors access a single shared physical address space. Each processor has local main memory but can directly access other processors' memory. Large machines are NUMA type (non-uniform memory access). Advantage: simple programming model since all data is in a common address space. Disadvantage: limited scalability — the shared bus/interconnect becomes a bottleneck as processors increase, and cache coherence overhead grows.</p>
+    <p><strong>Shared-Disk:</strong> Each processor has its own private memory (not accessible to others), but all processors can access all disks through a communication network. Disk controllers manage competing requests. Two forms: NAS (file-level transfers) and SAN (block-level transfers). Advantage: good fault tolerance — if a processor fails, others can still access all data. Disadvantage: disk contention and the overhead of distributed cache coherence across processors.</p>
+    <p><strong>Shared-Nothing:</strong> Each processor has its own private memory and its own disk(s). All communication is via network messages between processors. Advantage: highly scalable and inexpensive to build using commodity hardware in racks. Disadvantage: data transfer between processors is costly, and algorithms must be carefully designed to minimize inter-node communication.</p>
+  </div>
 </div>
 
 <div class="q-card written-card" id="w2">
   <div class="q-header"><span class="q-num">W2</span><span class="q-marks">4M</span></div>
   <div class="q-text">Explain the Two-Phase Commit (2PC) protocol in detail. Cover both phases, the role of the coordinator and participants, and the log records involved at each step.</div>
   <textarea class="written-input" placeholder="Write your answer here..."></textarea>
+  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
+  <div class="model-answer">
+    <p><strong>Phase 1 (Voting/Prepare):</strong> (1) The coordinator writes &lt;Prepare T&gt; to its log. (2) It sends a "prepare T" message to all participant sites. (3) Each participant decides whether it can commit its local component. (4) If yes, the participant enters a pre-committed state — it ensures no local abort will be needed, writes &lt;Ready T&gt; to its local log, flushes the log to disk, and sends "ready T" to the coordinator. Once pre-committed, a site cannot unilaterally abort. (5) If a site wants to abort, it logs &lt;Don't Commit T&gt; and sends "don't commit T" to the coordinator.</p>
+    <p><strong>Phase 2 (Decision):</strong> (1) If the coordinator receives "ready T" from ALL participants, it decides to commit — logs &lt;Commit T&gt; and sends "commit T" to all sites. (2) If even one participant sends "don't commit T", the coordinator logs &lt;Abort T&gt; and sends "abort T" to all sites. (3) Each site receiving "commit T" commits locally and logs &lt;Commit T&gt;. (4) Each site receiving "abort T" aborts and logs &lt;Abort T&gt;.</p>
+    <p><strong>Key property:</strong> Atomicity is guaranteed — the transaction is either committed at all sites or aborted at all sites. The protocol is blocking: if the coordinator crashes after Phase 1 but before Phase 2, participants in the pre-committed state must wait until the coordinator recovers.</p>
+  </div>
 </div>
 
 <div class="q-card written-card" id="w3">
   <div class="q-header"><span class="q-num">W3</span><span class="q-marks">4M</span></div>
   <div class="q-text">Using the EMPLOYEE-DEPARTMENT distributed join example from the slides, compute and compare the total bytes transferred for: (a) sending both relations to the result site, (b) sending DEPARTMENT to EMPLOYEE's site and forwarding the result. Show your calculations.</div>
   <textarea class="written-input" placeholder="Write your answer here..."></textarea>
+  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
+  <div class="model-answer">
+    <p><strong>Given:</strong> EMPLOYEE at Site 1: 10,000 records × 100 bytes = 1,000,000 bytes. DEPARTMENT at Site 2: 100 records × 35 bytes = 3,500 bytes. Result has 10,000 records × 40 bytes (Fname 15 + Lname 15 + Dname 10) = 400,000 bytes. Query submitted at Site 3.</p>
+    <p><strong>(a) Send both to Site 3:</strong> Transfer EMPLOYEE (1,000,000) + DEPARTMENT (3,500) = 1,003,500 bytes. Join is performed at Site 3.</p>
+    <p><strong>(b) Send DEPARTMENT to Site 1, join there, send result to Site 3:</strong> Transfer DEPARTMENT to Site 1 = 3,500 bytes. Join at Site 1 produces 10,000 result tuples. Transfer result to Site 3 = 400,000 bytes. Total = 3,500 + 400,000 = 403,500 bytes.</p>
+    <p><strong>Comparison:</strong> Option (b) transfers only 403,500 bytes vs 1,003,500 for option (a) — about 60% less. The key insight: always move the smaller relation to the larger one's site, then ship only the (projected) result to the query site. There's also option (c): send EMPLOYEE to Site 2 and result to Site 3 = 1,000,000 + 400,000 = 1,400,000 bytes — the worst option.</p>
+  </div>
 </div>
 
 <div class="q-card written-card" id="w4">
   <div class="q-header"><span class="q-num">W4</span><span class="q-marks">4M</span></div>
   <div class="q-text">Describe how a key lookup works in a Chord circle using finger tables. Use the example from the slides where N<sub>8</sub> looks up a key K with h(K) = 54. Trace each hop.</div>
   <textarea class="written-input" placeholder="Write your answer here..."></textarea>
+  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
+  <div class="model-answer">
+    <p><strong>Setup:</strong> m = 6, so 64 positions (0–63). Nodes: N₁, N₈, N₁₄, N₂₁, N₃₂, N₃₈, N₄₂, N₄₈, N₅₁, N₅₆. Each node has a finger table with entries at distances 1, 2, 4, 8, 16, 32.</p>
+    <p><strong>Hop 1 — N₈:</strong> N₈'s successor is N₁₄. Since 54 is not in range [9, 14], the key is not at N₁₄. N₈ checks its finger table: {1→N₁₄, 2→N₁₄, 4→N₁₄, 8→N₂₁, 16→N₃₂, 32→N₄₂}. The largest entry ≤ 54 (in circular sense) is N₄₂. N₈ forwards the request to N₄₂.</p>
+    <p><strong>Hop 2 — N₄₂:</strong> N₄₂'s successor is N₄₈. 54 is not in [43, 48]. N₄₂ checks its finger table: {1→N₄₈, 2→N₄₈, 4→N₄₈, 8→N₅₁, 16→N₁, 32→N₁₄}. The largest entry ≤ 54 is N₅₁. N₄₂ forwards to N₅₁.</p>
+    <p><strong>Hop 3 — N₅₁:</strong> N₅₁'s successor is N₅₆. Since 54 ≤ 56, if (K,V) exists it must be at N₅₆. N₅₁ sends a request to N₅₆ asking it to reply directly to the originator N₈.</p>
+    <p><strong>Hop 4 — N₅₆:</strong> N₅₆ looks up key K locally and sends the value V (or "not found") back to N₈. Total: 3 forwarding messages + 1 response = 4 messages. In general, at most m+1 messages are needed.</p>
+  </div>
 </div>
 
 <div class="q-card written-card" id="w5">
   <div class="q-header"><span class="q-num">W5</span><span class="q-marks">4M</span></div>
   <div class="q-text">Compare Lambda and Kappa architectures. Discuss their layers, data flow, advantages, and when you would choose one over the other. Give one real-world example for each.</div>
   <textarea class="written-input" placeholder="Write your answer here..."></textarea>
+  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
+  <div class="model-answer">
+    <p><strong>Lambda Architecture:</strong> Has three layers — (1) Batch layer: manages the master dataset (immutable, append-only) and pre-computes batch views using tools like Hadoop/HDFS; runs on a schedule (e.g., daily). (2) Speed/Stream layer: processes only recent data not yet in batch views, creating real-time views using tools like Apache Storm or Kafka. (3) Serving layer: indexes batch views for low-latency ad-hoc queries (e.g., HBase). New data is fed to both batch and stream layers simultaneously. Advantages: comprehensive accuracy from batch + low latency from stream; fault-tolerant. Disadvantage: complexity of maintaining two separate codebases with different logic for batch and stream.</p>
+    <p><strong>Kappa Architecture:</strong> Eliminates the batch layer entirely. All data is treated as a stream processed by a single stream processing engine (e.g., Kafka, Flink, Samza). Historical reprocessing is done by replaying events from the immutable log. Results go to a serving layer or storage. Advantages: simpler unified codebase, lower latency, easier maintenance. Disadvantage: reprocessing large historical data can be resource-intensive; not ideal for workloads that are inherently batch-oriented.</p>
+    <p><strong>When to choose:</strong> Lambda when you need both highly accurate historical analysis and real-time views, and can afford the operational complexity. Kappa when real-time processing dominates and you want simplicity. Example — Lambda: a data warehouse that runs nightly batch jobs for reporting while also showing live dashboards. Example — Kappa: LinkedIn's activity feed processing (billions of events/day via Kafka, all stream-based).</p>
+  </div>
 </div>
 
 <div class="q-card written-card" id="w6">
   <div class="q-header"><span class="q-num">W6</span><span class="q-marks">4M</span></div>
   <div class="q-text">Explain the concept of watermarks in stream processing. How do they resolve the open-boundary problem of event-time windows? What are the trade-offs between watermark length and output freshness?</div>
   <textarea class="written-input" placeholder="Write your answer here..."></textarea>
+  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
+  <div class="model-answer">
+    <p><strong>The problem:</strong> When using event-time windows (e.g., aggregate events from 00:30–00:40 based on when they were created), there is no natural upper boundary for when the window closes. Events can arrive late due to network delays — an event created at 00:36 might not arrive until 01:00. Without a cutoff, the system would wait indefinitely for stragglers.</p>
+    <p><strong>Watermark definition:</strong> A watermark is an arbitrary deadline — at any given moment, it represents the oldest event timestamp the system will still accept. Any event older than the current watermark is considered "too late" and is either discarded or routed to a late-arrivals side channel.</p>
+    <p><strong>How it resolves the open boundary:</strong> The watermark closes the event-time window by defining which events belong to the window and which are too late. Once the watermark passes the window's end time, the window can be finalized and results emitted. Without it, event-time windows would never close.</p>
+    <p><strong>Two modes of output:</strong> (1) If all data being processed is older than the watermark → output is final and definitive. (2) If data before the watermark boundary is still arriving → output is provisional and may be revised when delayed events arrive.</p>
+    <p><strong>Trade-offs:</strong> Longer watermark → more complete results (fewer missed late events), but higher latency (output is delayed by at least the watermark length) and higher memory consumption (memory ≈ watermark_length × arrival_rate × message_size, as intermediate state must be stored). Shorter watermark → fresher output with lower latency, but more events will be classified as "late" and potentially dropped, leading to less accurate results.</p>
+  </div>
 </div>
 
 <div class="q-card written-card" id="w7">
   <div class="q-header"><span class="q-num">W7</span><span class="q-marks">4M</span></div>
   <div class="q-text">Explain the three distributed locking strategies: centralized, primary-copy, and majority locking. For each, state the number of messages required per lock and discuss bottleneck/failure implications.</div>
   <textarea class="written-input" placeholder="Write your answer here..."></textarea>
+  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
+  <div class="model-answer">
+    <p><strong>1. Centralized Locking:</strong> A single designated site maintains the lock table for all logical elements across the system. To lock element X, a transaction sends a request to the lock site, which grants or denies it. Messages: 3 per lock (request → grant → release), unless the transaction is at the lock site itself (then 0 messages). Bottleneck: the single lock site can become a performance bottleneck under heavy load. Failure: if the lock site crashes, no transaction anywhere can obtain locks — single point of failure.</p>
+    <p><strong>2. Primary-Copy Locking:</strong> Each logical element X has one of its physical copies designated as the "primary copy." The site holding the primary copy is responsible for X's lock. This distributes lock management across multiple sites. Messages: still 3 per lock (request → grant → release), except when the transaction is at the primary copy's site. Bottleneck: avoided because different elements have primaries at different sites, spreading the load. Failure: if a primary copy's site crashes, only locks for elements whose primary is at that site are affected — partial rather than total failure.</p>
+    <p><strong>3. Majority Locking:</strong> No copy is "primary." A transaction broadcasts a lock request to all sites holding a copy of X. It obtains a global lock only after receiving local locks from a majority (more than half) of the sites. Messages: 1 broadcast request + responses from majority + 1 broadcast release — approximately 2n+1 messages for n sites (more expensive). Bottleneck: no single bottleneck since all copies are symmetric. Failure: tolerates minority of site failures — as long as a majority is reachable, locks can still be obtained. Drawback: higher message overhead and potential for deadlocks if two transactions each obtain locks from different non-overlapping majorities (though this is prevented by the majority quorum intersection property).</p>
+  </div>
 </div>
 
 <div class="q-card written-card" id="w8">
   <div class="q-header"><span class="q-num">W8</span><span class="q-marks">4M</span></div>
   <div class="q-text">Explain the MapReduce execution flow in Hadoop. Describe each step from job submission to final output, including the roles of JobTracker, TaskTracker, NameNode, and DataNode.</div>
   <textarea class="written-input" placeholder="Write your answer here..."></textarea>
+  <button class="model-toggle" onclick="toggleModel(this)"><span class="arrow">&#9654;</span> Show Model Answer</button>
+  <div class="model-answer">
+    <p><strong>Step 1 — Job Submission:</strong> The client submits a job to the cluster, which includes the JAR file containing the Mapper and Reducer logic, the input data path, and the output data path.</p>
+    <p><strong>Step 2 — Job Scheduling (JobTracker):</strong> The JobTracker (running on the master node alongside the NameNode) accepts the job, splits it into individual tasks, and assigns Map and Reduce tasks to TaskTrackers on slave nodes. Assignment is based on data locality — tasks are preferentially sent to nodes that already hold the relevant data blocks.</p>
+    <p><strong>Step 3 — Map Phase (TaskTrackers + DataNodes):</strong> Each TaskTracker (on a slave node) executes its assigned Map task on the input split stored locally on its DataNode. The Map function processes each record and emits key-value pairs. DataNodes store the actual data blocks of HDFS files; the NameNode stores metadata (file names, block locations, replication info).</p>
+    <p><strong>Step 4 — Shuffle and Sort:</strong> The intermediate key-value pairs output by mappers are shuffled across the network — all values for the same key are grouped together and sent to the same reducer. This involves sorting by key and transferring data between nodes.</p>
+    <p><strong>Step 5 — Reduce Phase:</strong> TaskTrackers execute Reduce tasks on the grouped intermediate data. Each reducer processes all values for a given key and produces the final output key-value pairs.</p>
+    <p><strong>Step 6 — Output:</strong> The final output from all reducers is written back to HDFS. The NameNode manages the metadata for these output files, and DataNodes store the actual output blocks with replication for fault tolerance (default replication factor is 3).</p>
+    <p><strong>Fault tolerance:</strong> If a TaskTracker fails, the JobTracker reassigns its tasks to another node. Data is resilient because HDFS replicates each block across multiple DataNodes.</p>
+  </div>
 </div>
 
 </div>
@@ -896,6 +987,14 @@ let score = 0;
 let answered = 0;
 const total = 42;
 const answered_set = new Set();
+
+function toggleModel(btn) {
+  btn.classList.toggle('open');
+  const answer = btn.nextElementSibling;
+  answer.classList.toggle('visible');
+  const arrow = btn.querySelector('.arrow');
+  btn.querySelector('.arrow').textContent = btn.classList.contains('open') ? '\u25BC' : '\u25B6';
+}
 
 function check(qNum, chosen, correct) {
   if (answered_set.has(qNum)) return;
