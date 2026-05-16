@@ -38,7 +38,6 @@
     color: #f5f0e8;
     padding: 2.5rem 2rem 2rem;
     text-align: center;
-    position: relative;
     border-bottom: 4px solid var(--gold);
   }
   header h1 {
@@ -202,20 +201,14 @@
   .q-text strong { color: var(--ink); font-weight: 600; }
   .q-sub { font-size: 0.88rem; color: var(--ink-muted); margin-top: 0.5rem; padding-left: 0.5rem; }
   .q-sub-item { margin: 0.3rem 0; }
-  .q-given { 
-    background: #faf6ee; 
-    border-left: 3px solid var(--gold); 
-    padding: 0.7rem 1rem; 
-    margin: 0.7rem 0; 
-    font-size: 0.88rem; 
+  .q-given {
+    background: #faf6ee;
+    border-left: 3px solid var(--gold);
+    padding: 0.7rem 1rem;
+    margin: 0.7rem 0;
+    font-size: 0.88rem;
     border-radius: 0 4px 4px 0;
-  }
-  .q-given code { 
-    font-family: 'Courier New', monospace; 
-    font-size: 0.85rem; 
-    background: rgba(0,0,0,0.04); 
-    padding: 1px 5px; 
-    border-radius: 3px; 
+    font-family: 'Source Serif 4', serif;
   }
 
   .marks-pill {
@@ -236,6 +229,96 @@
     font-style: italic;
     font-weight: 400;
   }
+
+  /* Solution reveal */
+  .sol-toggle {
+    margin-top: 1rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--green-mark);
+    border: 1px solid var(--green-mark);
+    background: var(--green-light);
+    padding: 6px 14px;
+    font-family: 'Source Serif 4', serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: all 0.2s;
+  }
+  .sol-toggle:hover { background: var(--green-mark); color: white; }
+  .sol-toggle .arrow { transition: transform 0.2s; font-size: 0.7rem; }
+  .sol-toggle.open .arrow { transform: rotate(90deg); }
+
+  .solution {
+    display: none;
+    margin-top: 1rem;
+    padding: 1.1rem 1.3rem;
+    background: #f4f9f5;
+    border-left: 4px solid var(--green-mark);
+    border-radius: 0 6px 6px 0;
+    font-size: 0.88rem;
+    color: var(--ink-muted);
+    line-height: 1.8;
+  }
+  .solution.open { display: block; }
+  .solution h4 {
+    font-family: 'Playfair Display', serif;
+    color: var(--green-mark);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+    margin-top: 0.8rem;
+    font-weight: 600;
+  }
+  .solution h4:first-child { margin-top: 0; }
+  .solution p { margin-bottom: 0.6rem; }
+  .solution ul, .solution ol { margin: 0.4rem 0 0.6rem 1.2rem; }
+  .solution li { margin-bottom: 0.3rem; }
+  .solution code, .solution .math {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    background: rgba(0,0,0,0.04);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+  .solution .step {
+    background: white;
+    border: 1px solid #d4e5d8;
+    padding: 0.6rem 0.9rem;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+  }
+  .solution .step-title {
+    font-weight: 600;
+    color: var(--green-mark);
+    font-size: 0.85rem;
+    margin-bottom: 0.3rem;
+  }
+  .solution .answer-final {
+    background: #fff8e1;
+    border: 1px solid #e0c87a;
+    padding: 0.6rem 0.9rem;
+    border-radius: 4px;
+    margin-top: 0.6rem;
+    font-weight: 600;
+    color: #5a4510;
+  }
+  .solution table {
+    border-collapse: collapse;
+    margin: 0.6rem 0;
+    font-size: 0.85rem;
+    background: white;
+  }
+  .solution th, .solution td {
+    border: 1px solid var(--rule);
+    padding: 5px 10px;
+    text-align: center;
+  }
+  .solution th { background: var(--green-light); font-weight: 600; }
 
   footer {
     text-align: center;
@@ -258,6 +341,25 @@
   }
   .note-box strong { color: #3a2e08; }
 
+  .controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+  .ctrl-btn {
+    background: white;
+    border: 1px solid var(--rule);
+    color: var(--ink-muted);
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    font-family: 'Source Serif 4', serif;
+    cursor: pointer;
+    border-radius: 4px;
+    letter-spacing: 0.03em;
+  }
+  .ctrl-btn:hover { border-color: var(--ink); color: var(--ink); }
+
   @media (max-width: 620px) {
     .set-header { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
     .set-meta { text-align: left; }
@@ -278,7 +380,7 @@
     <span class="badge">3 Sets</span>
     <span class="badge">4 Units</span>
     <span class="badge">100 Marks Each</span>
-    <span class="badge">Theory + Numerical</span>
+    <span class="badge">With Solutions</span>
   </div>
 </header>
 
@@ -288,22 +390,24 @@
   <button class="tab-btn" data-tab="set3">Set 3</button>
 </nav>
 
-<!-- ========================= SET 1 ========================= -->
+<!-- ============= SET 1 ============= -->
 <div class="tab-content active" id="set1">
   <div class="set-page">
     <div class="set-header">
       <div class="set-title">Practice Set &mdash; I</div>
-      <div class="set-meta">
-        Time: 3 Hours<br>
-        Max Marks: 100
-      </div>
+      <div class="set-meta">Time: 3 Hours<br>Max Marks: 100</div>
     </div>
 
     <div class="note-box">
-      <strong>Instructions:</strong> Answer all questions. Each unit carries 25 marks. Show all working for numericals; rounding to 3 decimal places where applicable. Calculator permitted.
+      <strong>Instructions:</strong> Answer all questions. Each unit carries 25 marks. Click "Show Solution" under each question to reveal the worked answer.
     </div>
 
-    <!-- UNIT 1 -->
+    <div class="controls">
+      <button class="ctrl-btn" onclick="toggleAll('set1', true)">Show All Solutions</button>
+      <button class="ctrl-btn" onclick="toggleAll('set1', false)">Hide All</button>
+    </div>
+
+    <!-- Unit 1 -->
     <div class="section-header">
       <span class="section-tag tag-u1">Unit 1 &middot; Foundations &amp; Transformers</span>
       <div class="section-rule"></div>
@@ -312,29 +416,70 @@
 
     <div class="question-block">
       <div class="q-number">1</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">Explain why GPT is a decoder-only architecture. List its core components (embedding dimension, attention heads, FFN size, etc.) from the original design.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Why GPT is Decoder-Only</h4>
+        <p>GPT is designed specifically for <strong>text generation</strong>, where the model must predict future tokens without seeing them. This drives the architectural choice:</p>
+        <ul>
+          <li><strong>Sequential generation:</strong> While generating a sentence, the model can only use previously generated tokens.</li>
+          <li><strong>Encoder limitation:</strong> The Transformer encoder uses <em>bidirectional attention</em> (token sees both past and future). This is ideal for understanding but unsuitable for generation.</li>
+          <li><strong>Decoder advantage:</strong> The decoder uses <em>unidirectional (causal) attention</em>, so predictions depend only on past context.</li>
+          <li><strong>Architectural simplification:</strong> Since GPT doesn't need full-sequence understanding before generating output, the encoder is unnecessary — only the decoder stack is retained.</li>
+        </ul>
+        <h4>Core Components (Original Design)</h4>
+        <ul>
+          <li>Embedding dimension <code>d_model = 512</code> (varies by GPT version)</li>
+          <li>Number of attention heads = <code>8</code></li>
+          <li>Each head: Query/Key dimension <code>d_k = 64</code>, Value dimension <code>d_v = 64</code></li>
+          <li>Feed-Forward Network hidden size = <code>2048</code></li>
+          <li>Decoder block contains: masked multi-head self-attention + FFN + residual connections + layer normalization</li>
+          <li>Final output: linear layer + softmax over vocabulary</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">2</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">6 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">6 marks</span>
       <div class="q-text">Differentiate between <strong>self-attention</strong> and <strong>cross-attention</strong> with respect to Q, K, V sources, purpose, and where they appear in the Transformer architecture.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <table>
+          <tr><th>Aspect</th><th>Self-Attention</th><th>Cross-Attention</th></tr>
+          <tr><td>Q source</td><td>Same input sequence</td><td>Decoder hidden states</td></tr>
+          <tr><td>K, V source</td><td>Same input sequence</td><td>Encoder output</td></tr>
+          <tr><td>Purpose</td><td>Capture relationships among tokens within one sequence</td><td>Allow decoder to focus on relevant encoder tokens</td></tr>
+          <tr><td>Used in</td><td>Both encoder &amp; decoder</td><td>Decoder only</td></tr>
+        </table>
+        <p><strong>Self-attention:</strong> Each token computes weighted sum of all tokens in the <em>same</em> sequence — produces contextualized representations. Used in encoder (bidirectional) and decoder (masked/causal).</p>
+        <p><strong>Cross-attention:</strong> The decoder Query attends over encoder Keys and Values, bridging the input sequence to the target sequence. It appears as the middle sublayer of each decoder block (between masked self-attention and FFN).</p>
+        <p>Computation is identical to self-attention; only the <em>source</em> of Q vs (K,V) changes.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">3</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">Why is the dot-product attention score scaled by &radic;d<sub>k</sub> before softmax? What happens if you skip this step?</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <p><strong>Purpose:</strong> To <strong>stabilize softmax</strong> and improve gradient flow during training.</p>
+        <p>As <code>d_k</code> grows, dot-product values <code>Q·K</code> grow in magnitude (variance scales with <code>d_k</code>). Large values pushed through softmax produce extremely sharp (peaked) distributions where one entry ≈ 1 and others ≈ 0.</p>
+        <p><strong>If skipped:</strong></p>
+        <ul>
+          <li>Softmax saturates → gradients become vanishingly small (the gradient of softmax in saturated regions is near zero).</li>
+          <li>Training becomes unstable; the model struggles to learn.</li>
+          <li>Numerical overflow risk when exponentiating large scores.</li>
+        </ul>
+        <p>Dividing by <code>√d_k</code> keeps the variance of the dot products approximately constant (≈ 1), so softmax produces well-behaved attention distributions regardless of embedding dimension.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">4</div>
-      <span class="q-type-badge type-numerical">Numerical</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-numerical">Numerical</span><span class="marks-pill">10 marks</span>
       <div class="q-text">Consider the two-token sentence <strong>"Deep Learning"</strong> processed using self-attention. For the token "Deep":</div>
       <div class="q-given">
         Q = (1, 1, 0, 0)<br>
@@ -345,11 +490,38 @@
       <div class="q-sub">
         <div class="q-sub-item">(a) Compute scaled dot-product scores. <span class="sub-marks">(3)</span></div>
         <div class="q-sub-item">(b) Compute softmax attention weights. <span class="sub-marks">(3)</span></div>
-        <div class="q-sub-item">(c) Compute the final self-attention output for "Deep". Round to 3 decimals. <span class="sub-marks">(4)</span></div>
+        <div class="q-sub-item">(c) Compute the final self-attention output for "Deep". <span class="sub-marks">(4)</span></div>
+      </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <div class="step">
+          <div class="step-title">Step 1 — Raw dot products</div>
+          <p><code>Q · K₁ = (1)(1) + (1)(1) + (0)(0) + (0)(0) = 2</code></p>
+          <p><code>Q · K₂ = (1)(0) + (1)(1) + (0)(1) + (0)(0) = 1</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">Step 2 — Scale by √d<sub>k</sub> = √4 = 2</div>
+          <p><code>s₁ = 2 / 2 = 1.000</code></p>
+          <p><code>s₂ = 1 / 2 = 0.500</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">Step 3 — Softmax</div>
+          <p><code>e^1 = 2.7183</code>, &nbsp; <code>e^0.5 = 1.6487</code></p>
+          <p><code>Σ = 2.7183 + 1.6487 = 4.3670</code></p>
+          <p><code>α₁ = 2.7183 / 4.3670 = 0.622</code></p>
+          <p><code>α₂ = 1.6487 / 4.3670 = 0.378</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">Step 4 — Weighted sum of values</div>
+          <p><code>Output = α₁·V₁ + α₂·V₂</code></p>
+          <p><code>= 0.622·(2.0, 1.0) + 0.378·(1.0, 3.0)</code></p>
+          <p><code>= (1.244 + 0.378, &nbsp; 0.622 + 1.134)</code></p>
+        </div>
+        <div class="answer-final">Final output for "Deep" = (1.622, 1.755)</div>
       </div>
     </div>
 
-    <!-- UNIT 2 -->
+    <!-- Unit 2 -->
     <div class="section-header">
       <span class="section-tag tag-u2">Unit 2 &middot; Prompt Engineering &amp; RAG</span>
       <div class="section-rule"></div>
@@ -358,47 +530,124 @@
 
     <div class="question-block">
       <div class="q-number">5</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">Define prompt engineering. Differentiate <strong>zero-shot, one-shot, and few-shot</strong> prompting with one example each.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <p><strong>Prompt engineering</strong> is the practice of designing and structuring inputs (prompts) to effectively guide an LLM's behavior and outputs. It reduces vague/incorrect responses, improves control, and optimizes performance across tasks.</p>
+        <h4>Zero-Shot Prompting</h4>
+        <p>Only an instruction is given, no examples. Relies entirely on pre-trained knowledge.</p>
+        <p><em>Example:</em> "Classify this review as positive or negative: 'The product is amazing.'"</p>
+        <h4>One-Shot Prompting</h4>
+        <p>One example is given along with the instruction to clarify task format.</p>
+        <p><em>Example:</em> "Review: 'Great lectures' → Positive. Now classify: 'The pace was too fast' → ?"</p>
+        <h4>Few-Shot Prompting</h4>
+        <p>Several examples shown before the actual task; the model learns the pattern.</p>
+        <p><em>Example:</em> "Apple → Manzana, Banana → Plátano, Orange → ?" → "Naranja"</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">6</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">6 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">6 marks</span>
       <div class="q-sub">
         <div class="q-sub-item">(a) What is RAG? How does it differ from a traditional LLM? <span class="sub-marks">(3)</span></div>
         <div class="q-sub-item">(b) Explain the RAG Evaluation Triad (TruEra model). <span class="sub-marks">(3)</span></div>
+      </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>(a) RAG vs Traditional LLM</h4>
+        <p><strong>Retrieval-Augmented Generation (RAG)</strong> combines information retrieval with text generation. It augments an LLM with access to external knowledge stores (vector DBs, document repositories) at inference time.</p>
+        <p><strong>Differences from a traditional LLM:</strong></p>
+        <ul>
+          <li>Traditional LLM relies only on parametric memory (knowledge baked into weights at training).</li>
+          <li>RAG fetches relevant documents at query time → answers are <strong>grounded</strong> in external data.</li>
+          <li>RAG handles knowledge cut-off, reduces hallucinations, and supports private/domain-specific data.</li>
+        </ul>
+        <h4>(b) RAG Evaluation Triad (TruEra)</h4>
+        <p>Three relationships evaluated:</p>
+        <ul>
+          <li><strong>Context Relevance (Query ↔ Context):</strong> Is the retrieved data relevant to the question? Bad retrieval → bad answers.</li>
+          <li><strong>Groundedness (Context ↔ Answer):</strong> Is the generated answer actually based on the retrieved context? If the LLM ignores context → hallucination.</li>
+          <li><strong>Answer Relevance (Query ↔ Answer):</strong> Does the answer address the user's question? Even with good retrieval, answer may be off-topic.</li>
+        </ul>
       </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">7</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">Compare <strong>TF-IDF and BM25</strong> across: term frequency handling, length normalization, probabilistic basis, and ranking quality.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <table>
+          <tr><th>Feature</th><th>TF-IDF</th><th>BM25</th></tr>
+          <tr><td>Term frequency</td><td>Linear (unbounded)</td><td>Saturated (diminishing returns)</td></tr>
+          <tr><td>Length normalization</td><td>Weak / none</td><td>Strong (parameter <code>b</code>)</td></tr>
+          <tr><td>Probabilistic model</td><td>No</td><td>Yes</td></tr>
+          <tr><td>Production usage</td><td>Limited</td><td>Very widely used (Lucene, Elasticsearch)</td></tr>
+          <tr><td>Ranking quality</td><td>Good</td><td>Better</td></tr>
+        </table>
+        <p>BM25 was developed to address TF-IDF's main weaknesses:</p>
+        <ul>
+          <li>Saturation parameter <code>k₁</code> prevents keyword-stuffing dominance.</li>
+          <li>Length normalization <code>b</code> ensures fair comparison between short and long documents.</li>
+          <li>Probabilistic foundation provides theoretical justification.</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">8</div>
-      <span class="q-type-badge type-numerical">Numerical</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-numerical">Numerical</span><span class="marks-pill">10 marks</span>
       <div class="q-text">Given the corpus:</div>
       <div class="q-given">
-        D1: "data science machine learning"<br>
-        D2: "machine learning data data"<br>
-        D3: "deep learning neural network"<br><br>
-        Query Q = {"machine", "learning"} &nbsp;|&nbsp; k&#8321; = 1.5, b = 0.75, use log&#8321;&#8320; for IDF
+        D1: "neural network deep learning"<br>
+        D2: "deep network deep model"<br>
+        D3: "learning network learning system"<br><br>
+        Query Q = {"learning", "network"} &nbsp;|&nbsp; k&#8321; = 1.5, b = 0.75, IDF = log&#8321;&#8320;(1 + (N&minus;n+0.5)/(n+0.5))
       </div>
       <div class="q-sub">
         <div class="q-sub-item">(a) Compute term frequencies and document lengths. <span class="sub-marks">(3)</span></div>
         <div class="q-sub-item">(b) Compute IDF for both query terms. <span class="sub-marks">(3)</span></div>
         <div class="q-sub-item">(c) Compute the BM25 score for each document and rank them. <span class="sub-marks">(4)</span></div>
       </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <div class="step">
+          <div class="step-title">Step 1 — Term Frequencies &amp; Lengths</div>
+          <table>
+            <tr><th>Term</th><th>D1</th><th>D2</th><th>D3</th></tr>
+            <tr><td>learning</td><td>1</td><td>0</td><td>2</td></tr>
+            <tr><td>network</td><td>1</td><td>1</td><td>1</td></tr>
+          </table>
+          <p>|D1| = |D2| = |D3| = 4. &nbsp; avgD = 4. &nbsp; Length factor = (1 − b + b·|D|/avgD) = 1.</p>
+        </div>
+        <div class="step">
+          <div class="step-title">Step 2 — IDF (N=3)</div>
+          <p>learning appears in D1, D3 → <code>n = 2</code><br>
+          <code>IDF(learning) = log₁₀(1 + (3−2+0.5)/(2+0.5)) = log₁₀(1 + 1.5/2.5) = log₁₀(1.6) = 0.2041</code></p>
+          <p>network appears in all 3 docs → <code>n = 3</code><br>
+          <code>IDF(network) = log₁₀(1 + 0.5/3.5) = log₁₀(1.143) = 0.0580</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">Step 3 — BM25 Score per Document</div>
+          <p>Formula: <code>BM25(term) = IDF · tf·(k₁+1) / (tf + k₁)</code> (since length factor = 1)</p>
+          <p><strong>D1</strong> (learning=1, network=1):<br>
+          = 0.2041·(1·2.5)/(1+1.5) + 0.0580·(1·2.5)/(1+1.5)<br>
+          = 0.2041 + 0.0580 = <strong>0.2621</strong></p>
+          <p><strong>D2</strong> (learning=0, network=1):<br>
+          = 0 + 0.0580 = <strong>0.0580</strong></p>
+          <p><strong>D3</strong> (learning=2, network=1):<br>
+          = 0.2041·(2·2.5)/(2+1.5) + 0.0580·(2.5)/(2.5)<br>
+          = 0.2041·(5/3.5) + 0.0580<br>
+          = 0.2916 + 0.0580 = <strong>0.3496</strong></p>
+        </div>
+        <div class="answer-final">Final Ranking: D3 (0.3496) &gt; D1 (0.2621) &gt; D2 (0.0580)</div>
+      </div>
     </div>
 
-    <!-- UNIT 3 -->
+    <!-- Unit 3 -->
     <div class="section-header">
       <span class="section-tag tag-u3">Unit 3 &middot; Fine-Tuning, LoRA &amp; QLoRA</span>
       <div class="section-rule"></div>
@@ -407,29 +656,80 @@
 
     <div class="question-block">
       <div class="q-number">9</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">What is <strong>Parameter-Efficient Fine-Tuning (PEFT)</strong>? Why is it needed for modern LLMs?</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <p><strong>PEFT</strong> is a class of techniques that fine-tune a small subset of model parameters while keeping the bulk of the pretrained model frozen.</p>
+        <h4>Why PEFT is Needed</h4>
+        <ul>
+          <li><strong>Cost:</strong> Modern LLMs have billions of parameters; full fine-tuning requires huge GPU memory and is expensive.</li>
+          <li><strong>Time:</strong> Training all parameters takes very long.</li>
+          <li><strong>Storage:</strong> Storing one full-model copy per downstream task is impractical.</li>
+          <li><strong>Hardware:</strong> Difficult on consumer or modest GPUs.</li>
+        </ul>
+        <p><strong>PEFT approach:</strong> Freeze base model → train only small "adapters" (e.g. LoRA matrices, prefix vectors, prompt tokens). Faster, cheaper, achieves comparable performance to full fine-tuning. Examples: LoRA, QLoRA, prompt tuning, prefix tuning, adapter layers.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">10</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">Explain the three key techniques of QLoRA: <strong>NF4 quantization, double quantization, and paged optimizer</strong>.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>1. NF4 Quantization (NormalFloat 4-bit)</h4>
+        <p>A special 4-bit numerical format designed for neural network weights. Weights typically follow approximately a normal distribution, and NF4 places its 16 quantization levels in a <em>distribution-aware</em> way so that values near zero get finer resolution.</p>
+        <ul>
+          <li>Better than standard int4</li>
+          <li>Preserves important weight magnitudes</li>
+          <li>Reduces accuracy loss after quantization</li>
+        </ul>
+        <h4>2. Double Quantization</h4>
+        <p>Quantization itself produces scaling/zero-point constants per block, which also consume memory. Double quantization <em>quantizes the quantization constants</em>, compressing them further.</p>
+        <ul>
+          <li>Saves an additional ~0.4 bits per parameter on average</li>
+          <li>Improves storage efficiency without significant accuracy loss</li>
+        </ul>
+        <h4>3. Paged Optimizer</h4>
+        <p>During training, optimizer states (Adam moments) can exceed GPU memory, especially with large gradient batches. Paged optimizers swap states between CPU RAM and GPU VRAM on-demand (using unified memory).</p>
+        <ul>
+          <li>Prevents out-of-memory crashes</li>
+          <li>Enables training large models on small/consumer GPUs (e.g. 24 GB)</li>
+          <li>Improves stability for long training runs</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">11</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">6 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">6 marks</span>
       <div class="q-text">Compare <strong>LoRA vs QLoRA</strong> across: base model precision, memory, GPU need, speed, cost. Also state why QLoRA's scaling factor (&alpha;/r) matters.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <table>
+          <tr><th>Feature</th><th>LoRA</th><th>QLoRA</th></tr>
+          <tr><td>Base model precision</td><td>FP16 / FP32</td><td>4-bit (NF4)</td></tr>
+          <tr><td>Memory</td><td>Medium</td><td>Very Low</td></tr>
+          <tr><td>GPU need</td><td>High</td><td>Low (consumer-grade OK)</td></tr>
+          <tr><td>Speed</td><td>Fast</td><td>Faster (less data movement)</td></tr>
+          <tr><td>Cost</td><td>Medium</td><td>Low</td></tr>
+        </table>
+        <p><strong>Example:</strong> A 13B model needs ~70 GB GPU in FP16 for fine-tuning; with QLoRA it fits on a 24 GB GPU.</p>
+        <h4>Role of α/r Scaling Factor</h4>
+        <p>The LoRA update is: <code>W' = W + (α/r)·BA</code></p>
+        <ul>
+          <li><strong>Controls magnitude</strong> of the LoRA update on the original weights.</li>
+          <li>Acts like a learning-rate scale specifically for the adapter — letting you tune <code>r</code> without re-tuning the overall update strength.</li>
+          <li>Maintains training stability: small <code>r</code> with appropriate α keeps updates well-conditioned.</li>
+          <li>Without this scaling, changing rank would unintentionally change the effective step size of fine-tuning.</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">12</div>
-      <span class="q-type-badge type-numerical">Numerical</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-numerical">Numerical</span><span class="marks-pill">10 marks</span>
       <div class="q-text">Given the weight matrix and LoRA matrices below:</div>
       <div class="q-given">
         W = [[1.6, &minus;0.4], [&minus;1.2, 0.8]] &nbsp;|&nbsp; b = 4 bits, r = 2, &alpha; = 4<br><br>
@@ -440,11 +740,64 @@
         <div class="q-sub-item">(a) Compute scaling factor &delta; and quantize W. <span class="sub-marks">(3)</span></div>
         <div class="q-sub-item">(b) Dequantize and compute the L2 quantization error. <span class="sub-marks">(2)</span></div>
         <div class="q-sub-item">(c) Compute &Delta;W = (&alpha;/r) &middot; BA. <span class="sub-marks">(3)</span></div>
-        <div class="q-sub-item">(d) Compute the final updated W' = W + &Delta;W. <span class="sub-marks">(2)</span></div>
+        <div class="q-sub-item">(d) Compute the final updated W' = W&#771; + &Delta;W. <span class="sub-marks">(2)</span></div>
+      </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <div class="step">
+          <div class="step-title">(a) Range &amp; Scaling Factor</div>
+          <p>min = −1.2, max = 1.6, levels = 2⁴ = 16</p>
+          <p><code>δ = (max − min)/(2ᵇ − 1) = (1.6 − (−1.2))/15 = 2.8/15 ≈ 0.18667</code></p>
+          <p><strong>Quantization:</strong> <code>Q = round((W − min)/δ)</code></p>
+          <ul>
+            <li>(0,0): (1.6 − (−1.2))/0.18667 = 15.00 → <strong>15</strong></li>
+            <li>(0,1): (−0.4 + 1.2)/0.18667 = 4.286 → <strong>4</strong></li>
+            <li>(1,0): (−1.2 + 1.2)/0.18667 = 0 → <strong>0</strong></li>
+            <li>(1,1): (0.8 + 1.2)/0.18667 = 10.714 → <strong>11</strong></li>
+          </ul>
+          <p><code>Q = [[15, 4], [0, 11]]</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(b) Dequantization &amp; L2 Error</div>
+          <p><code>W̃ = Q·δ + min</code></p>
+          <ul>
+            <li>(0,0): 15·0.18667 − 1.2 = 1.600</li>
+            <li>(0,1): 4·0.18667 − 1.2 = −0.453</li>
+            <li>(1,0): 0 − 1.2 = −1.200</li>
+            <li>(1,1): 11·0.18667 − 1.2 = 0.853</li>
+          </ul>
+          <p><code>W̃ = [[1.600, −0.453], [−1.200, 0.853]]</code></p>
+          <p><strong>Error matrix:</strong> <code>E = W − W̃ = [[0, 0.053], [0, −0.053]]</code></p>
+          <p><code>L2 = √(0² + 0.053² + 0² + 0.053²) = √0.00568 ≈ 0.0754</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(c) Compute ΔW</div>
+          <p><strong>BA:</strong></p>
+          <ul>
+            <li>(0,0): 0.1·0.2 + 0.2·0.3 = 0.02 + 0.06 = 0.08</li>
+            <li>(0,1): 0.1·0.1 + 0.2·0.0 = 0.01</li>
+            <li>(1,0): −0.1·0.2 + 0.3·0.3 = −0.02 + 0.09 = 0.07</li>
+            <li>(1,1): −0.1·0.1 + 0.3·0.0 = −0.01</li>
+          </ul>
+          <p><code>BA = [[0.08, 0.01], [0.07, −0.01]]</code></p>
+          <p><code>α/r = 4/2 = 2</code></p>
+          <p><code>ΔW = 2·BA = [[0.16, 0.02], [0.14, −0.02]]</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(d) Final Update</div>
+          <p><code>W' = W̃ + ΔW</code></p>
+          <ul>
+            <li>(0,0): 1.600 + 0.16 = 1.760</li>
+            <li>(0,1): −0.453 + 0.02 = −0.433</li>
+            <li>(1,0): −1.200 + 0.14 = −1.060</li>
+            <li>(1,1): 0.853 + (−0.02) = 0.833</li>
+          </ul>
+        </div>
+        <div class="answer-final">W' = [[1.760, −0.433], [−1.060, 0.833]]</div>
       </div>
     </div>
 
-    <!-- UNIT 4 -->
+    <!-- Unit 4 -->
     <div class="section-header">
       <span class="section-tag tag-u4">Unit 4 &middot; Multimodal, Agentic &amp; Evaluation</span>
       <div class="section-rule"></div>
@@ -453,29 +806,81 @@
 
     <div class="question-block">
       <div class="q-number">13</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">What are <strong>multimodal models</strong>? List any 4 examples and one application of each.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <p><strong>Multimodal models</strong> are AI systems that process and integrate multiple forms of data — text, images, audio, video — to generate richer and more accurate outputs than single-modality models.</p>
+        <h4>Examples &amp; Applications</h4>
+        <ul>
+          <li><strong>CLIP</strong> (OpenAI) — zero-shot image classification; aligns images with natural-language descriptions.</li>
+          <li><strong>BLIP</strong> (Salesforce) — image captioning and visual question answering (VQA).</li>
+          <li><strong>DALL·E</strong> (OpenAI) — text-to-image generation for creative content.</li>
+          <li><strong>Whisper</strong> (OpenAI) — multilingual speech-to-text transcription and translation.</li>
+          <li><em>(Others: GPT-4V, Flamingo, Kosmos-2, ImageBind, VideoBERT)</em></li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">14</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">6 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">6 marks</span>
       <div class="q-text">Explain the <strong>ReAct pattern</strong> in agentic AI with a step-by-step example. Why is it preferred over a one-shot plan-then-execute approach for dynamic tasks?</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>ReAct (Reason + Act)</h4>
+        <p>The agent <strong>alternates between reasoning and action</strong>. It thinks about what to do, performs an action (tool call, API request, search), observes the result, then reasons again. The loop continues until the goal is reached.</p>
+        <h4>Step-by-Step Example</h4>
+        <p><strong>Task:</strong> "Find the cheapest flight from New York to Seattle next weekend."</p>
+        <ol>
+          <li><strong>Reason:</strong> I need flight prices for next weekend.</li>
+          <li><strong>Act:</strong> Call flight search API.</li>
+          <li><strong>Observe:</strong> Flights found at $280, $310, $355.</li>
+          <li><strong>Reason:</strong> $280 is cheapest, but I should check baggage fees.</li>
+          <li><strong>Act:</strong> Call airline details API.</li>
+          <li><strong>Observe:</strong> $280 flight has $70 baggage fee → total $350.</li>
+          <li><strong>Reason:</strong> The $310 option may actually be cheaper overall.</li>
+          <li><strong>Final:</strong> Recommend the $310 flight.</li>
+        </ol>
+        <h4>Why ReAct &gt; Plan-then-Execute</h4>
+        <ul>
+          <li><strong>Adaptive:</strong> Plans formed at the start may be invalidated by new observations. ReAct adjusts step-by-step.</li>
+          <li><strong>Lower hallucination:</strong> Grounding each step in real tool output reduces fabricated reasoning.</li>
+          <li><strong>Handles uncertainty:</strong> When intermediate results surprise the model, it can recover gracefully.</li>
+          <li><strong>Better for tool-heavy tasks:</strong> Search, code, retrieval — where the next action depends on what just happened.</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">15</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">Explain <strong>Whisper's architecture</strong> and how it performs multiple tasks (transcription, translation, language detection) using a single model.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Architecture</h4>
+        <p>Whisper uses an <strong>encoder-decoder Transformer</strong> trained on ~680,000 hours of diverse multilingual audio.</p>
+        <ul>
+          <li><strong>Input:</strong> Raw audio is converted into a <em>log-Mel spectrogram</em> (numerical time-frequency features).</li>
+          <li><strong>Encoder:</strong> Processes spectrogram features and produces hidden audio representations.</li>
+          <li><strong>Decoder:</strong> Autoregressively generates text tokens, attending over the encoder's audio context.</li>
+        </ul>
+        <h4>Multi-task via Special Tokens</h4>
+        <p>Whisper uses <strong>special control tokens</strong> in the decoder input to switch behavior:</p>
+        <ul>
+          <li><code>&lt;|transcribe|&gt;</code> → output text in the same language as audio</li>
+          <li><code>&lt;|translate|&gt;</code> → output English translation</li>
+          <li><code>&lt;|en|&gt;</code>, <code>&lt;|es|&gt;</code>, … → language identifier tokens</li>
+          <li>Timestamp tokens for time-aligned outputs</li>
+        </ul>
+        <p>One unified model handles transcription, translation, language detection, and voice activity detection — selected by the prompt structure rather than separate models.</p>
+        <p><strong>Key strength:</strong> Large diverse training data → robust across accents, noise, and 90+ languages.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">16</div>
-      <span class="q-type-badge type-mixed">Mixed</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-mixed">Mixed</span><span class="marks-pill">10 marks</span>
       <div class="q-sub">
         <div class="q-sub-item">(a) Compute the BLEU 1-gram precision for: <span class="sub-marks">(3)</span></div>
       </div>
@@ -487,27 +892,52 @@
         <div class="q-sub-item">(b) Explain the RAG Evaluation Triad and how Groundedness, Context Relevance, and Answer Relevance are measured. <span class="sub-marks">(4)</span></div>
         <div class="q-sub-item">(c) List any 3 common pitfalls in LLM evaluation. <span class="sub-marks">(3)</span></div>
       </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>(a) BLEU 1-gram Precision</h4>
+        <p>Candidate unigrams: {the, cat, sat, on, a, mat}  → 6 tokens</p>
+        <p>Check which appear in reference {the, cat, sat, on, the, mat}:</p>
+        <ul>
+          <li>the ✓, cat ✓, sat ✓, on ✓, a ✗, mat ✓ → <strong>5 matches</strong></li>
+        </ul>
+        <div class="answer-final">Precision-1 = 5/6 ≈ 0.833</div>
+        <h4>(b) RAG Evaluation Triad</h4>
+        <ul>
+          <li><strong>Context Relevance (Query ↔ Context):</strong> Measured by ranking metrics (Precision@k, Recall@k) and LLM-as-judge scoring of retrieved chunks against the query.</li>
+          <li><strong>Groundedness (Context ↔ Answer):</strong> Measured by checking if each claim in the answer is supported by the retrieved context — often via NLI (natural-language inference) classifiers or LLM-based grounding checks.</li>
+          <li><strong>Answer Relevance (Query ↔ Answer):</strong> Measured by semantic similarity (BERTScore, embedding similarity) or LLM judges asking "does this answer the question?".</li>
+        </ul>
+        <h4>(c) Common Pitfalls in LLM Evaluation</h4>
+        <ul>
+          <li><strong>Over-relying on a single metric</strong> (e.g. just BLEU for open-ended generation)</li>
+          <li><strong>Cherry-picking examples</strong> instead of using representative test sets</li>
+          <li><strong>Ignoring statistical significance</strong> — small improvements may be noise</li>
+          <li><em>(Others: using reference-based metrics for open-ended tasks, assuming humans are always right, demographic bias in test sets)</em></li>
+        </ul>
+      </div>
     </div>
 
   </div>
 </div>
 
-<!-- ========================= SET 2 ========================= -->
+<!-- ============= SET 2 ============= -->
 <div class="tab-content" id="set2">
   <div class="set-page">
     <div class="set-header">
       <div class="set-title">Practice Set &mdash; II</div>
-      <div class="set-meta">
-        Time: 3 Hours<br>
-        Max Marks: 100
-      </div>
+      <div class="set-meta">Time: 3 Hours<br>Max Marks: 100</div>
     </div>
 
     <div class="note-box">
-      <strong>Instructions:</strong> Answer all questions. Each unit carries 25 marks. Show all working for numericals; rounding to 3 decimal places where applicable. Calculator permitted.
+      <strong>Instructions:</strong> Answer all questions. Each unit carries 25 marks. Click "Show Solution" to reveal worked answers.
     </div>
 
-    <!-- UNIT 1 -->
+    <div class="controls">
+      <button class="ctrl-btn" onclick="toggleAll('set2', true)">Show All Solutions</button>
+      <button class="ctrl-btn" onclick="toggleAll('set2', false)">Hide All</button>
+    </div>
+
+    <!-- Unit 1 -->
     <div class="section-header">
       <span class="section-tag tag-u1">Unit 1 &middot; Foundations &amp; Transformers</span>
       <div class="section-rule"></div>
@@ -516,35 +946,87 @@
 
     <div class="question-block">
       <div class="q-number">1</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">What is the difference between <strong>discriminative and generative AI</strong>? Give 2 examples for each.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Discriminative AI</h4>
+        <p>Learns the <strong>decision boundary</strong> between classes — predicts <em>y</em> given <em>x</em>. Used to classify or decide.</p>
+        <ul>
+          <li>Logistic regression (spam vs not-spam)</li>
+          <li>CNN image classifier (cat vs dog)</li>
+        </ul>
+        <h4>Generative AI</h4>
+        <p>Learns the <strong>underlying distribution</strong> of data — can create new samples that resemble training data.</p>
+        <ul>
+          <li>GPT (generates text)</li>
+          <li>DALL·E / Stable Diffusion (generates images)</li>
+        </ul>
+        <p><strong>One-line summary:</strong> Discriminative models <em>decide</em>; generative models <em>create</em>.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">2</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">Explain <strong>Causal Language Modeling (CLM)</strong> vs <strong>Masked Language Modeling (MLM)</strong>. Which models use each, and what's the trade-off?</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Causal Language Modeling (CLM)</h4>
+        <ul>
+          <li>Predicts the <strong>next word</strong> from previous words.</li>
+          <li>One-directional (left-to-right) context.</li>
+          <li>Used in: <strong>GPT family</strong>, decoder-only models.</li>
+          <li>Strength: Natural fit for text generation.</li>
+        </ul>
+        <h4>Masked Language Modeling (MLM)</h4>
+        <ul>
+          <li>Some tokens are <strong>masked</strong>; model predicts them.</li>
+          <li>Bidirectional context (uses both left and right).</li>
+          <li>Used in: <strong>BERT</strong>, encoder-only models.</li>
+          <li>Strength: Stronger language understanding (richer context).</li>
+        </ul>
+        <h4>Trade-off</h4>
+        <ul>
+          <li>CLM → great for generation, weaker pure-understanding tasks.</li>
+          <li>MLM → great for understanding (classification, NER), cannot directly generate fluent long text.</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">3</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">6 marks</span>
-      <div class="q-text">Describe the role of:</div>
-      <div class="q-sub">
-        <div class="q-sub-item">(a) Positional encoding</div>
-        <div class="q-sub-item">(b) Residual connections</div>
-        <div class="q-sub-item">(c) Layer normalization</div>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">6 marks</span>
+      <div class="q-text">Describe the role of (a) positional encoding, (b) residual connections, (c) layer normalization in the Transformer architecture.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>(a) Positional Encoding (PE)</h4>
+        <ul>
+          <li>Transformers process tokens in <strong>parallel</strong>, so they have no inherent sense of order.</li>
+          <li>PE injects position information by adding sine/cosine values (or learned vectors) to embeddings.</li>
+          <li><code>PE(pos, 2i) = sin(pos / 10000^(2i/d))</code> and <code>PE(pos, 2i+1) = cos(...)</code></li>
+          <li>Without PE: "I love AI" and "AI love I" look identical to the model.</li>
+        </ul>
+        <h4>(b) Residual Connections</h4>
+        <ul>
+          <li>Add the input of a sublayer to its output: <code>x + Sublayer(x)</code>.</li>
+          <li>Prevents <strong>vanishing gradients</strong> in deep networks.</li>
+          <li>Allows information to flow even if a layer learns near-zero updates.</li>
+          <li>Enables stacking many layers (encoder/decoder depth = 6+).</li>
+        </ul>
+        <h4>(c) Layer Normalization</h4>
+        <ul>
+          <li>Normalizes activations across feature dimensions for each token.</li>
+          <li>Stabilizes training, reduces internal covariate shift.</li>
+          <li>Speeds up convergence.</li>
+          <li>Applied around each sublayer together with residual connections.</li>
+        </ul>
       </div>
-      <div class="q-text" style="margin-top:0.5rem;">in the Transformer architecture.</div>
     </div>
 
     <div class="question-block">
       <div class="q-number">4</div>
-      <span class="q-type-badge type-numerical">Numerical</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-numerical">Numerical</span><span class="marks-pill">10 marks</span>
       <div class="q-text">For the sentence <strong>"AI rules"</strong> (2 tokens), with embedding dimension d = 4:</div>
       <div class="q-given">
         Token embeddings (before PE):<br>
@@ -552,13 +1034,59 @@
         "rules" &rarr; (0.3, 0.6, 0.2, 0.1)
       </div>
       <div class="q-sub">
-        <div class="q-sub-item">(a) Compute positional encodings for pos = 0 and pos = 1 using sin/cos formulas. Round to 3 decimals. <span class="sub-marks">(4)</span></div>
+        <div class="q-sub-item">(a) Compute positional encodings for pos = 0 and pos = 1. <span class="sub-marks">(4)</span></div>
         <div class="q-sub-item">(b) Add PE to embeddings to get input matrix X. <span class="sub-marks">(2)</span></div>
         <div class="q-sub-item">(c) Assuming identity projection matrices, list Q, K, V for both tokens and explain how attention scores would be formed. <span class="sub-marks">(4)</span></div>
       </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <div class="step">
+          <div class="step-title">(a) Positional Encodings — d = 4 means i ∈ {0, 1}</div>
+          <p><strong>Dimensions 0, 1</strong> use i = 0 → denom = 10000⁰ = 1</p>
+          <p><strong>Dimensions 2, 3</strong> use i = 1 → denom = 10000^(2/4) = 10000^0.5 = 100</p>
+          <p><strong>For pos = 0:</strong></p>
+          <ul>
+            <li>PE(0,0) = sin(0/1) = 0</li>
+            <li>PE(0,1) = cos(0/1) = 1</li>
+            <li>PE(0,2) = sin(0/100) = 0</li>
+            <li>PE(0,3) = cos(0/100) = 1</li>
+          </ul>
+          <p><code>PE(0) = (0, 1, 0, 1)</code></p>
+          <p><strong>For pos = 1:</strong></p>
+          <ul>
+            <li>PE(1,0) = sin(1) ≈ 0.841</li>
+            <li>PE(1,1) = cos(1) ≈ 0.540</li>
+            <li>PE(1,2) = sin(0.01) ≈ 0.010</li>
+            <li>PE(1,3) = cos(0.01) ≈ 1.000</li>
+          </ul>
+          <p><code>PE(1) = (0.841, 0.540, 0.010, 1.000)</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(b) Input matrix X = embedding + PE</div>
+          <p>"AI" + PE(0) = (0.5+0, 0.2+1, 0.1+0, 0.4+1) = <code>(0.500, 1.200, 0.100, 1.400)</code></p>
+          <p>"rules" + PE(1) = (0.3+0.841, 0.6+0.540, 0.2+0.010, 0.1+1.000) = <code>(1.141, 1.140, 0.210, 1.100)</code></p>
+          <p><code>X = [[0.500, 1.200, 0.100, 1.400], [1.141, 1.140, 0.210, 1.100]]</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(c) Q, K, V with identity projections</div>
+          <p>With identity projections, <code>Q = K = V = X</code>.</p>
+          <p>For each token: Q = K = V = its own row of X.</p>
+          <ul>
+            <li>Q("AI") = K("AI") = V("AI") = (0.500, 1.200, 0.100, 1.400)</li>
+            <li>Q("rules") = K("rules") = V("rules") = (1.141, 1.140, 0.210, 1.100)</li>
+          </ul>
+          <p><strong>Attention score formation:</strong></p>
+          <ol>
+            <li>For each token, compute <code>Q · Kᵀ</code> with every token (including itself) — gives raw similarity scores.</li>
+            <li>Divide by <code>√d_k = 2</code> (since d_k = 4).</li>
+            <li>Apply <strong>softmax row-wise</strong> to obtain attention weights summing to 1.</li>
+            <li>Output for each token = weighted sum <code>Σ αᵢ · Vᵢ</code> over all tokens.</li>
+          </ol>
+        </div>
+      </div>
     </div>
 
-    <!-- UNIT 2 -->
+    <!-- Unit 2 -->
     <div class="section-header">
       <span class="section-tag tag-u2">Unit 2 &middot; Prompt Engineering &amp; RAG</span>
       <div class="section-rule"></div>
@@ -567,29 +1095,96 @@
 
     <div class="question-block">
       <div class="q-number">5</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">Explain <strong>Chain-of-Thought (CoT)</strong> and <strong>Tree-of-Thought (ToT)</strong> prompting with one example each. When is ToT preferred?</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Chain-of-Thought (CoT)</h4>
+        <p>Model is prompted to break problems into <strong>intermediate reasoning steps</strong> before the final answer. A single linear chain of reasoning.</p>
+        <p><em>Example:</em> "If a train travels at 60 km/h for 2 h, then 80 km/h for 3 h, total distance?"<br>
+        Reasoning: 60×2 = 120 km; 80×3 = 240 km; Total = 360 km.</p>
+        <h4>Tree-of-Thought (ToT)</h4>
+        <p>Model explores <strong>multiple reasoning paths in parallel</strong> (branching structure), evaluates each, and selects the best. Supports backtracking.</p>
+        <p><em>Example:</em> "Best way to allocate $10,000 for school development?" → Explores branches: renovation / technology / extracurriculars → compares trade-offs → picks 50/30/20 split.</p>
+        <h4>When ToT is Preferred</h4>
+        <ul>
+          <li>Complex decision-making (planning, optimization)</li>
+          <li>Multiple plausible strategies must be compared</li>
+          <li>Problems where one mistake on a single path is hard to recover from</li>
+          <li>Games, puzzles, strategic reasoning</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">6</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">What are <strong>temperature, top-k sampling, and context window</strong>? How do they affect LLM output?</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Temperature</h4>
+        <ul>
+          <li>Controls <strong>randomness/creativity</strong> in token sampling.</li>
+          <li>Low (0.1–0.3): more predictable, factual, deterministic.</li>
+          <li>High (0.7–1.2): more diverse, creative, sometimes unstable.</li>
+        </ul>
+        <h4>Top-k Sampling</h4>
+        <ul>
+          <li>Restricts choice to the <strong>k most probable</strong> next tokens.</li>
+          <li>Lower k (e.g. 10): focused output.</li>
+          <li>Higher k (e.g. 100): more variety.</li>
+        </ul>
+        <h4>Context Window</h4>
+        <ul>
+          <li>Fixed maximum number of tokens the model can process at once.</li>
+          <li>Tokens beyond this limit are dropped/truncated (older context "forgotten").</li>
+          <li>Affects long-document summarization, multi-turn chat, and RAG chunk sizing.</li>
+        </ul>
+        <p><strong>Combined effect:</strong> Temperature + top-k shape output style/creativity; context window determines how much info the model can reason over.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">7</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">6 marks</span>
-      <div class="q-text">Explain the <strong>architecture of a RAG system</strong> with a diagram. Describe each layer (indexing, generation, evaluation, monitoring, orchestration).</div>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">6 marks</span>
+      <div class="q-text">Explain the <strong>architecture of a RAG system</strong>. Describe each layer (indexing, generation, evaluation, monitoring, orchestration).</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <p>A production RAG system has several coordinated layers:</p>
+        <h4>1. Indexing Layer</h4>
+        <ul>
+          <li>Documents are chunked and embedded into vectors.</li>
+          <li>Stored in a vector database (FAISS, Pinecone, Weaviate, Chroma).</li>
+          <li>Inverted indexes built for sparse retrieval (BM25).</li>
+        </ul>
+        <h4>2. Generation Layer</h4>
+        <ul>
+          <li>User query is embedded and used to retrieve top-k relevant chunks.</li>
+          <li>Retrieved context + query is sent to the LLM as a prompt.</li>
+          <li>LLM generates the final grounded answer.</li>
+        </ul>
+        <h4>3. Evaluation Layer</h4>
+        <ul>
+          <li>Measures retrieval quality (Precision@k, Recall@k), groundedness, and answer relevance.</li>
+          <li>Frameworks: TruLens, DeepEval, RAGAS.</li>
+        </ul>
+        <h4>4. Monitoring Layer</h4>
+        <ul>
+          <li>Tracks latency, hallucination rates, user feedback in production.</li>
+          <li>Logs failures for analysis.</li>
+        </ul>
+        <h4>5. Orchestration Layer</h4>
+        <ul>
+          <li>Central controller that routes the flow between layers.</li>
+          <li>Manages retries, fallbacks, security checks, and component interaction.</li>
+        </ul>
+        <p><strong>Flow:</strong> Query → Embed → Retrieve → Re-rank → Filter → Build Prompt → LLM → Answer → (Evaluate + Monitor).</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">8</div>
-      <span class="q-type-badge type-numerical">Numerical</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-numerical">Numerical</span><span class="marks-pill">10 marks</span>
       <div class="q-text">Given:</div>
       <div class="q-given">
         BM25 scores: D1 = 0.6, D2 = 0.4, D3 = 0.8<br><br>
@@ -601,12 +1196,54 @@
       </div>
       <div class="q-sub">
         <div class="q-sub-item">(a) Compute cosine similarity between Q and each document. <span class="sub-marks">(5)</span></div>
-        <div class="q-sub-item">(b) Compute hybrid retrieval score with &alpha; = 0.5 and rank the documents. <span class="sub-marks">(3)</span></div>
-        <div class="q-sub-item">(c) Why does hybrid retrieval generally outperform pure BM25 or pure dense retrieval? <span class="sub-marks">(2)</span></div>
+        <div class="q-sub-item">(b) Compute hybrid retrieval score with &alpha; = 0.5 and rank. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(c) Why does hybrid retrieval outperform pure BM25 or pure dense retrieval? <span class="sub-marks">(2)</span></div>
+      </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <div class="step">
+          <div class="step-title">(a) Cosine Similarities</div>
+          <p>Magnitudes:</p>
+          <ul>
+            <li>‖Q‖ = √(0.25 + 0.49 + 0.25) = √0.99 = 0.9950</li>
+            <li>‖D1‖ = √(0.36 + 0.64 + 0) = √1.00 = 1.0000</li>
+            <li>‖D2‖ = √(0.16 + 0.09 + 0.81) = √1.06 = 1.0296</li>
+            <li>‖D3‖ = √(0.49 + 0.49 + 0.01) = √0.99 = 0.9950</li>
+          </ul>
+          <p>Dot products:</p>
+          <ul>
+            <li>Q·D1 = 0.5·0.6 + 0.7·0.8 + 0.5·0 = 0.30 + 0.56 + 0 = 0.860</li>
+            <li>Q·D2 = 0.5·0.4 + 0.7·0.3 + 0.5·0.9 = 0.20 + 0.21 + 0.45 = 0.860</li>
+            <li>Q·D3 = 0.5·0.7 + 0.7·0.7 + 0.5·0.1 = 0.35 + 0.49 + 0.05 = 0.890</li>
+          </ul>
+          <p>Cosine similarities:</p>
+          <ul>
+            <li>cos(Q,D1) = 0.860 / (0.9950 × 1.0000) = <strong>0.864</strong></li>
+            <li>cos(Q,D2) = 0.860 / (0.9950 × 1.0296) = <strong>0.840</strong></li>
+            <li>cos(Q,D3) = 0.890 / (0.9950 × 0.9950) = <strong>0.899</strong></li>
+          </ul>
+        </div>
+        <div class="step">
+          <div class="step-title">(b) Hybrid Score: H = α·BM25 + (1−α)·cosine,  α = 0.5</div>
+          <ul>
+            <li>H(D1) = 0.5·0.6 + 0.5·0.864 = 0.300 + 0.432 = <strong>0.732</strong></li>
+            <li>H(D2) = 0.5·0.4 + 0.5·0.840 = 0.200 + 0.420 = <strong>0.620</strong></li>
+            <li>H(D3) = 0.5·0.8 + 0.5·0.899 = 0.400 + 0.450 = <strong>0.850</strong></li>
+          </ul>
+          <p><strong>Ranking: D3 (0.850) &gt; D1 (0.732) &gt; D2 (0.620)</strong></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(c) Why Hybrid Wins</div>
+          <ul>
+            <li><strong>BM25 (sparse):</strong> Excellent for exact keyword matching but blind to synonyms/paraphrase.</li>
+            <li><strong>Dense (cosine):</strong> Captures semantic similarity but may miss rare exact-term matches.</li>
+            <li><strong>Hybrid:</strong> Combines lexical precision (BM25) with semantic recall (dense embeddings) → more robust ranking.</li>
+          </ul>
+        </div>
       </div>
     </div>
 
-    <!-- UNIT 3 -->
+    <!-- Unit 3 -->
     <div class="section-header">
       <span class="section-tag tag-u3">Unit 3 &middot; Fine-Tuning, LoRA &amp; QLoRA</span>
       <div class="section-rule"></div>
@@ -615,29 +1252,81 @@
 
     <div class="question-block">
       <div class="q-number">9</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">Write the <strong>LoRA weight update formula</strong>. Explain each term (W, A, B, r, &alpha;).</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <p><strong>LoRA update:</strong></p>
+        <p><code>W' = W + ΔW = W + (α/r) · B·A</code></p>
+        <h4>Terms</h4>
+        <ul>
+          <li><strong>W:</strong> Original pretrained weight matrix (frozen, dimension d × k).</li>
+          <li><strong>A:</strong> Trainable matrix of shape r × k (down-projection).</li>
+          <li><strong>B:</strong> Trainable matrix of shape d × r (up-projection).</li>
+          <li><strong>r:</strong> Rank — typically very small (r ≪ d, k); controls capacity of the adapter.</li>
+          <li><strong>α:</strong> Scaling factor that controls the magnitude of the update; α/r acts as an effective learning-rate scale.</li>
+        </ul>
+        <p>Since <code>BA</code> is low-rank, the number of trainable parameters is <code>r·(d + k)</code> — far fewer than the <code>d·k</code> of full fine-tuning.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">10</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">How does <strong>rank (r)</strong> affect LoRA performance? What's the trade-off between small and large r?</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Effect of Rank r</h4>
+        <p>r controls the <strong>expressive capacity</strong> of the LoRA adapter (BA is rank-r at most).</p>
+        <h4>Small r (e.g. 4–8)</h4>
+        <ul>
+          <li>Very few trainable parameters → fast, cheap, low memory.</li>
+          <li>May underfit complex tasks (limited capacity).</li>
+          <li>Best for tasks similar to pretraining domain.</li>
+        </ul>
+        <h4>Large r (e.g. 64–128)</h4>
+        <ul>
+          <li>More capacity → can adapt to harder, more distant domains.</li>
+          <li>Slower training, more memory, larger adapter to store.</li>
+          <li>Risk of overfitting on small datasets.</li>
+        </ul>
+        <h4>Trade-off Summary</h4>
+        <ul>
+          <li>r is a <strong>capacity ↔ efficiency</strong> dial.</li>
+          <li>Common practical range: r = 4 to 32.</li>
+          <li>α should be tuned together with r (often α = r or α = 2r).</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">11</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">6 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">6 marks</span>
       <div class="q-text">Describe the <strong>practical fine-tuning workflow using QLoRA</strong> in 5 steps. Mention the role of the Hugging Face PEFT library.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>QLoRA Fine-Tuning Workflow</h4>
+        <ol>
+          <li><strong>Load pretrained model</strong> — e.g. Llama-2 7B from Hugging Face Hub.</li>
+          <li><strong>Quantize to 4-bit (NF4)</strong> — base model weights stored in 4-bit; activations stay in higher precision (e.g. bfloat16).</li>
+          <li><strong>Add LoRA adapters</strong> — attach trainable low-rank matrices to attention layers (Q, K, V projections).</li>
+          <li><strong>Train adapters</strong> — using paged optimizer, only the LoRA matrices update; base weights stay frozen.</li>
+          <li><strong>Save / merge model</strong> — save adapter weights separately (small footprint) or merge into base for inference.</li>
+        </ol>
+        <h4>Role of Hugging Face PEFT Library</h4>
+        <ul>
+          <li>Provides <code>LoraConfig</code> and <code>get_peft_model()</code> to wrap any HF model with LoRA adapters in 2–3 lines.</li>
+          <li>Integrates with <code>bitsandbytes</code> for 4-bit quantization (NF4, double quantization).</li>
+          <li>Handles adapter saving/loading via <code>PeftModel.from_pretrained()</code>.</li>
+          <li>Compatible with HF Trainer for standard fine-tuning loops.</li>
+          <li>Massively reduces boilerplate compared to manual implementation.</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">12</div>
-      <span class="q-type-badge type-numerical">Numerical</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-numerical">Numerical</span><span class="marks-pill">10 marks</span>
       <div class="q-text">Quantize the matrix W to b = 3 bits (8 levels):</div>
       <div class="q-given">
         W = [[2.0, &minus;1.0, 0.5], [&minus;2.0, 1.5, 0.0]]
@@ -647,9 +1336,46 @@
         <div class="q-sub-item">(b) Quantize each element. <span class="sub-marks">(3)</span></div>
         <div class="q-sub-item">(c) Dequantize and compute the Mean Absolute Error (MAE). <span class="sub-marks">(4)</span></div>
       </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <div class="step">
+          <div class="step-title">(a) Range &amp; Scaling Factor</div>
+          <p>min = −2.0, max = 2.0, levels = 2³ = 8</p>
+          <p><code>δ = (max − min)/(2ᵇ − 1) = (2.0 − (−2.0))/7 = 4/7 ≈ 0.57143</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(b) Quantization: Q = round((W − min)/δ)</div>
+          <ul>
+            <li>(0,0): (2.0 + 2.0)/0.5714 = 7.000 → <strong>7</strong></li>
+            <li>(0,1): (−1.0 + 2.0)/0.5714 = 1.750 → <strong>2</strong></li>
+            <li>(0,2): (0.5 + 2.0)/0.5714 = 4.375 → <strong>4</strong></li>
+            <li>(1,0): (−2.0 + 2.0)/0.5714 = 0 → <strong>0</strong></li>
+            <li>(1,1): (1.5 + 2.0)/0.5714 = 6.125 → <strong>6</strong></li>
+            <li>(1,2): (0.0 + 2.0)/0.5714 = 3.500 → <strong>4</strong> (round half to even, or just round-half-up = 4)</li>
+          </ul>
+          <p><code>Q = [[7, 2, 4], [0, 6, 4]]</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(c) Dequantize &amp; MAE</div>
+          <p><code>W̃ = Q·δ + min</code></p>
+          <ul>
+            <li>(0,0): 7·0.5714 − 2.0 = 2.000</li>
+            <li>(0,1): 2·0.5714 − 2.0 = −0.857</li>
+            <li>(0,2): 4·0.5714 − 2.0 = 0.286</li>
+            <li>(1,0): 0 − 2.0 = −2.000</li>
+            <li>(1,1): 6·0.5714 − 2.0 = 1.429</li>
+            <li>(1,2): 4·0.5714 − 2.0 = 0.286</li>
+          </ul>
+          <p><code>W̃ = [[2.000, −0.857, 0.286], [−2.000, 1.429, 0.286]]</code></p>
+          <p><strong>Error matrix:</strong> <code>E = W − W̃</code></p>
+          <p>|E| = [0, 0.143, 0.214, 0, 0.071, 0.286]</p>
+          <p>Sum = 0.714,  count = 6</p>
+        </div>
+        <div class="answer-final">MAE = 0.714 / 6 ≈ 0.119</div>
+      </div>
     </div>
 
-    <!-- UNIT 4 -->
+    <!-- Unit 4 -->
     <div class="section-header">
       <span class="section-tag tag-u4">Unit 4 &middot; Multimodal, Agentic &amp; Evaluation</span>
       <div class="section-rule"></div>
@@ -658,29 +1384,85 @@
 
     <div class="question-block">
       <div class="q-number">13</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">Explain <strong>CLIP</strong>. What is contrastive learning and why does CLIP enable zero-shot classification?</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>CLIP (Contrastive Language-Image Pretraining)</h4>
+        <p>Developed by OpenAI, CLIP learns a <strong>shared embedding space</strong> for images and text by training on hundreds of millions of (image, caption) pairs from the web.</p>
+        <h4>Contrastive Learning</h4>
+        <ul>
+          <li>For each training batch, the model is given many image-text pairs.</li>
+          <li><strong>Maximize</strong> similarity between matching pairs.</li>
+          <li><strong>Minimize</strong> similarity between non-matching pairs.</li>
+          <li>Result: matching images and texts end up close in embedding space.</li>
+        </ul>
+        <h4>Zero-Shot Classification</h4>
+        <p>To classify an image into N categories without task-specific training:</p>
+        <ol>
+          <li>Create text prompts like "a photo of a {class}" for each class.</li>
+          <li>Embed image and all text prompts.</li>
+          <li>Pick the class whose text embedding has highest cosine similarity with the image.</li>
+        </ol>
+        <p>No labeled training data needed — the joint embedding space generalizes to new classes via natural language descriptions.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">14</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">What are <strong>agentic design patterns</strong> and why are they needed? List any 5 patterns.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <p>An <strong>agentic design pattern</strong> is a reusable solution to a common system-design problem in agentic AI. It describes proven ways to organize reasoning, planning, tool use, memory, validation, and coordination among one or more agents.</p>
+        <h4>Why They're Needed</h4>
+        <ul>
+          <li>Agentic systems are more complex than single-prompt LLM calls.</li>
+          <li>Without structure, workflows are unstable, expensive, and hard to debug.</li>
+          <li>Patterns improve reliability, reduce hallucination, separate concerns, and make systems easier to scale and monitor.</li>
+        </ul>
+        <h4>Five Popular Patterns</h4>
+        <ol>
+          <li><strong>Planning Pattern</strong> — decompose goal into sub-tasks before acting.</li>
+          <li><strong>ReAct Pattern</strong> — alternate reason ↔ act loop.</li>
+          <li><strong>Retrieval-Augmented Generation (RAG)</strong> — fetch documents before generating.</li>
+          <li><strong>Tool-Use Pattern</strong> — call APIs, code interpreter, calculators.</li>
+          <li><strong>Reflection / Self-Critique</strong> — agent reviews and improves its own output.</li>
+        </ol>
+        <p><em>(Others: Router, Orchestrator-Worker, Multi-Agent, Memory, Human-in-Loop, Guardrails.)</em></p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">15</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">6 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">6 marks</span>
       <div class="q-text">Compare <strong>AutoGen, LangGraph, and CrewAI</strong> frameworks: strengths, weaknesses, and ideal use cases.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>AutoGen (Microsoft)</h4>
+        <ul>
+          <li><strong>Strengths:</strong> Strong multi-agent conversation; built-in tool use and code execution; human-in-the-loop support; great for research.</li>
+          <li><strong>Weaknesses:</strong> Expensive (many LLM calls); conversations can be hard to control; less predictable.</li>
+          <li><strong>Use case:</strong> Multi-agent collaboration, simulations, autonomous research workflows.</li>
+        </ul>
+        <h4>LangGraph (LangChain)</h4>
+        <ul>
+          <li><strong>Strengths:</strong> Graph-based control with loops, retries, branching; production-ready for agents; fine-grained control.</li>
+          <li><strong>Weaknesses:</strong> Steeper learning curve; more setup; overkill for simple tasks.</li>
+          <li><strong>Use case:</strong> Iterative workflows (ReAct, reflection), complex pipelines, production agents.</li>
+        </ul>
+        <h4>CrewAI</h4>
+        <ul>
+          <li><strong>Strengths:</strong> Simple, role-based design ("agents as a team"); easy to understand; good for business workflows.</li>
+          <li><strong>Weaknesses:</strong> Less flexible than LangGraph; limited control for advanced workflows; still evolving.</li>
+          <li><strong>Use case:</strong> Role-based automation (researcher → writer → editor), business processes, marketing content generation.</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">16</div>
-      <span class="q-type-badge type-mixed">Mixed</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-mixed">Mixed</span><span class="marks-pill">10 marks</span>
       <div class="q-sub">
         <div class="q-sub-item">(a) Compute BLEU clipped precision for unigrams: <span class="sub-marks">(4)</span></div>
       </div>
@@ -689,30 +1471,59 @@
         Candidate: "the the the sun rises east"
       </div>
       <div class="q-sub">
-        <div class="q-sub-item">(b) Explain early fusion vs late fusion vs hybrid fusion in multimodal models. <span class="sub-marks">(3)</span></div>
-        <div class="q-sub-item">(c) What metrics are used to evaluate BLIP across image captioning, VQA, and image-text retrieval tasks? <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(b) Explain early fusion vs late fusion vs hybrid fusion. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(c) What metrics evaluate BLIP across image captioning, VQA, and retrieval tasks? <span class="sub-marks">(3)</span></div>
+      </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>(a) BLEU Clipped Unigram Precision</h4>
+        <p><strong>Without clipping</strong>, "the" appears 3 times in candidate but only 2 times in reference. Naive precision would over-count.</p>
+        <p><strong>Clipped count</strong> = min(candidate_count, max_reference_count) for each unique word:</p>
+        <ul>
+          <li>the: min(3, 2) = 2</li>
+          <li>sun: min(1, 1) = 1</li>
+          <li>rises: min(1, 1) = 1</li>
+          <li>east: min(1, 1) = 1</li>
+        </ul>
+        <p>Total clipped matches = 2 + 1 + 1 + 1 = 5<br>
+        Total candidate words = 6</p>
+        <div class="answer-final">Clipped precision = 5/6 ≈ 0.833</div>
+        <h4>(b) Fusion Strategies in Multimodal Models</h4>
+        <ul>
+          <li><strong>Early Fusion (feature-level):</strong> Raw features from different modalities are concatenated/combined <em>before</em> the main model. Simple, but modalities must be aligned. E.g. concatenate image patches and text tokens at input.</li>
+          <li><strong>Late Fusion (decision-level):</strong> Each modality is processed by a separate model, predictions/embeddings combined at the <em>end</em>. Flexible, modular, but loses cross-modal interaction.</li>
+          <li><strong>Hybrid Fusion:</strong> Combines both — some interaction happens early, some processing remains modality-specific. Used in modern systems (CLIP, BLIP, Flamingo).</li>
+        </ul>
+        <h4>(c) BLIP Evaluation Metrics</h4>
+        <ul>
+          <li><strong>Image Captioning:</strong> BLEU (n-gram overlap with reference), CIDEr (consensus-based caption evaluation).</li>
+          <li><strong>Visual Question Answering (VQA):</strong> Accuracy — % of correctly predicted answers.</li>
+          <li><strong>Image-Text Retrieval:</strong> Recall@k — fraction of queries where correct match is in top-k.</li>
+        </ul>
       </div>
     </div>
 
   </div>
 </div>
 
-<!-- ========================= SET 3 ========================= -->
+<!-- ============= SET 3 ============= -->
 <div class="tab-content" id="set3">
   <div class="set-page">
     <div class="set-header">
       <div class="set-title">Practice Set &mdash; III</div>
-      <div class="set-meta">
-        Time: 3 Hours<br>
-        Max Marks: 100
-      </div>
+      <div class="set-meta">Time: 3 Hours<br>Max Marks: 100</div>
     </div>
 
     <div class="note-box">
-      <strong>Instructions:</strong> Answer all questions. Each unit carries 25 marks. Show all working for numericals; rounding to 3 decimal places where applicable. Calculator permitted.
+      <strong>Instructions:</strong> Answer all questions. Each unit carries 25 marks. Click "Show Solution" to reveal worked answers.
     </div>
 
-    <!-- UNIT 1 -->
+    <div class="controls">
+      <button class="ctrl-btn" onclick="toggleAll('set3', true)">Show All Solutions</button>
+      <button class="ctrl-btn" onclick="toggleAll('set3', false)">Hide All</button>
+    </div>
+
+    <!-- Unit 1 -->
     <div class="section-header">
       <span class="section-tag tag-u1">Unit 1 &middot; Foundations &amp; Transformers</span>
       <div class="section-rule"></div>
@@ -721,29 +1532,72 @@
 
     <div class="question-block">
       <div class="q-number">1</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">What are the <strong>three Generative AI revolutions</strong> (2018&ndash;2025)? Briefly explain each.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>1. Pretraining Era (2018–2020)</h4>
+        <p>Foundation models learn language (and later vision) from massive amounts of unlabeled web data via self-supervised objectives (CLM, MLM). Models like GPT, BERT, T5 demonstrate that scale + transformer architecture yields surprisingly general capabilities.</p>
+        <h4>2. Instruction Tuning Era (2022)</h4>
+        <p>Pretrained models are aligned to follow human intent via supervised instruction tuning + reinforcement learning from human feedback (RLHF). ChatGPT, InstructGPT, Claude → users can interact in natural language without crafting careful prompts.</p>
+        <h4>3. Agentic AI Era (2024–2025)</h4>
+        <p>Models gain the ability to reason, plan, use tools, and act autonomously. Multi-step task execution, tool calling, persistent memory. Examples: AutoGPT, Devin, multi-agent research systems.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">2</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">Why is <strong>masking</strong> used in the decoder's self-attention? Show with an example how the mask prevents data leakage.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Why Masking?</h4>
+        <p>During training, the decoder is fed the entire target sequence in parallel to enable fast training. Without masking, when predicting position <em>t</em>, the model could attend to future tokens (positions &gt; <em>t</em>) — this is <strong>data leakage</strong>: the model would "cheat" by seeing the answer.</p>
+        <h4>How the Mask Works</h4>
+        <ul>
+          <li>A causal mask <code>M</code> is added to the scaled scores <em>before</em> softmax.</li>
+          <li>Future positions get <code>−∞</code>; current/past positions get <code>0</code>.</li>
+          <li>After softmax, attention weights for future tokens become exactly 0.</li>
+        </ul>
+        <h4>Example</h4>
+        <p>Predicting "Word 3" in target "Word 1 Word 2 Word 3 Word 4". The mask matrix for 4 tokens:</p>
+        <table>
+          <tr><th> </th><th>t1</th><th>t2</th><th>t3</th><th>t4</th></tr>
+          <tr><td>t1</td><td>0</td><td>−∞</td><td>−∞</td><td>−∞</td></tr>
+          <tr><td>t2</td><td>0</td><td>0</td><td>−∞</td><td>−∞</td></tr>
+          <tr><td>t3</td><td>0</td><td>0</td><td>0</td><td>−∞</td></tr>
+          <tr><td>t4</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+        </table>
+        <p>When predicting t3, attention to t4 is killed by the mask → no leakage. The model can train in parallel while preserving autoregressive integrity.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">3</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">6 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">6 marks</span>
       <div class="q-text">Explain the input processing pipeline of a Transformer: <strong>tokenization &rarr; embeddings &rarr; positional encoding</strong>. Why is final input = embedding + PE and not concatenation?</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>1. Tokenization</h4>
+        <p>Raw text is segmented into discrete tokens using subword tokenization (BPE, WordPiece). Each token is mapped to an integer index from a fixed vocabulary (typically 30k–50k tokens).</p>
+        <h4>2. Token Embeddings</h4>
+        <p>Each token index is looked up in an embedding matrix → dense vector of dimension <code>d_model</code> (e.g. 512). These embeddings encode semantic and syntactic properties; they're learned during training.</p>
+        <h4>3. Positional Encoding (PE)</h4>
+        <p>Since transformers process tokens in parallel (no recurrence), they have no inherent order awareness. PE is added to each token embedding to inject position info using sine/cosine functions of different frequencies.</p>
+        <h4>Why Addition (not Concatenation)?</h4>
+        <ul>
+          <li><strong>Keeps dimension fixed</strong> at <code>d_model</code> — no extra parameters needed in downstream layers.</li>
+          <li><strong>Allows joint learning</strong> of content + position in the same vector space.</li>
+          <li><strong>Compatible with residual connections</strong> which require matching dimensions throughout the network.</li>
+          <li>Concatenation would double the dimension and force every subsequent weight matrix to be larger.</li>
+          <li>Empirically: addition works well because PE values are bounded (−1 to 1) and don't overwhelm the semantic embedding.</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">4</div>
-      <span class="q-type-badge type-numerical">Numerical</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-numerical">Numerical</span><span class="marks-pill">10 marks</span>
       <div class="q-text">A Transformer encoder processes <strong>"Hello World"</strong> (2 tokens) with d = 4.</div>
       <div class="q-given">
         Input matrix after PE:<br>
@@ -751,18 +1605,65 @@
         Projection matrices (4&times;2):<br>
         W<sub>Q</sub> = [[1,0],[0,1],[1,0],[0,1]]<br>
         W<sub>K</sub> = [[1,0],[0,1],[1,0],[0,1]]<br>
-        W<sub>V</sub> = [[1,0],[0,1],[0,1],[1,0]]<br><br>
+        W<sub>V</sub> = [[2,0],[0,1],[0,3],[1,0]]<br><br>
         d<sub>k</sub> = 2
       </div>
       <div class="q-sub">
         <div class="q-sub-item">(a) Compute Q, K, V matrices. <span class="sub-marks">(3)</span></div>
         <div class="q-sub-item">(b) Compute scaled score matrix QK&#7488;/&radic;d<sub>k</sub>. <span class="sub-marks">(2)</span></div>
         <div class="q-sub-item">(c) Compute softmax attention weights. <span class="sub-marks">(2)</span></div>
-        <div class="q-sub-item">(d) Compute the final output Z. Round to 3 decimals. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(d) Compute the final output Z. <span class="sub-marks">(3)</span></div>
+      </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <div class="step">
+          <div class="step-title">(a) Compute Q, K, V = X · W</div>
+          <p><strong>Q = X · W_Q:</strong></p>
+          <ul>
+            <li>Row 0: (1,0,1,0)·col1 = 1·1+0·0+1·1+0·0 = 2; ·col2 = 0+0+0+0 = 0 → (2, 0)</li>
+            <li>Row 1: (0,1,0,1)·col1 = 0; ·col2 = 0·0+1·1+0·0+1·1 = 2 → (0, 2)</li>
+          </ul>
+          <p><code>Q = [[2, 0], [0, 2]]</code></p>
+          <p><strong>K = X · W_K</strong> (same as Q since W_K = W_Q): <code>K = [[2, 0], [0, 2]]</code></p>
+          <p><strong>V = X · W_V:</strong></p>
+          <ul>
+            <li>Row 0: (1,0,1,0)·col1 = 1·2+0+1·0+0 = 2; ·col2 = 1·0+0+1·3+0 = 3 → (2, 3)</li>
+            <li>Row 1: (0,1,0,1)·col1 = 0+0+0+1·1 = 1; ·col2 = 0+1·1+0+0 = 1 → (1, 1)</li>
+          </ul>
+          <p><code>V = [[2, 3], [1, 1]]</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(b) Scaled Scores QKᵀ/√d_k</div>
+          <p>QKᵀ:</p>
+          <ul>
+            <li>(0,0): (2,0)·(2,0) = 4</li>
+            <li>(0,1): (2,0)·(0,2) = 0</li>
+            <li>(1,0): (0,2)·(2,0) = 0</li>
+            <li>(1,1): (0,2)·(0,2) = 4</li>
+          </ul>
+          <p>Divide by √2 ≈ 1.4142:</p>
+          <p><code>Scores = [[2.828, 0], [0, 2.828]]</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(c) Softmax (row-wise)</div>
+          <p>For row 0: exp(2.828) = 16.95; exp(0) = 1; Σ = 17.95</p>
+          <ul>
+            <li>α₀₀ = 16.95/17.95 = 0.944</li>
+            <li>α₀₁ = 1/17.95 = 0.056</li>
+          </ul>
+          <p>Row 1 by symmetry: (0.056, 0.944)</p>
+          <p><code>A = [[0.944, 0.056], [0.056, 0.944]]</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(d) Output Z = A · V</div>
+          <p>Row 0: 0.944·(2,3) + 0.056·(1,1) = (1.888 + 0.056, 2.832 + 0.056) = (1.944, 2.888)</p>
+          <p>Row 1: 0.056·(2,3) + 0.944·(1,1) = (0.112 + 0.944, 0.168 + 0.944) = (1.056, 1.112)</p>
+        </div>
+        <div class="answer-final">Z = [[1.944, 2.888], [1.056, 1.112]]</div>
       </div>
     </div>
 
-    <!-- UNIT 2 -->
+    <!-- Unit 2 -->
     <div class="section-header">
       <span class="section-tag tag-u2">Unit 2 &middot; Prompt Engineering &amp; RAG</span>
       <div class="section-rule"></div>
@@ -771,37 +1672,91 @@
 
     <div class="question-block">
       <div class="q-number">5</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">Explain <strong>role-based prompting</strong> and <strong>negative prompting</strong> with one example each.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Role-Based Prompting</h4>
+        <p>Tells the model to adopt a specific persona or expertise to shape its tone, vocabulary, and depth.</p>
+        <p><em>Example:</em> "Act as a machine learning professor and explain CNNs to beginners using simple analogies."<br>
+        → Model produces accessible, pedagogical content rather than dense technical jargon.</p>
+        <h4>Negative Prompting</h4>
+        <p>Explicitly tells the model what to <strong>avoid</strong> in the response.</p>
+        <p><em>Example:</em> "Write a movie review for Inception. Do <em>not</em> include spoilers, do <em>not</em> use the word 'amazing', and avoid bullet lists."<br>
+        → Constrains output style and content.</p>
+        <p><strong>Use cases:</strong> Style control, content filtering, format constraints, avoiding repetition.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">6</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">What is <strong>document chunking</strong>? Why is it important in RAG? Explain hierarchical chunking briefly.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Document Chunking</h4>
+        <p>The process of splitting large documents into smaller meaningful segments before embedding and indexing.</p>
+        <h4>Why It's Important</h4>
+        <ul>
+          <li><strong>Fits LLM context window:</strong> Whole documents may exceed the model's input limit.</li>
+          <li><strong>Improves retrieval precision:</strong> Smaller chunks reduce noise; the LLM gets only relevant passages.</li>
+          <li><strong>Better semantic embeddings:</strong> A small focused chunk has a more concentrated meaning than a large mixed document.</li>
+          <li><strong>Typical sizes:</strong> 256–1024 tokens, often with overlap (e.g. 10–20%) to preserve continuity across boundaries.</li>
+        </ul>
+        <h4>Hierarchical Chunking</h4>
+        <p>Splits documents into <strong>structured levels</strong>: document → section → paragraph → sentence. Each level has its own embedding. At retrieval time, the system can:</p>
+        <ul>
+          <li>Use high-level chunks for broad context.</li>
+          <li>Drill down to fine-grained chunks for specific facts.</li>
+          <li>Return parents of matching children to provide surrounding context.</li>
+        </ul>
+        <p>Improves accuracy on long documents (legal, medical, research papers) where flat chunking loses structural context.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">7</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">6 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">6 marks</span>
       <div class="q-sub">
         <div class="q-sub-item">(a) What is <strong>parametric vs non-parametric memory</strong> in LLMs? <span class="sub-marks">(3)</span></div>
         <div class="q-sub-item">(b) Explain how RAG bridges this gap and reduces hallucinations. <span class="sub-marks">(3)</span></div>
+      </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>(a) Parametric vs Non-Parametric Memory</h4>
+        <p><strong>Parametric memory:</strong></p>
+        <ul>
+          <li>Knowledge stored inside model weights (billions of parameters).</li>
+          <li>Learned during training, compressed lossy into weights.</li>
+          <li>Cannot be updated instantly; requires retraining or fine-tuning.</li>
+          <li>May recall facts incorrectly (hallucination).</li>
+        </ul>
+        <p><strong>Non-parametric memory:</strong></p>
+        <ul>
+          <li>External knowledge — databases, PDFs, APIs, vector stores.</li>
+          <li>Stored outside the model.</li>
+          <li>Can be updated anytime without retraining.</li>
+          <li>Effectively unlimited capacity.</li>
+        </ul>
+        <h4>(b) How RAG Bridges This Gap</h4>
+        <ul>
+          <li>At query time, RAG retrieves relevant docs from non-parametric memory.</li>
+          <li>Retrieved context is injected into the prompt → LLM generates an answer <em>grounded</em> in real, current data.</li>
+          <li><strong>Reduces hallucinations</strong> because answers cite specific retrieved content instead of relying purely on (lossy) parametric recall.</li>
+          <li>Solves knowledge-cutoff: external corpus can include up-to-date information the base model never saw.</li>
+          <li>Handles private/domain-specific data without retraining.</li>
+        </ul>
       </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">8</div>
-      <span class="q-type-badge type-numerical">Numerical</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-numerical">Numerical</span><span class="marks-pill">10 marks</span>
       <div class="q-text">A database of 3 vectors (d = 3):</div>
       <div class="q-given">
-        v&#8321; = (1, 0, 2)<br>
-        v&#8322; = (2, 1, 0)<br>
-        v&#8323; = (0, 3, 1)<br><br>
+        v&#8321; = (3, 3, 3)<br>
+        v&#8322; = (1, 0, 0)<br>
+        v&#8323; = (2, 2, 1)<br><br>
         Query q = (1, 1, 1)
       </div>
       <div class="q-sub">
@@ -809,9 +1764,52 @@
         <div class="q-sub-item">(b) Compute cosine similarity between q and each vector. <span class="sub-marks">(4)</span></div>
         <div class="q-sub-item">(c) Which vector is nearest by each metric? Explain any discrepancy. <span class="sub-marks">(3)</span></div>
       </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <div class="step">
+          <div class="step-title">(a) Euclidean Distance</div>
+          <p><code>d(q, v) = √Σ(qᵢ − vᵢ)²</code></p>
+          <ul>
+            <li>d(q, v₁) = √((1−3)² + (1−3)² + (1−3)²) = √(4+4+4) = √12 ≈ <strong>3.464</strong></li>
+            <li>d(q, v₂) = √((1−1)² + (1−0)² + (1−0)²) = √(0+1+1) = √2 ≈ <strong>1.414</strong></li>
+            <li>d(q, v₃) = √((1−2)² + (1−2)² + (1−1)²) = √(1+1+0) = √2 ≈ <strong>1.414</strong></li>
+          </ul>
+        </div>
+        <div class="step">
+          <div class="step-title">(b) Cosine Similarity</div>
+          <p>Magnitudes:</p>
+          <ul>
+            <li>‖q‖ = √3 ≈ 1.732</li>
+            <li>‖v₁‖ = √27 ≈ 5.196</li>
+            <li>‖v₂‖ = √1 = 1.000</li>
+            <li>‖v₃‖ = √9 = 3.000</li>
+          </ul>
+          <p>Dot products:</p>
+          <ul>
+            <li>q · v₁ = 3 + 3 + 3 = 9</li>
+            <li>q · v₂ = 1 + 0 + 0 = 1</li>
+            <li>q · v₃ = 2 + 2 + 1 = 5</li>
+          </ul>
+          <p>Cosine similarities:</p>
+          <ul>
+            <li>cos(q, v₁) = 9 / (1.732 × 5.196) = 9/9 = <strong>1.000</strong></li>
+            <li>cos(q, v₂) = 1 / (1.732 × 1.000) = <strong>0.577</strong></li>
+            <li>cos(q, v₃) = 5 / (1.732 × 3.000) = <strong>0.962</strong></li>
+          </ul>
+        </div>
+        <div class="step">
+          <div class="step-title">(c) Discrepancy Analysis</div>
+          <ul>
+            <li><strong>By Euclidean:</strong> v₂ and v₃ tied as nearest (distance √2). v₁ is farthest.</li>
+            <li><strong>By cosine:</strong> v₁ is most similar (1.000, perfect angle match). v₂ is least similar.</li>
+            <li><strong>Discrepancy:</strong> v₁ is in the exact same direction as q (just longer), so cosine sees it as perfectly aligned. Euclidean penalizes its large magnitude.</li>
+            <li><strong>Insight:</strong> Cosine ignores magnitude (only direction); Euclidean considers both. For embeddings of varying norms, cosine is usually preferred — which is why RAG systems use cosine for semantic search.</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
-    <!-- UNIT 3 -->
+    <!-- Unit 3 -->
     <div class="section-header">
       <span class="section-tag tag-u3">Unit 3 &middot; Fine-Tuning, LoRA &amp; QLoRA</span>
       <div class="section-rule"></div>
@@ -820,22 +1818,61 @@
 
     <div class="question-block">
       <div class="q-number">9</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">What are the <strong>challenges of full fine-tuning</strong> of LLMs? How does PEFT solve them?</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Challenges of Full Fine-Tuning</h4>
+        <ul>
+          <li><strong>GPU memory:</strong> A 13B model needs ~70 GB just to hold parameters + gradients + optimizer states.</li>
+          <li><strong>Training time:</strong> Updating billions of parameters takes long even with multi-GPU clusters.</li>
+          <li><strong>Storage:</strong> One full fine-tuned model per downstream task → bloat.</li>
+          <li><strong>Cost:</strong> High electricity and cloud GPU costs.</li>
+          <li><strong>Catastrophic forgetting:</strong> Risk of losing general knowledge while specializing.</li>
+        </ul>
+        <h4>How PEFT Solves These</h4>
+        <ul>
+          <li>Freeze the base model → no gradient computation for 99% of parameters.</li>
+          <li>Train tiny adapter modules (LoRA, prefix tokens) → memory drops dramatically.</li>
+          <li>Adapter sizes are MBs not GBs → easy to share and version per task.</li>
+          <li>Base model unchanged → general knowledge preserved.</li>
+          <li>Multiple tasks can share one base model with different adapters loaded on demand.</li>
+        </ul>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">10</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">Explain <strong>Soft Prompts and Prompt Tuning</strong>. How do they differ from prompt engineering?</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Soft Prompts</h4>
+        <p>Continuous, <strong>learnable</strong> vectors prepended to the input embeddings. Unlike discrete text prompts, they live directly in the model's embedding space and don't correspond to real words.</p>
+        <h4>Prompt Tuning</h4>
+        <p>The process of optimizing these soft-prompt vectors via backpropagation while keeping the base model <strong>frozen</strong>. Introduced by Lester et al. (Google, 2021).</p>
+        <h4>Advantages</h4>
+        <ul>
+          <li>Minimal model changes — only the soft-prompt embedding is trained.</li>
+          <li>Lower training cost than full fine-tuning or even LoRA.</li>
+          <li>Multiple soft prompts can be stored separately and swapped per task.</li>
+        </ul>
+        <h4>Differences from Prompt Engineering</h4>
+        <table>
+          <tr><th>Prompt Engineering</th><th>Prompt Tuning (Soft Prompts)</th></tr>
+          <tr><td>Manual; uses natural-language text</td><td>Learned automatically via gradient descent</td></tr>
+          <tr><td>Discrete tokens (real words)</td><td>Continuous embedding vectors (no word equivalent)</td></tr>
+          <tr><td>No training required</td><td>Requires labeled task data and training</td></tr>
+          <tr><td>Limited expressiveness</td><td>Can capture task-specific signal not expressible in words</td></tr>
+        </table>
+        <h4>Challenges</h4>
+        <p>May underperform on complex tasks needing substantial model adaptation; less effective than LoRA on smaller models.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">11</div>
-      <span class="q-type-badge type-numerical">Numerical</span>
-      <span class="marks-pill">6 marks</span>
+      <span class="q-type-badge type-numerical">Numerical</span><span class="marks-pill">6 marks</span>
       <div class="q-text">A model has a linear layer with d = 2048, k = 2048.</div>
       <div class="q-sub">
         <div class="q-sub-item">(a) How many trainable parameters in full fine-tuning of this layer? <span class="sub-marks">(1)</span></div>
@@ -843,12 +1880,35 @@
         <div class="q-sub-item">(c) Calculate the reduction ratio. <span class="sub-marks">(1)</span></div>
         <div class="q-sub-item">(d) State 2 advantages this brings during deployment. <span class="sub-marks">(2)</span></div>
       </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <div class="step">
+          <div class="step-title">(a) Full Fine-Tuning Parameters</div>
+          <p><code>params = d · k = 2048 × 2048 = 4,194,304 ≈ 4.19M</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(b) LoRA Parameters (r = 16)</div>
+          <p>LoRA introduces A (r × k) and B (d × r):</p>
+          <p><code>params = r·(d + k) = 16 × (2048 + 2048) = 16 × 4096 = 65,536 ≈ 65.5K</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(c) Reduction Ratio</div>
+          <p><code>Ratio = 4,194,304 / 65,536 = 64×</code></p>
+          <p>LoRA trains only ~1.56% of the parameters of full fine-tuning.</p>
+        </div>
+        <div class="step">
+          <div class="step-title">(d) Deployment Advantages</div>
+          <ul>
+            <li><strong>Tiny adapter files:</strong> ~256 KB (at fp16) vs 8 MB for the full layer — easy to share, version, and store per-task.</li>
+            <li><strong>Hot-swap multiple tasks:</strong> One frozen base model can host many LoRA adapters loaded on demand — supports multi-tenant serving without duplicating the base.</li>
+          </ul>
+        </div>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">12</div>
-      <span class="q-type-badge type-numerical">Numerical</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-numerical">Numerical</span><span class="marks-pill">10 marks</span>
       <div class="q-text">QLoRA fine-tuning. Given:</div>
       <div class="q-given">
         W = [[0.8, &minus;1.2], [1.5, 0.4]] &nbsp;|&nbsp; b = 4 bits, r = 1, &alpha; = 2<br><br>
@@ -861,9 +1921,68 @@
         <div class="q-sub-item">(c) Compute BA, then &Delta;W = (&alpha;/r) &middot; BA. <span class="sub-marks">(2)</span></div>
         <div class="q-sub-item">(d) Compute the final W' = W&#771; + &Delta;W. <span class="sub-marks">(2)</span></div>
       </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <div class="step">
+          <div class="step-title">(a) Quantize W</div>
+          <p>min = −1.2, max = 1.5, levels = 16</p>
+          <p><code>δ = (1.5 − (−1.2))/15 = 2.7/15 = 0.180</code></p>
+          <p>Q = round((W − min)/δ):</p>
+          <ul>
+            <li>(0,0): (0.8 + 1.2)/0.180 = 11.111 → <strong>11</strong></li>
+            <li>(0,1): (−1.2 + 1.2)/0.180 = 0 → <strong>0</strong></li>
+            <li>(1,0): (1.5 + 1.2)/0.180 = 15.000 → <strong>15</strong></li>
+            <li>(1,1): (0.4 + 1.2)/0.180 = 8.889 → <strong>9</strong></li>
+          </ul>
+          <p><code>Q = [[11, 0], [15, 9]]</code></p>
+          <p>Dequantize W̃ = Q·δ + min:</p>
+          <ul>
+            <li>(0,0): 11·0.180 − 1.2 = 1.980 − 1.200 = 0.780</li>
+            <li>(0,1): 0 − 1.2 = −1.200</li>
+            <li>(1,0): 15·0.180 − 1.2 = 2.700 − 1.200 = 1.500</li>
+            <li>(1,1): 9·0.180 − 1.2 = 1.620 − 1.200 = 0.420</li>
+          </ul>
+          <p><code>W̃ = [[0.780, −1.200], [1.500, 0.420]]</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(b) Quantization Error</div>
+          <p>E = W − W̃:</p>
+          <ul>
+            <li>(0,0): 0.800 − 0.780 = 0.020</li>
+            <li>(0,1): −1.200 − (−1.200) = 0</li>
+            <li>(1,0): 1.500 − 1.500 = 0</li>
+            <li>(1,1): 0.400 − 0.420 = −0.020</li>
+          </ul>
+          <p><code>E = [[0.020, 0], [0, −0.020]]</code></p>
+          <p>L2 = √(0.020² + 0² + 0² + 0.020²) = √0.0008 ≈ <strong>0.0283</strong></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(c) Compute ΔW = (α/r) · BA</div>
+          <p>BA (B is 2×1, A is 1×2 → result 2×2):</p>
+          <ul>
+            <li>(0,0): 0.4 · 0.5 = 0.20</li>
+            <li>(0,1): 0.4 · (−0.3) = −0.12</li>
+            <li>(1,0): (−0.2) · 0.5 = −0.10</li>
+            <li>(1,1): (−0.2) · (−0.3) = 0.06</li>
+          </ul>
+          <p><code>BA = [[0.20, −0.12], [−0.10, 0.06]]</code></p>
+          <p>α/r = 2/1 = 2</p>
+          <p><code>ΔW = 2 · BA = [[0.40, −0.24], [−0.20, 0.12]]</code></p>
+        </div>
+        <div class="step">
+          <div class="step-title">(d) Final W' = W̃ + ΔW</div>
+          <ul>
+            <li>(0,0): 0.780 + 0.400 = 1.180</li>
+            <li>(0,1): −1.200 + (−0.240) = −1.440</li>
+            <li>(1,0): 1.500 + (−0.200) = 1.300</li>
+            <li>(1,1): 0.420 + 0.120 = 0.540</li>
+          </ul>
+        </div>
+        <div class="answer-final">W' = [[1.180, −1.440], [1.300, 0.540]]</div>
+      </div>
     </div>
 
-    <!-- UNIT 4 -->
+    <!-- Unit 4 -->
     <div class="section-header">
       <span class="section-tag tag-u4">Unit 4 &middot; Multimodal, Agentic &amp; Evaluation</span>
       <div class="section-rule"></div>
@@ -872,46 +1991,143 @@
 
     <div class="question-block">
       <div class="q-number">13</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">4 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">4 marks</span>
       <div class="q-text">Define an <strong>agentic loop</strong>. Show the cycle (Plan &rarr; Act &rarr; Observe &rarr; Reflect) with a simple real-world task.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Agentic Loop</h4>
+        <p>A continuous cycle where an agent plans, acts, observes the result, reflects on it, and iterates until the goal is achieved. It's <strong>looping intelligence</strong> — not a one-shot response but continuous decision-making.</p>
+        <h4>Example: "Book the cheapest flight to Mumbai next Friday"</h4>
+        <ol>
+          <li><strong>Plan:</strong> Search flights for Friday → compare prices → pick cheapest.</li>
+          <li><strong>Act:</strong> Call flight search API.</li>
+          <li><strong>Observe:</strong> Returns 5 options, prices $200–$450.</li>
+          <li><strong>Reflect:</strong> $200 option has 12-hour layover — bad. Should I optimize for total trip time, not just price?</li>
+          <li><strong>Loop:</strong> Re-plan → filter by max-layover 4h → re-search.</li>
+          <li><strong>Act:</strong> Re-call API with new filters.</li>
+          <li><strong>Observe:</strong> $280 direct flight available.</li>
+          <li><strong>Final Output:</strong> Recommend the $280 direct flight.</li>
+        </ol>
+        <p>The loop continues refining until acceptable solution emerges.</p>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">14</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">5 marks</span>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">5 marks</span>
       <div class="q-text">Differentiate <strong>traditional AI workflow vs agentic workflow</strong>. List the 4 abilities that make a system "agentic".</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>Traditional AI (Linear)</h4>
+        <p><code>Input → Model → Output</code></p>
+        <ul>
+          <li>One-step process</li>
+          <li>No decision-making</li>
+          <li>No adaptation, no tool usage</li>
+          <li>Static; doesn't verify or improve</li>
+        </ul>
+        <h4>Agentic Workflow (Non-Linear)</h4>
+        <p><code>Goal → Plan → Act → Observe → React → Repeat</code></p>
+        <ul>
+          <li>Multi-step process with feedback loops</li>
+          <li>Dynamic decision-making</li>
+          <li>Uses external tools (APIs, code, search)</li>
+          <li>Adapts based on observed results</li>
+        </ul>
+        <h4>4 Abilities of an Agentic System</h4>
+        <ol>
+          <li><strong>Goal-Oriented:</strong> Works toward an explicit goal (e.g. "find best laptop under ₹80k").</li>
+          <li><strong>Planning:</strong> Decides the sequence of steps to take.</li>
+          <li><strong>Action (Execution):</strong> Performs actions like search, API calls, code execution.</li>
+          <li><strong>Observation &amp; Reaction:</strong> Inspects results and adapts strategy if needed.</li>
+        </ol>
+      </div>
     </div>
 
     <div class="question-block">
       <div class="q-number">15</div>
-      <span class="q-type-badge type-theory">Theory</span>
-      <span class="marks-pill">6 marks</span>
-      <div class="q-text">Explain any 3 agentic design patterns in detail:</div>
-      <div class="q-sub">
-        <div class="q-sub-item">(a) Planning Pattern</div>
-        <div class="q-sub-item">(b) Tool-Use Pattern</div>
-        <div class="q-sub-item">(c) Reflection / Self-Critique Pattern</div>
+      <span class="q-type-badge type-theory">Theory</span><span class="marks-pill">6 marks</span>
+      <div class="q-text">Explain any 3 agentic design patterns in detail: (a) Planning, (b) Tool-Use, (c) Reflection/Self-Critique. Give one task example per pattern.</div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>(a) Planning Pattern</h4>
+        <p>The agent transforms the goal into a <strong>sequence of sub-tasks</strong> before execution. Decomposes a complex problem so each step is manageable and dependencies are explicit.</p>
+        <p><em>Where to add:</em> In a planner layer before tool execution.</p>
+        <p><strong>Example task:</strong> "Plan a 3-day budget trip to New York."<br>
+        Plan generated:</p>
+        <ol>
+          <li>Set total budget to $400</li>
+          <li>Find bus/train transport options</li>
+          <li>Search hostels under $60/night</li>
+          <li>Group nearby attractions day-wise</li>
+          <li>Add food + local travel estimate</li>
+          <li>Produce final itinerary</li>
+        </ol>
+        <h4>(b) Tool-Use Pattern</h4>
+        <p>The agent calls <strong>external tools</strong> (search, calculator, code interpreter, APIs) to do things it can't do reliably from text generation alone.</p>
+        <p><em>Where to add:</em> In the execution layer with a tool-selection / function-calling mechanism.</p>
+        <p><strong>Example task:</strong> "What is 25% growth on monthly revenue of $84,500, and plot 6-month projection."<br>
+        Agent: uses calculator tool for exact math → uses Python/matplotlib to produce projection graph → returns numbers + chart.</p>
+        <h4>(c) Reflection / Self-Critique Pattern</h4>
+        <p>The agent <strong>evaluates its own output</strong> against quality criteria and refines it before returning the final answer.</p>
+        <p><em>Where to add:</em> After draft generation, before final response.</p>
+        <p><strong>Example task:</strong> "Write a formal email requesting an extension."</p>
+        <ol>
+          <li>Draft 1: Initial email.</li>
+          <li>Self-critique: Is tone professional? Is reason clear? Did I propose a new deadline?</li>
+          <li>Revise: Improve weak points.</li>
+          <li>Return polished final email.</li>
+        </ol>
       </div>
-      <div class="q-text" style="margin-top:0.5rem;">Give one task example per pattern.</div>
     </div>
 
     <div class="question-block">
       <div class="q-number">16</div>
-      <span class="q-type-badge type-mixed">Mixed</span>
-      <span class="marks-pill">10 marks</span>
+      <span class="q-type-badge type-mixed">Mixed</span><span class="marks-pill">10 marks</span>
       <div class="q-sub">
         <div class="q-sub-item">(a) Compute BLEU 1-gram precision and brevity penalty: <span class="sub-marks">(5)</span></div>
       </div>
       <div class="q-given">
         Reference: "she went to the market early" &nbsp;(length r = 6)<br>
         Candidate: "she went market" &nbsp;(length c = 3)<br><br>
-        Then compute the final BLEU-1 score = BP &times; precision.
+        Compute the final BLEU-1 score = BP &times; precision.
       </div>
       <div class="q-sub">
         <div class="q-sub-item">(b) Compare DeepEval and TruLens. Which is better suited for production monitoring? <span class="sub-marks">(3)</span></div>
         <div class="q-sub-item">(c) Explain why BERTScore is preferred over BLEU for open-ended generation. <span class="sub-marks">(2)</span></div>
+      </div>
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Solution</button>
+      <div class="solution">
+        <h4>(a) BLEU-1 with Brevity Penalty</h4>
+        <p><strong>Step 1 — Clipped 1-gram precision:</strong></p>
+        <ul>
+          <li>Candidate tokens: {she, went, market} → 3 tokens</li>
+          <li>All 3 appear in reference once each → matches = 3</li>
+          <li>Precision = 3/3 = <strong>1.000</strong></li>
+        </ul>
+        <p><strong>Step 2 — Brevity Penalty:</strong></p>
+        <p>c = 3, r = 6. Since c &lt; r:</p>
+        <p><code>BP = exp(1 − r/c) = exp(1 − 6/3) = exp(−1) ≈ 0.368</code></p>
+        <p><strong>Step 3 — Final BLEU-1:</strong></p>
+        <p><code>BLEU-1 = BP · precision = 0.368 × 1.000 = 0.368</code></p>
+        <div class="answer-final">BLEU-1 ≈ 0.368 (low despite perfect precision, because the candidate is too short)</div>
+        <p><em>This shows why BLEU needs BP — without it, short candidates with high precision would get inflated scores.</em></p>
+        <h4>(b) DeepEval vs TruLens</h4>
+        <table>
+          <tr><th>DeepEval</th><th>TruLens</th></tr>
+          <tr><td>Comprehensive pre-built metrics library</td><td>Open-source with focus on explainability</td></tr>
+          <tr><td>Custom metric framework</td><td>Feedback functions + dashboards</td></tr>
+          <tr><td>Strong CI/CD integration for dev pipelines</td><td>Strong instrumentation for production logs</td></tr>
+          <tr><td>Batch processing for offline eval</td><td>Real-time monitoring of LLM calls</td></tr>
+          <tr><td>Statistical analysis &amp; hypothesis testing</td><td>Performance tracking over time, A/B testing</td></tr>
+        </table>
+        <p><strong>For production monitoring: TruLens is better suited</strong> — it instruments live LLM calls, provides dashboards, and tracks metrics over time, which is essential for monitoring deployed systems.</p>
+        <h4>(c) Why BERTScore &gt; BLEU for Open-Ended Generation</h4>
+        <ul>
+          <li><strong>BLEU</strong> relies on exact n-gram overlap with reference. For open-ended tasks (creative writing, summarization, dialogue), many valid responses are semantically correct but use different words → BLEU penalizes them unfairly.</li>
+          <li><strong>BERTScore</strong> uses contextual embeddings (BERT) to compute <em>semantic</em> similarity between candidate and reference at the token level. It rewards paraphrases and synonyms.</li>
+          <li>Result: BERTScore correlates much better with human judgment on open-ended generation.</li>
+        </ul>
       </div>
     </div>
 
@@ -919,7 +2135,7 @@
 </div>
 
 <footer>
-  Generative AI &amp; its Applications &middot; UE23CS342BA9 &middot; Practice Material
+  Generative AI &amp; its Applications &middot; UE23CS342BA9 &middot; Practice Material with Solutions
 </footer>
 
 <script>
@@ -936,6 +2152,35 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
+
+  function toggleSol(btn) {
+    const sol = btn.nextElementSibling;
+    const isOpen = sol.classList.contains('open');
+    sol.classList.toggle('open');
+    btn.classList.toggle('open');
+    btn.innerHTML = isOpen
+      ? '<span class="arrow">▶</span> Show Solution'
+      : '<span class="arrow">▶</span> Hide Solution';
+  }
+
+  function toggleAll(setId, show) {
+    const set = document.getElementById(setId);
+    const sols = set.querySelectorAll('.solution');
+    const btns = set.querySelectorAll('.sol-toggle');
+    sols.forEach(s => {
+      if (show) s.classList.add('open');
+      else s.classList.remove('open');
+    });
+    btns.forEach(b => {
+      if (show) {
+        b.classList.add('open');
+        b.innerHTML = '<span class="arrow">▶</span> Hide Solution';
+      } else {
+        b.classList.remove('open');
+        b.innerHTML = '<span class="arrow">▶</span> Show Solution';
+      }
+    });
+  }
 </script>
 
 </body>
