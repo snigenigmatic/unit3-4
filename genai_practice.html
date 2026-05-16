@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenAI Practice Exam Sets</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf8f3;
+    --ink: #1a1612;
+    --ink-muted: #4a4540;
+    --ink-faint: #7a7570;
+    --rule: #d9d4cc;
+    --accent: #2d5a8e;
+    --accent-light: #e8f0f9;
+    --gold: #b5892a;
+    --gold-light: #fdf6e3;
+    --red-mark: #8b2635;
+    --red-light: #fdf0f2;
+    --green-mark: #1a5c2a;
+    --green-light: #f0f7f1;
+    --purple: #4a2d7a;
+    --purple-light: #f3f0f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  header {
+    background: var(--ink);
+    color: #f5f0e8;
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    position: relative;
+    border-bottom: 4px solid var(--gold);
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+  }
+  header p {
+    font-size: 0.92rem;
+    color: #b0a898;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.78rem;
+    color: #c8c0b0;
+    letter-spacing: 0.04em;
+  }
+
+  .tabs {
+    display: flex;
+    background: #f0ede6;
+    border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+    gap: 0;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .tab-btn {
+    padding: 0.9rem 1.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.88rem;
+    color: var(--ink-faint);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .set-page {
+    max-width: 840px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  .set-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+  }
+  .set-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--ink);
+  }
+  .set-meta {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem 0 1.2rem;
+  }
+  .section-tag {
+    font-size: 0.7rem;
+    font-family: 'Source Serif 4', serif;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 4px;
+    white-space: nowrap;
+  }
+  .tag-u1 { background: var(--accent-light); color: var(--accent); }
+  .tag-u2 { background: var(--gold-light); color: #7a5a10; }
+  .tag-u3 { background: var(--purple-light); color: var(--purple); }
+  .tag-u4 { background: var(--red-light); color: var(--red-mark); }
+
+  .section-rule { flex: 1; height: 1px; background: var(--rule); }
+
+  .section-marks {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .question-block {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.4rem 1.6rem 1.4rem 2.2rem;
+    margin-bottom: 1rem;
+    margin-left: 1.2rem;
+    position: relative;
+  }
+  .q-number {
+    position: absolute;
+    top: 1.2rem;
+    left: -1.2rem;
+    background: var(--ink);
+    color: #f5f0e8;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 600;
+    font-family: 'Source Serif 4', serif;
+  }
+  .q-type-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 3px;
+    margin-bottom: 0.6rem;
+    font-weight: 600;
+  }
+  .type-theory { background: var(--purple-light); color: var(--purple); }
+  .type-numerical { background: var(--gold-light); color: #7a5a10; }
+  .type-mixed { background: var(--red-light); color: var(--red-mark); }
+
+  .q-text { font-size: 0.95rem; color: var(--ink); line-height: 1.75; }
+  .q-text strong { color: var(--ink); font-weight: 600; }
+  .q-sub { font-size: 0.88rem; color: var(--ink-muted); margin-top: 0.5rem; padding-left: 0.5rem; }
+  .q-sub-item { margin: 0.3rem 0; }
+  .q-given { 
+    background: #faf6ee; 
+    border-left: 3px solid var(--gold); 
+    padding: 0.7rem 1rem; 
+    margin: 0.7rem 0; 
+    font-size: 0.88rem; 
+    border-radius: 0 4px 4px 0;
+  }
+  .q-given code { 
+    font-family: 'Courier New', monospace; 
+    font-size: 0.85rem; 
+    background: rgba(0,0,0,0.04); 
+    padding: 1px 5px; 
+    border-radius: 3px; 
+  }
+
+  .marks-pill {
+    display: inline-block;
+    background: var(--ink);
+    color: #f5f0e8;
+    font-size: 0.72rem;
+    padding: 2px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.04em;
+    margin-left: 8px;
+    vertical-align: middle;
+    font-family: 'Source Serif 4', serif;
+  }
+  .sub-marks {
+    color: var(--ink-faint);
+    font-size: 0.82rem;
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--rule);
+    background: #f5f2ec;
+  }
+
+  .note-box {
+    background: var(--gold-light);
+    border: 1px solid #e0c87a;
+    border-radius: 6px;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 2rem;
+    font-size: 0.85rem;
+    color: #5a4510;
+    line-height: 1.6;
+  }
+  .note-box strong { color: #3a2e08; }
+
+  @media (max-width: 620px) {
+    .set-header { flex-direction: column; gap: 0.5rem; align-items: flex-start; }
+    .set-meta { text-align: left; }
+    .tabs { padding: 0 1rem; }
+    .set-page { padding: 2rem 1rem 3rem; }
+    .question-block { margin-left: 0.8rem; padding-left: 1.8rem; }
+    .q-number { width: 2rem; height: 2rem; left: -1rem; font-size: 0.72rem; }
+    header h1 { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Generative AI &amp; its Applications</h1>
+  <p>Practice Exam Paper Sets &middot; UE23CS342BA9</p>
+  <div class="badge-row">
+    <span class="badge">3 Sets</span>
+    <span class="badge">4 Units</span>
+    <span class="badge">100 Marks Each</span>
+    <span class="badge">Theory + Numerical</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="set1">Set 1</button>
+  <button class="tab-btn" data-tab="set2">Set 2</button>
+  <button class="tab-btn" data-tab="set3">Set 3</button>
+</nav>
+
+<!-- ========================= SET 1 ========================= -->
+<div class="tab-content active" id="set1">
+  <div class="set-page">
+    <div class="set-header">
+      <div class="set-title">Practice Set &mdash; I</div>
+      <div class="set-meta">
+        Time: 3 Hours<br>
+        Max Marks: 100
+      </div>
+    </div>
+
+    <div class="note-box">
+      <strong>Instructions:</strong> Answer all questions. Each unit carries 25 marks. Show all working for numericals; rounding to 3 decimal places where applicable. Calculator permitted.
+    </div>
+
+    <!-- UNIT 1 -->
+    <div class="section-header">
+      <span class="section-tag tag-u1">Unit 1 &middot; Foundations &amp; Transformers</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">1</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">Explain why GPT is a decoder-only architecture. List its core components (embedding dimension, attention heads, FFN size, etc.) from the original design.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">2</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-text">Differentiate between <strong>self-attention</strong> and <strong>cross-attention</strong> with respect to Q, K, V sources, purpose, and where they appear in the Transformer architecture.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">3</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">Why is the dot-product attention score scaled by &radic;d<sub>k</sub> before softmax? What happens if you skip this step?</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">4</div>
+      <span class="q-type-badge type-numerical">Numerical</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-text">Consider the two-token sentence <strong>"Deep Learning"</strong> processed using self-attention. For the token "Deep":</div>
+      <div class="q-given">
+        Q = (1, 1, 0, 0)<br>
+        K&#8321; ("Deep") = (1, 1, 0, 0), &nbsp; V&#8321; = (2.0, 1.0)<br>
+        K&#8322; ("Learning") = (0, 1, 1, 0), &nbsp; V&#8322; = (1.0, 3.0)<br>
+        d<sub>k</sub> = 4
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Compute scaled dot-product scores. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(b) Compute softmax attention weights. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(c) Compute the final self-attention output for "Deep". Round to 3 decimals. <span class="sub-marks">(4)</span></div>
+      </div>
+    </div>
+
+    <!-- UNIT 2 -->
+    <div class="section-header">
+      <span class="section-tag tag-u2">Unit 2 &middot; Prompt Engineering &amp; RAG</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">5</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">Define prompt engineering. Differentiate <strong>zero-shot, one-shot, and few-shot</strong> prompting with one example each.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">6</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) What is RAG? How does it differ from a traditional LLM? <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(b) Explain the RAG Evaluation Triad (TruEra model). <span class="sub-marks">(3)</span></div>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">7</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">Compare <strong>TF-IDF and BM25</strong> across: term frequency handling, length normalization, probabilistic basis, and ranking quality.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">8</div>
+      <span class="q-type-badge type-numerical">Numerical</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-text">Given the corpus:</div>
+      <div class="q-given">
+        D1: "data science machine learning"<br>
+        D2: "machine learning data data"<br>
+        D3: "deep learning neural network"<br><br>
+        Query Q = {"machine", "learning"} &nbsp;|&nbsp; k&#8321; = 1.5, b = 0.75, use log&#8321;&#8320; for IDF
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Compute term frequencies and document lengths. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(b) Compute IDF for both query terms. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(c) Compute the BM25 score for each document and rank them. <span class="sub-marks">(4)</span></div>
+      </div>
+    </div>
+
+    <!-- UNIT 3 -->
+    <div class="section-header">
+      <span class="section-tag tag-u3">Unit 3 &middot; Fine-Tuning, LoRA &amp; QLoRA</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">9</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">What is <strong>Parameter-Efficient Fine-Tuning (PEFT)</strong>? Why is it needed for modern LLMs?</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">10</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">Explain the three key techniques of QLoRA: <strong>NF4 quantization, double quantization, and paged optimizer</strong>.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">11</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-text">Compare <strong>LoRA vs QLoRA</strong> across: base model precision, memory, GPU need, speed, cost. Also state why QLoRA's scaling factor (&alpha;/r) matters.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">12</div>
+      <span class="q-type-badge type-numerical">Numerical</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-text">Given the weight matrix and LoRA matrices below:</div>
+      <div class="q-given">
+        W = [[1.6, &minus;0.4], [&minus;1.2, 0.8]] &nbsp;|&nbsp; b = 4 bits, r = 2, &alpha; = 4<br><br>
+        A = [[0.2, 0.1], [0.3, 0.0]]<br>
+        B = [[0.1, 0.2], [&minus;0.1, 0.3]]
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Compute scaling factor &delta; and quantize W. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(b) Dequantize and compute the L2 quantization error. <span class="sub-marks">(2)</span></div>
+        <div class="q-sub-item">(c) Compute &Delta;W = (&alpha;/r) &middot; BA. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(d) Compute the final updated W' = W + &Delta;W. <span class="sub-marks">(2)</span></div>
+      </div>
+    </div>
+
+    <!-- UNIT 4 -->
+    <div class="section-header">
+      <span class="section-tag tag-u4">Unit 4 &middot; Multimodal, Agentic &amp; Evaluation</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">13</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">What are <strong>multimodal models</strong>? List any 4 examples and one application of each.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">14</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-text">Explain the <strong>ReAct pattern</strong> in agentic AI with a step-by-step example. Why is it preferred over a one-shot plan-then-execute approach for dynamic tasks?</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">15</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">Explain <strong>Whisper's architecture</strong> and how it performs multiple tasks (transcription, translation, language detection) using a single model.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">16</div>
+      <span class="q-type-badge type-mixed">Mixed</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Compute the BLEU 1-gram precision for: <span class="sub-marks">(3)</span></div>
+      </div>
+      <div class="q-given">
+        Reference: "the cat sat on the mat"<br>
+        Candidate: "the cat sat on a mat"
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(b) Explain the RAG Evaluation Triad and how Groundedness, Context Relevance, and Answer Relevance are measured. <span class="sub-marks">(4)</span></div>
+        <div class="q-sub-item">(c) List any 3 common pitfalls in LLM evaluation. <span class="sub-marks">(3)</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========================= SET 2 ========================= -->
+<div class="tab-content" id="set2">
+  <div class="set-page">
+    <div class="set-header">
+      <div class="set-title">Practice Set &mdash; II</div>
+      <div class="set-meta">
+        Time: 3 Hours<br>
+        Max Marks: 100
+      </div>
+    </div>
+
+    <div class="note-box">
+      <strong>Instructions:</strong> Answer all questions. Each unit carries 25 marks. Show all working for numericals; rounding to 3 decimal places where applicable. Calculator permitted.
+    </div>
+
+    <!-- UNIT 1 -->
+    <div class="section-header">
+      <span class="section-tag tag-u1">Unit 1 &middot; Foundations &amp; Transformers</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">1</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">What is the difference between <strong>discriminative and generative AI</strong>? Give 2 examples for each.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">2</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">Explain <strong>Causal Language Modeling (CLM)</strong> vs <strong>Masked Language Modeling (MLM)</strong>. Which models use each, and what's the trade-off?</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">3</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-text">Describe the role of:</div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Positional encoding</div>
+        <div class="q-sub-item">(b) Residual connections</div>
+        <div class="q-sub-item">(c) Layer normalization</div>
+      </div>
+      <div class="q-text" style="margin-top:0.5rem;">in the Transformer architecture.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">4</div>
+      <span class="q-type-badge type-numerical">Numerical</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-text">For the sentence <strong>"AI rules"</strong> (2 tokens), with embedding dimension d = 4:</div>
+      <div class="q-given">
+        Token embeddings (before PE):<br>
+        "AI" &rarr; (0.5, 0.2, 0.1, 0.4)<br>
+        "rules" &rarr; (0.3, 0.6, 0.2, 0.1)
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Compute positional encodings for pos = 0 and pos = 1 using sin/cos formulas. Round to 3 decimals. <span class="sub-marks">(4)</span></div>
+        <div class="q-sub-item">(b) Add PE to embeddings to get input matrix X. <span class="sub-marks">(2)</span></div>
+        <div class="q-sub-item">(c) Assuming identity projection matrices, list Q, K, V for both tokens and explain how attention scores would be formed. <span class="sub-marks">(4)</span></div>
+      </div>
+    </div>
+
+    <!-- UNIT 2 -->
+    <div class="section-header">
+      <span class="section-tag tag-u2">Unit 2 &middot; Prompt Engineering &amp; RAG</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">5</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">Explain <strong>Chain-of-Thought (CoT)</strong> and <strong>Tree-of-Thought (ToT)</strong> prompting with one example each. When is ToT preferred?</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">6</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">What are <strong>temperature, top-k sampling, and context window</strong>? How do they affect LLM output?</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">7</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-text">Explain the <strong>architecture of a RAG system</strong> with a diagram. Describe each layer (indexing, generation, evaluation, monitoring, orchestration).</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">8</div>
+      <span class="q-type-badge type-numerical">Numerical</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-text">Given:</div>
+      <div class="q-given">
+        BM25 scores: D1 = 0.6, D2 = 0.4, D3 = 0.8<br><br>
+        SBERT embeddings:<br>
+        D1 = (0.6, 0.8, 0)<br>
+        D2 = (0.4, 0.3, 0.9)<br>
+        D3 = (0.7, 0.7, 0.1)<br>
+        Query Q = (0.5, 0.7, 0.5)
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Compute cosine similarity between Q and each document. <span class="sub-marks">(5)</span></div>
+        <div class="q-sub-item">(b) Compute hybrid retrieval score with &alpha; = 0.5 and rank the documents. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(c) Why does hybrid retrieval generally outperform pure BM25 or pure dense retrieval? <span class="sub-marks">(2)</span></div>
+      </div>
+    </div>
+
+    <!-- UNIT 3 -->
+    <div class="section-header">
+      <span class="section-tag tag-u3">Unit 3 &middot; Fine-Tuning, LoRA &amp; QLoRA</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">9</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">Write the <strong>LoRA weight update formula</strong>. Explain each term (W, A, B, r, &alpha;).</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">10</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">How does <strong>rank (r)</strong> affect LoRA performance? What's the trade-off between small and large r?</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">11</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-text">Describe the <strong>practical fine-tuning workflow using QLoRA</strong> in 5 steps. Mention the role of the Hugging Face PEFT library.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">12</div>
+      <span class="q-type-badge type-numerical">Numerical</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-text">Quantize the matrix W to b = 3 bits (8 levels):</div>
+      <div class="q-given">
+        W = [[2.0, &minus;1.0, 0.5], [&minus;2.0, 1.5, 0.0]]
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Find min, max, levels, and scaling factor &delta;. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(b) Quantize each element. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(c) Dequantize and compute the Mean Absolute Error (MAE). <span class="sub-marks">(4)</span></div>
+      </div>
+    </div>
+
+    <!-- UNIT 4 -->
+    <div class="section-header">
+      <span class="section-tag tag-u4">Unit 4 &middot; Multimodal, Agentic &amp; Evaluation</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">13</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">Explain <strong>CLIP</strong>. What is contrastive learning and why does CLIP enable zero-shot classification?</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">14</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">What are <strong>agentic design patterns</strong> and why are they needed? List any 5 patterns.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">15</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-text">Compare <strong>AutoGen, LangGraph, and CrewAI</strong> frameworks: strengths, weaknesses, and ideal use cases.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">16</div>
+      <span class="q-type-badge type-mixed">Mixed</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Compute BLEU clipped precision for unigrams: <span class="sub-marks">(4)</span></div>
+      </div>
+      <div class="q-given">
+        Reference: "the sun rises in the east"<br>
+        Candidate: "the the the sun rises east"
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(b) Explain early fusion vs late fusion vs hybrid fusion in multimodal models. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(c) What metrics are used to evaluate BLIP across image captioning, VQA, and image-text retrieval tasks? <span class="sub-marks">(3)</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ========================= SET 3 ========================= -->
+<div class="tab-content" id="set3">
+  <div class="set-page">
+    <div class="set-header">
+      <div class="set-title">Practice Set &mdash; III</div>
+      <div class="set-meta">
+        Time: 3 Hours<br>
+        Max Marks: 100
+      </div>
+    </div>
+
+    <div class="note-box">
+      <strong>Instructions:</strong> Answer all questions. Each unit carries 25 marks. Show all working for numericals; rounding to 3 decimal places where applicable. Calculator permitted.
+    </div>
+
+    <!-- UNIT 1 -->
+    <div class="section-header">
+      <span class="section-tag tag-u1">Unit 1 &middot; Foundations &amp; Transformers</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">1</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">What are the <strong>three Generative AI revolutions</strong> (2018&ndash;2025)? Briefly explain each.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">2</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">Why is <strong>masking</strong> used in the decoder's self-attention? Show with an example how the mask prevents data leakage.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">3</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-text">Explain the input processing pipeline of a Transformer: <strong>tokenization &rarr; embeddings &rarr; positional encoding</strong>. Why is final input = embedding + PE and not concatenation?</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">4</div>
+      <span class="q-type-badge type-numerical">Numerical</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-text">A Transformer encoder processes <strong>"Hello World"</strong> (2 tokens) with d = 4.</div>
+      <div class="q-given">
+        Input matrix after PE:<br>
+        X = [[1.0, 0.0, 1.0, 0.0], [0.0, 1.0, 0.0, 1.0]]<br><br>
+        Projection matrices (4&times;2):<br>
+        W<sub>Q</sub> = [[1,0],[0,1],[1,0],[0,1]]<br>
+        W<sub>K</sub> = [[1,0],[0,1],[1,0],[0,1]]<br>
+        W<sub>V</sub> = [[1,0],[0,1],[0,1],[1,0]]<br><br>
+        d<sub>k</sub> = 2
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Compute Q, K, V matrices. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(b) Compute scaled score matrix QK&#7488;/&radic;d<sub>k</sub>. <span class="sub-marks">(2)</span></div>
+        <div class="q-sub-item">(c) Compute softmax attention weights. <span class="sub-marks">(2)</span></div>
+        <div class="q-sub-item">(d) Compute the final output Z. Round to 3 decimals. <span class="sub-marks">(3)</span></div>
+      </div>
+    </div>
+
+    <!-- UNIT 2 -->
+    <div class="section-header">
+      <span class="section-tag tag-u2">Unit 2 &middot; Prompt Engineering &amp; RAG</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">5</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">Explain <strong>role-based prompting</strong> and <strong>negative prompting</strong> with one example each.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">6</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">What is <strong>document chunking</strong>? Why is it important in RAG? Explain hierarchical chunking briefly.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">7</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) What is <strong>parametric vs non-parametric memory</strong> in LLMs? <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(b) Explain how RAG bridges this gap and reduces hallucinations. <span class="sub-marks">(3)</span></div>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">8</div>
+      <span class="q-type-badge type-numerical">Numerical</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-text">A database of 3 vectors (d = 3):</div>
+      <div class="q-given">
+        v&#8321; = (1, 0, 2)<br>
+        v&#8322; = (2, 1, 0)<br>
+        v&#8323; = (0, 3, 1)<br><br>
+        Query q = (1, 1, 1)
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Compute Euclidean distance from q to each vector. <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(b) Compute cosine similarity between q and each vector. <span class="sub-marks">(4)</span></div>
+        <div class="q-sub-item">(c) Which vector is nearest by each metric? Explain any discrepancy. <span class="sub-marks">(3)</span></div>
+      </div>
+    </div>
+
+    <!-- UNIT 3 -->
+    <div class="section-header">
+      <span class="section-tag tag-u3">Unit 3 &middot; Fine-Tuning, LoRA &amp; QLoRA</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">9</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">What are the <strong>challenges of full fine-tuning</strong> of LLMs? How does PEFT solve them?</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">10</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">Explain <strong>Soft Prompts and Prompt Tuning</strong>. How do they differ from prompt engineering?</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">11</div>
+      <span class="q-type-badge type-numerical">Numerical</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-text">A model has a linear layer with d = 2048, k = 2048.</div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) How many trainable parameters in full fine-tuning of this layer? <span class="sub-marks">(1)</span></div>
+        <div class="q-sub-item">(b) With LoRA at r = 16, how many trainable parameters? <span class="sub-marks">(2)</span></div>
+        <div class="q-sub-item">(c) Calculate the reduction ratio. <span class="sub-marks">(1)</span></div>
+        <div class="q-sub-item">(d) State 2 advantages this brings during deployment. <span class="sub-marks">(2)</span></div>
+      </div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">12</div>
+      <span class="q-type-badge type-numerical">Numerical</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-text">QLoRA fine-tuning. Given:</div>
+      <div class="q-given">
+        W = [[0.8, &minus;1.2], [1.5, 0.4]] &nbsp;|&nbsp; b = 4 bits, r = 1, &alpha; = 2<br><br>
+        A = [[0.5, &minus;0.3]] &nbsp; (shape 1&times;2)<br>
+        B = [[0.4], [&minus;0.2]] &nbsp; (shape 2&times;1)
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Quantize W and compute dequantized W&#771;. <span class="sub-marks">(4)</span></div>
+        <div class="q-sub-item">(b) Compute the quantization error matrix and L2 error. <span class="sub-marks">(2)</span></div>
+        <div class="q-sub-item">(c) Compute BA, then &Delta;W = (&alpha;/r) &middot; BA. <span class="sub-marks">(2)</span></div>
+        <div class="q-sub-item">(d) Compute the final W' = W&#771; + &Delta;W. <span class="sub-marks">(2)</span></div>
+      </div>
+    </div>
+
+    <!-- UNIT 4 -->
+    <div class="section-header">
+      <span class="section-tag tag-u4">Unit 4 &middot; Multimodal, Agentic &amp; Evaluation</span>
+      <div class="section-rule"></div>
+      <span class="section-marks">25 marks</span>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">13</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">4 marks</span>
+      <div class="q-text">Define an <strong>agentic loop</strong>. Show the cycle (Plan &rarr; Act &rarr; Observe &rarr; Reflect) with a simple real-world task.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">14</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">5 marks</span>
+      <div class="q-text">Differentiate <strong>traditional AI workflow vs agentic workflow</strong>. List the 4 abilities that make a system "agentic".</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">15</div>
+      <span class="q-type-badge type-theory">Theory</span>
+      <span class="marks-pill">6 marks</span>
+      <div class="q-text">Explain any 3 agentic design patterns in detail:</div>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Planning Pattern</div>
+        <div class="q-sub-item">(b) Tool-Use Pattern</div>
+        <div class="q-sub-item">(c) Reflection / Self-Critique Pattern</div>
+      </div>
+      <div class="q-text" style="margin-top:0.5rem;">Give one task example per pattern.</div>
+    </div>
+
+    <div class="question-block">
+      <div class="q-number">16</div>
+      <span class="q-type-badge type-mixed">Mixed</span>
+      <span class="marks-pill">10 marks</span>
+      <div class="q-sub">
+        <div class="q-sub-item">(a) Compute BLEU 1-gram precision and brevity penalty: <span class="sub-marks">(5)</span></div>
+      </div>
+      <div class="q-given">
+        Reference: "she went to the market early" &nbsp;(length r = 6)<br>
+        Candidate: "she went market" &nbsp;(length c = 3)<br><br>
+        Then compute the final BLEU-1 score = BP &times; precision.
+      </div>
+      <div class="q-sub">
+        <div class="q-sub-item">(b) Compare DeepEval and TruLens. Which is better suited for production monitoring? <span class="sub-marks">(3)</span></div>
+        <div class="q-sub-item">(c) Explain why BERTScore is preferred over BLEU for open-ended generation. <span class="sub-marks">(2)</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Generative AI &amp; its Applications &middot; UE23CS342BA9 &middot; Practice Material
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const contents = document.querySelectorAll('.tab-content');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.remove('active'));
+      contents.forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(target).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+</script>
+
+</body>
+</html>
