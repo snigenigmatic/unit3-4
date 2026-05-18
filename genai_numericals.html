@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GenAI Numericals — Hard Practice</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf8f3;
+    --ink: #1a1612;
+    --ink-muted: #4a4540;
+    --ink-faint: #7a7570;
+    --rule: #d9d4cc;
+    --accent: #2d5a8e;
+    --accent-light: #e8f0f9;
+    --gold: #b5892a;
+    --gold-light: #fdf6e3;
+    --red-mark: #8b2635;
+    --red-light: #fdf0f2;
+    --green-mark: #1a5c2a;
+    --green-light: #f0f7f1;
+    --purple: #4a2d7a;
+    --purple-light: #f3f0f9;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--cream);
+    color: var(--ink);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  header {
+    background: var(--ink);
+    color: #f5f0e8;
+    padding: 2.5rem 2rem 2rem;
+    text-align: center;
+    border-bottom: 4px solid var(--gold);
+  }
+  header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.4rem;
+  }
+  header p {
+    font-size: 0.92rem;
+    color: #b0a898;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.2rem;
+    flex-wrap: wrap;
+  }
+  .badge {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.78rem;
+    color: #c8c0b0;
+    letter-spacing: 0.04em;
+  }
+
+  .tabs {
+    display: flex;
+    background: #f0ede6;
+    border-bottom: 1px solid var(--rule);
+    padding: 0 2rem;
+    gap: 0;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .tab-btn {
+    padding: 0.9rem 1.5rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: 'Source Serif 4', serif;
+    font-size: 0.88rem;
+    color: var(--ink-faint);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s;
+    white-space: nowrap;
+    letter-spacing: 0.02em;
+  }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+  }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .set-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  .topic-header {
+    margin: 2rem 0 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--ink);
+  }
+  .topic-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+  .topic-meta {
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .problem-box {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 1.6rem 1.8rem;
+    margin-bottom: 1.6rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .problem-tag {
+    display: inline-block;
+    background: var(--ink);
+    color: #f5f0e8;
+    font-size: 0.75rem;
+    padding: 3px 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+    font-weight: 600;
+  }
+  .difficulty {
+    display: inline-block;
+    margin-left: 0.6rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    padding: 2px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+  .diff-hard { background: var(--red-light); color: var(--red-mark); }
+  .diff-medium { background: var(--gold-light); color: #7a5a10; }
+
+  .problem-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--ink);
+    margin-bottom: 0.7rem;
+  }
+  .problem-text { color: var(--ink-muted); margin-bottom: 0.8rem; }
+  .problem-text strong { color: var(--ink); }
+
+  .given {
+    background: #faf6ee;
+    border-left: 4px solid var(--gold);
+    padding: 0.9rem 1.2rem;
+    margin: 0.8rem 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.9rem;
+  }
+  .given .label {
+    font-weight: 600;
+    color: #7a5a10;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+
+  .matrix {
+    font-family: 'Courier New', monospace;
+    font-size: 0.88rem;
+    background: white;
+    padding: 0.6rem 0.9rem;
+    border-radius: 4px;
+    border: 1px solid #e8e0d0;
+    display: inline-block;
+    margin: 0.3rem 0;
+    white-space: pre;
+    color: var(--ink);
+  }
+
+  .find-box {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+    padding: 0.8rem 1.1rem;
+    margin: 0.8rem 0;
+    border-radius: 0 6px 6px 0;
+    font-size: 0.88rem;
+    color: var(--accent);
+  }
+  .find-box .label {
+    font-weight: 600;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    color: var(--accent);
+  }
+
+  .sol-toggle {
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    color: white;
+    background: var(--green-mark);
+    border: none;
+    padding: 8px 18px;
+    font-family: 'Source Serif 4', serif;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 4px;
+    transition: all 0.2s;
+    margin-top: 0.6rem;
+  }
+  .sol-toggle:hover { background: #2a7a3e; }
+  .sol-toggle .arrow { transition: transform 0.2s; font-size: 0.72rem; }
+  .sol-toggle.open .arrow { transform: rotate(90deg); }
+
+  .solution {
+    display: none;
+    margin-top: 1.2rem;
+    padding: 1.3rem 1.5rem;
+    background: #f4f9f5;
+    border-left: 4px solid var(--green-mark);
+    border-radius: 0 8px 8px 0;
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    line-height: 1.8;
+  }
+  .solution.open { display: block; }
+
+  .step {
+    background: white;
+    border: 1px solid #d4e5d8;
+    padding: 0.9rem 1.1rem;
+    margin: 0.7rem 0;
+    border-radius: 6px;
+  }
+  .step-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 600;
+    color: var(--green-mark);
+    font-size: 0.95rem;
+    margin-bottom: 0.5rem;
+  }
+  .step p { margin-bottom: 0.45rem; }
+  .step code, .solution code {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    background: rgba(0,0,0,0.05);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--ink);
+  }
+
+  .calc-block {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    background: #fafdfa;
+    border: 1px solid #d4e5d8;
+    padding: 0.7rem 0.9rem;
+    margin: 0.5rem 0;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    line-height: 1.7;
+    color: var(--ink);
+  }
+
+  .answer-final {
+    background: #fff8e1;
+    border: 2px solid var(--gold);
+    padding: 0.9rem 1.2rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+    font-weight: 600;
+    color: #5a4510;
+    font-size: 0.95rem;
+  }
+  .answer-final::before {
+    content: "✓ ";
+    color: var(--green-mark);
+    font-size: 1.1rem;
+  }
+
+  table.computed {
+    border-collapse: collapse;
+    margin: 0.6rem 0;
+    font-size: 0.85rem;
+    background: white;
+    width: 100%;
+  }
+  table.computed th, table.computed td {
+    border: 1px solid var(--rule);
+    padding: 6px 12px;
+    text-align: center;
+  }
+  table.computed th { background: var(--green-light); color: var(--green-mark); font-weight: 600; }
+
+  .formula-box {
+    background: #f0f4f9;
+    border: 1px solid #c8d8e8;
+    padding: 0.7rem 1rem;
+    border-radius: 4px;
+    margin: 0.6rem 0;
+    font-family: 'Courier New', monospace;
+    font-size: 0.88rem;
+    color: var(--accent);
+  }
+
+  ul.notes { margin: 0.5rem 0 0.8rem 1.4rem; }
+  ul.notes li { margin: 0.25rem 0; }
+
+  .controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-bottom: 1.2rem;
+  }
+  .ctrl-btn {
+    background: white;
+    border: 1px solid var(--rule);
+    color: var(--ink-muted);
+    padding: 6px 14px;
+    font-size: 0.8rem;
+    font-family: 'Source Serif 4', serif;
+    cursor: pointer;
+    border-radius: 4px;
+    letter-spacing: 0.04em;
+  }
+  .ctrl-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+  footer {
+    text-align: center;
+    padding: 1.5rem;
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--rule);
+    background: #f5f2ec;
+  }
+
+  .formula-ref {
+    background: var(--purple-light);
+    border-left: 4px solid var(--purple);
+    padding: 0.7rem 1rem;
+    border-radius: 0 4px 4px 0;
+    margin: 0.6rem 0;
+    font-size: 0.85rem;
+    color: var(--purple);
+  }
+  .formula-ref .label {
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  @media (max-width: 620px) {
+    .tabs { padding: 0 1rem; }
+    .set-page { padding: 2rem 1rem 3rem; }
+    header h1 { font-size: 1.5rem; }
+    .matrix { font-size: 0.78rem; }
+    .calc-block { font-size: 0.78rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>GenAI Numericals — Hard Practice</h1>
+  <p>Slide-Difficulty Problems with Full Step-by-Step Solutions</p>
+  <div class="badge-row">
+    <span class="badge">6 Topics</span>
+    <span class="badge">12 Problems</span>
+    <span class="badge">Hard Tier</span>
+    <span class="badge">Worked Solutions</span>
+  </div>
+</header>
+
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="tok">Tokenization</button>
+  <button class="tab-btn" data-tab="attn">Self &amp; Cross Attention</button>
+  <button class="tab-btn" data-tab="bm25">BM25 &amp; Hybrid</button>
+  <button class="tab-btn" data-tab="sim">Vector Similarity</button>
+  <button class="tab-btn" data-tab="qlora">QLoRA &amp; LoRA</button>
+  <button class="tab-btn" data-tab="bleu">BLEU Score</button>
+</nav>
+
+<!-- ============= TOKENIZATION ============= -->
+<div class="tab-content active" id="tok">
+  <div class="set-page">
+    <div class="topic-header">
+      <div class="topic-title">Tokenization</div>
+      <div class="topic-meta">Unit 1 &middot; BPE, WordPiece, SentencePiece, Comparisons</div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl-btn" onclick="toggleAll('tok', true)">Show All Solutions</button>
+      <button class="ctrl-btn" onclick="toggleAll('tok', false)">Hide All</button>
+    </div>
+
+    <!-- Problem T.1 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem T.1</span>
+      <span class="difficulty diff-hard">Hard</span>
+      <div class="problem-title">BPE — Full Training (K = 3 merges) + Inference on New Words</div>
+      <div class="problem-text">Train a Byte Pair Encoding tokenizer on a small corpus, then use the learned vocabulary to tokenize unseen words.</div>
+
+      <div class="given">
+        <div class="label">Training Corpus</div>
+        <div class="matrix">"newer newest newly"  (each word appears once)</div>
+      </div>
+
+      <div class="given">
+        <div class="label">Parameters &amp; Rules</div>
+        <div class="matrix">K = 3 (perform exactly 3 merges)
+Merge criterion: most frequent adjacent pair
+Tie-break: alphabetical order
+Inference: greedy longest-match-first</div>
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) Character-level initialization &amp; initial vocabulary<br>
+        (b) Show pair frequency table before each merge<br>
+        (c) Perform K = 3 merges, listing the resulting tokens<br>
+        (d) Final vocabulary<br>
+        (e) Tokenize the unseen words: <strong>"renew"</strong>, <strong>"newer"</strong>, <strong>"newness"</strong>
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Character-Level Initialization</div>
+          <div class="calc-block">newer   → n  e  w  e  r
+newest  → n  e  w  e  s  t
+newly   → n  e  w  l  y
+
+Initial vocab: {n, e, w, r, s, t, l, y}   (8 characters)</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) Pair Frequencies Before Merge 1</div>
+          <table class="computed">
+            <tr><th>Pair</th><th>Count</th></tr>
+            <tr><td>(n, e)</td><td>3</td></tr>
+            <tr><td>(e, w)</td><td>3</td></tr>
+            <tr><td>(w, e)</td><td>2</td></tr>
+            <tr><td>(e, r)</td><td>1</td></tr>
+            <tr><td>(e, s)</td><td>1</td></tr>
+            <tr><td>(s, t)</td><td>1</td></tr>
+            <tr><td>(w, l)</td><td>1</td></tr>
+            <tr><td>(l, y)</td><td>1</td></tr>
+          </table>
+          <p>Two pairs tie at frequency 3: <code>(e, w)</code> and <code>(n, e)</code>. Alphabetical tie-break picks <code>(e, w)</code>.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) Merge 1: (e, w) → "ew"</div>
+          <div class="calc-block">newer   → n  ew  e  r
+newest  → n  ew  e  s  t
+newly   → n  ew  l  y
+
+Vocab: {n, e, w, r, s, t, l, y, ew}</div>
+          <p><strong>Pair frequencies before Merge 2:</strong></p>
+          <table class="computed">
+            <tr><th>Pair</th><th>Count</th></tr>
+            <tr><td>(n, ew)</td><td>3</td></tr>
+            <tr><td>(ew, e)</td><td>2</td></tr>
+            <tr><td>(e, r)</td><td>1</td></tr>
+            <tr><td>(e, s)</td><td>1</td></tr>
+            <tr><td>(ew, l)</td><td>1</td></tr>
+            <tr><td>(l, y)</td><td>1</td></tr>
+            <tr><td>(s, t)</td><td>1</td></tr>
+          </table>
+        </div>
+
+        <div class="step">
+          <div class="step-title">Merge 2: (n, ew) → "new"</div>
+          <div class="calc-block">newer   → new  e  r
+newest  → new  e  s  t
+newly   → new  l  y
+
+Vocab: {n, e, w, r, s, t, l, y, ew, new}</div>
+          <p><strong>Pair frequencies before Merge 3:</strong></p>
+          <table class="computed">
+            <tr><th>Pair</th><th>Count</th></tr>
+            <tr><td>(new, e)</td><td>2</td></tr>
+            <tr><td>(e, r)</td><td>1</td></tr>
+            <tr><td>(e, s)</td><td>1</td></tr>
+            <tr><td>(new, l)</td><td>1</td></tr>
+            <tr><td>(l, y)</td><td>1</td></tr>
+            <tr><td>(s, t)</td><td>1</td></tr>
+          </table>
+        </div>
+
+        <div class="step">
+          <div class="step-title">Merge 3: (new, e) → "newe"</div>
+          <div class="calc-block">newer   → newe  r
+newest  → newe  s  t
+newly   → new   l  y
+
+Stopping condition reached (K = 3 merges done).</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(d) Final Vocabulary</div>
+          <div class="calc-block">{n, e, w, r, s, t, l, y, ew, new, newe}    (11 tokens)</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(e) Inference — Greedy Longest-Match-First</div>
+          <p><strong>"newer"</strong> (seen in training):</p>
+          <div class="calc-block">Position 0: try 'newer'(5)? no. 'newe'(4)? YES → take "newe"
+Position 4: 'r'? YES → take "r"
+
+newer → [newe, r]</div>
+
+          <p><strong>"renew"</strong> (unseen, characters all known):</p>
+          <div class="calc-block">Position 0: 'renew'? no. 'rene'? no. 'ren'? no. 're'? no. 'r'? YES → "r"
+Position 1: 'enew'? no. 'ene'? no. 'en'? no. 'e'? YES → "e"
+Position 2: 'new'? YES → "new"   (longest match available)
+
+renew → [r, e, new]</div>
+
+          <p><strong>"newness"</strong> (unseen):</p>
+          <div class="calc-block">Position 0: 'newness'? no. … 'newn'? no. 'new'? YES → "new"
+Position 3: 'ness'? no. 'nes'? no. 'ne'? no. 'n'? YES → "n"
+Position 4: 'ess'? no. 'es'? no. 'e'? YES → "e"
+Position 5: 'ss'? no. 's'? YES → "s"
+Position 6: 's'? YES → "s"
+
+newness → [new, n, e, s, s]</div>
+        </div>
+
+        <div class="answer-final">newer → [newe, r] | renew → [r, e, new] | newness → [new, n, e, s, s]</div>
+
+        <div class="formula-ref">
+          <div class="label">Key Insight</div>
+          BPE learned the morphological root "new" — so unseen words containing "new" (like renew, newness) reuse this token rather than falling back fully to characters. This is why BPE generalizes far better than word-level tokenization.
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem T.2 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem T.2</span>
+      <span class="difficulty diff-hard">Hard</span>
+      <div class="problem-title">WordPiece — Score-Based Merging (2 merges)</div>
+      <div class="problem-text">WordPiece uses a <strong>probability-based</strong> score, not raw frequency. This causes very different merge choices than BPE.</div>
+
+      <div class="given">
+        <div class="label">Training Corpus</div>
+        <div class="matrix">"read reader reading"  (each word appears once)</div>
+      </div>
+
+      <div class="given">
+        <div class="label">WordPiece Score Formula</div>
+        <div class="matrix">score(x, y) = count(xy) / (count(x) × count(y))
+
+The pair with the HIGHEST score is merged first.
+Continuation tokens use "##" prefix at inference.</div>
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) Character frequencies across the entire corpus<br>
+        (b) Adjacent pair frequencies<br>
+        (c) WordPiece score for every pair<br>
+        (d) First merge<br>
+        (e) Recompute scores &amp; perform second merge<br>
+        (f) Tokenize "reading" and unseen "ring" with ## continuation markers
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Character Frequencies</div>
+          <p>Concatenate all characters:</p>
+          <div class="calc-block">"read"    → r e a d         (4 chars)
+"reader"  → r e a d e r     (6 chars)
+"reading" → r e a d i n g   (7 chars)
+
+Total chars = 17
+
+Per-character counts:
+  r: 4   (appears in start of each word + once in 'reader')
+  e: 4   (one per word + extra in 'reader')
+  a: 3
+  d: 3
+  i: 1
+  n: 1
+  g: 1</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) Adjacent Pair Frequencies</div>
+          <table class="computed">
+            <tr><th>Pair</th><th>Count</th></tr>
+            <tr><td>(r, e)</td><td>3</td></tr>
+            <tr><td>(e, a)</td><td>3</td></tr>
+            <tr><td>(a, d)</td><td>3</td></tr>
+            <tr><td>(d, e)</td><td>1</td></tr>
+            <tr><td>(e, r)</td><td>1</td></tr>
+            <tr><td>(d, i)</td><td>1</td></tr>
+            <tr><td>(i, n)</td><td>1</td></tr>
+            <tr><td>(n, g)</td><td>1</td></tr>
+          </table>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) WordPiece Scores</div>
+          <div class="calc-block">score(r,e) = 3 / (4 × 4) = 3/16  = 0.1875
+score(e,a) = 3 / (4 × 3) = 3/12  = 0.2500
+score(a,d) = 3 / (3 × 3) = 3/9   = 0.3333
+score(d,e) = 1 / (3 × 4) = 1/12  = 0.0833
+score(e,r) = 1 / (4 × 4) = 1/16  = 0.0625
+score(d,i) = 1 / (3 × 1) = 1/3   = 0.3333
+score(i,n) = 1 / (1 × 1) = 1/1   = 1.0000  ★
+score(n,g) = 1 / (1 × 1) = 1/1   = 1.0000  ★</div>
+          <p>Two pairs tie at 1.0. With alphabetical tie-break, <strong>(i, n)</strong> merges first.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(d) Merge 1: (i, n) → "in"</div>
+          <div class="calc-block">read    → r e a d
+reader  → r e a d e r
+reading → r e a d in g
+
+Vocab: {r, e, a, d, i, n, g, in}</div>
+          <p><strong>Notice:</strong> Even though (a,d) appeared 3 times, WordPiece chose (i,n) which appeared only once. This is because i and n each appear only once — making their co-occurrence statistically <em>very</em> meaningful. WordPiece rewards <em>strong association</em>, not just frequency.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(e) Recompute Scores → Merge 2</div>
+          <p><strong>New token counts:</strong> r=4, e=4, a=3, d=3, in=1, g=1 (i and n removed as separate tokens within these words after merge)</p>
+          <p><strong>New pair counts:</strong></p>
+          <table class="computed">
+            <tr><th>Pair</th><th>Count</th></tr>
+            <tr><td>(r, e)</td><td>3</td></tr>
+            <tr><td>(e, a)</td><td>3</td></tr>
+            <tr><td>(a, d)</td><td>3</td></tr>
+            <tr><td>(d, e)</td><td>1</td></tr>
+            <tr><td>(e, r)</td><td>1</td></tr>
+            <tr><td>(d, in)</td><td>1</td></tr>
+            <tr><td>(in, g)</td><td>1</td></tr>
+          </table>
+          <div class="calc-block">score(in, g) = 1 / (1 × 1) = 1.0000  ★  highest
+
+Merge 2: (in, g) → "ing"</div>
+          <div class="calc-block">read    → r e a d
+reader  → r e a d e r
+reading → r e a d ing
+
+Vocab: {r, e, a, d, i, n, g, in, ing}</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(f) Inference with ## Continuation Markers</div>
+          <p><strong>Rule:</strong> First token has no prefix; subsequent tokens get <code>##</code>.</p>
+
+          <p><strong>"reading"</strong>:</p>
+          <div class="calc-block">Position 0: longest match → 'r' (no longer prefixes in vocab)
+Position 1: 'e' (no continuation match like 'ea' or 'ead' in vocab)
+Position 2: 'a'
+Position 3: 'd'
+Position 4: longest from 'ing' = 'ing' ✓
+
+reading → [r, ##e, ##a, ##d, ##ing]</div>
+
+          <p><strong>"ring"</strong> (unseen):</p>
+          <div class="calc-block">Position 0: 'r' ✓
+Position 1: 'ing' ✓ (longest match)
+
+ring → [r, ##ing]</div>
+        </div>
+
+        <div class="answer-final">reading → [r, ##e, ##a, ##d, ##ing] | ring → [r, ##ing]</div>
+
+        <div class="formula-ref">
+          <div class="label">Why WordPiece Chose Rare Pairs First</div>
+          High score occurs when count(xy) is close to count(x) × count(y). For rare characters like i, n, g — which co-occur only as "ing" — their joint probability is "perfect". WordPiece recognizes this structural signal even though raw frequency is low. This is why BERT's tokenizer captures meaningful morphemes ("ing", "ed", "tion") so well.
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem T.3 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem T.3</span>
+      <span class="difficulty diff-medium">Medium</span>
+      <div class="problem-title">SentencePiece — Space-as-Token Tokenization</div>
+      <div class="problem-text">SentencePiece treats whitespace as just another character via the special symbol <code>▁</code> (U+2581). This makes it language-agnostic.</div>
+
+      <div class="given">
+        <div class="label">Input Sentence</div>
+        <div class="matrix">"GenAI changes everything"</div>
+      </div>
+
+      <div class="given">
+        <div class="label">Learned Vocabulary (after training)</div>
+        <div class="matrix">{▁, Gen, AI, ▁change, s, ▁every, thing, e, v, r, y, t, h, i, n, g, a, ...}</div>
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) Rewrite the input with the ▁ marker<br>
+        (b) Apply greedy longest-match tokenization<br>
+        (c) Show how the tokenizer recovers the original string<br>
+        (d) State two advantages of SentencePiece
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Rewrite with ▁ Marker</div>
+          <p>Every space becomes <code>▁</code>, and (by convention) a leading <code>▁</code> is added to the first word too — to mark word boundary uniformly.</p>
+          <div class="calc-block">Original:  "GenAI changes everything"
+Rewritten: "▁GenAI▁changes▁everything"</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) Greedy Longest-Match Tokenization</div>
+          <p>Scan the rewritten string, picking the longest vocab token at each position.</p>
+          <div class="calc-block">"▁GenAI▁changes▁everything"
+
+Pos 0: Try '▁GenAI'? not in vocab. '▁Gen'? not in vocab. 
+       But 'Gen' is in vocab — we need '▁' as separate too.
+       ▁ alone IS in vocab → take "▁"
+Pos 1: 'Gen' ✓ longest → take "Gen"
+Pos 4: 'AI' ✓ → take "AI"
+Pos 6: '▁' → take "▁"
+Pos 7: '▁change' starts here? text from pos 6 onward is "▁changes▁..."
+       Restart: at pos 6 we have '▁change'? YES (7 chars) → take "▁change"
+       Wait — better: scan greedy. Reset:
+
+Greedy scan:
+  i=0: '▁' (longer '▁G', '▁Ge'... not in vocab) → "▁"
+  i=1: 'Gen' (longest) → "Gen"
+  i=4: 'AI' → "AI"
+  i=6: '▁change' is 7 chars; check '▁changes'(8)? not in vocab. 
+       '▁change' YES → "▁change"
+  i=13: 's' → "s"
+  i=14: '▁every' YES → "▁every"
+  i=20: 'thing' YES → "thing"
+
+Tokens: [▁, Gen, AI, ▁change, s, ▁every, thing]</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) Detokenization (Round-trip)</div>
+          <p>To recover the original text:</p>
+          <div class="calc-block">1. Concatenate tokens:  "▁GenAI▁changes▁everything"
+2. Replace ▁ with space: " GenAI changes everything"
+3. Strip leading space: "GenAI changes everything"</div>
+          <p>This <strong>lossless reversibility</strong> is a defining property of SentencePiece.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(d) Two Key Advantages</div>
+          <ul class="notes">
+            <li><strong>Language-agnostic:</strong> No pre-tokenization needed. Works on Japanese/Chinese (no spaces) the same way as English.</li>
+            <li><strong>Lossless &amp; reversible:</strong> Original raw text can be reconstructed from tokens (unlike whitespace tokenizers which collapse multiple spaces).</li>
+            <li><strong>Bonus:</strong> Used by Llama, T5, mT5, NLLB — all multilingual models.</li>
+          </ul>
+        </div>
+
+        <div class="answer-final">[▁, Gen, AI, ▁change, s, ▁every, thing] — 7 tokens, fully reversible</div>
+      </div>
+    </div>
+
+    <!-- Problem T.4 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem T.4</span>
+      <span class="difficulty diff-medium">Medium</span>
+      <div class="problem-title">Tokenization Strategy Comparison — Count &amp; Trade-offs</div>
+      <div class="problem-text">Compare token counts across four strategies on the same sentence, and analyze trade-offs.</div>
+
+      <div class="given">
+        <div class="label">Input</div>
+        <div class="matrix">Text: "The unpredictable nature of GenAI."</div>
+      </div>
+
+      <div class="given">
+        <div class="label">Assumed BPE Vocabulary (partial)</div>
+        <div class="matrix">{The, un, predict, able, nature, of, Gen, AI, ., ▁, ...}</div>
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) Whitespace tokenization &amp; count<br>
+        (b) Punctuation-aware tokenization &amp; count<br>
+        (c) Character-level tokenization &amp; count (excluding spaces)<br>
+        (d) Subword (BPE) tokenization &amp; count<br>
+        (e) Compute OOV risk and sequence-length trade-off for each
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Whitespace Tokenization</div>
+          <div class="calc-block">Split on spaces:
+["The", "unpredictable", "nature", "of", "GenAI."]
+
+Count: 5 tokens
+Issue: "GenAI." includes a period — punctuation glued to word.</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) Punctuation-Aware Tokenization</div>
+          <div class="calc-block">Split on spaces + separate punctuation:
+["The", "unpredictable", "nature", "of", "GenAI", "."]
+
+Count: 6 tokens
+Better: punctuation isolated, but still suffers if 'unpredictable' is OOV.</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) Character-Level Tokenization</div>
+          <div class="calc-block">Each character is a token (excluding spaces here):
+"T,h,e,u,n,p,r,e,d,i,c,t,a,b,l,e,n,a,t,u,r,e,o,f,G,e,n,A,I,."
+
+Count: 30 tokens
+Pros: zero OOV — any character can be represented.
+Cons: very long sequence → slow + reduced semantics per token.</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(d) Subword (BPE) Tokenization</div>
+          <div class="calc-block">Using vocab {The, un, predict, able, nature, of, Gen, AI, .}:
+["The", "un", "predict", "able", "nature", "of", "Gen", "AI", "."]
+
+Count: 9 tokens
+"unpredictable" decomposed into [un, predict, able] — meaningful morphemes preserved.
+"GenAI" decomposed into [Gen, AI] — captures both components.</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(e) Trade-offs Summary</div>
+          <table class="computed">
+            <tr><th>Strategy</th><th>Tokens</th><th>OOV Risk</th><th>Seq Length</th><th>Semantic Quality</th></tr>
+            <tr><td>Whitespace</td><td>5</td><td>HIGH</td><td>Short</td><td>Word-level (good if seen)</td></tr>
+            <tr><td>Punct-aware</td><td>6</td><td>HIGH</td><td>Short</td><td>Good</td></tr>
+            <tr><td>Character</td><td>30</td><td>NONE</td><td>Very long</td><td>Poor (no word meaning)</td></tr>
+            <tr><td>Subword (BPE)</td><td>9</td><td>NONE*</td><td>Medium</td><td>Best balance</td></tr>
+          </table>
+          <p>*Subword BPE has near-zero OOV because unknown words fall back to known subwords or characters.</p>
+        </div>
+
+        <div class="answer-final">Subword (BPE) is the sweet spot — handles OOV, keeps sequence manageable, preserves morphology.</div>
+
+        <div class="formula-ref">
+          <div class="label">Why Modern LLMs Use Subword</div>
+          GPT-2/3/4, BERT, Llama, T5 — all use subword tokenization (BPE or its variants) because it provides the best balance: ~30-50K vocabulary, no OOV problem, and reasonable sequence lengths (~1.3 tokens per word for English).
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============= SELF & CROSS ATTENTION ============= -->
+<div class="tab-content" id="attn">
+  <div class="set-page">
+    <div class="topic-header">
+      <div class="topic-title">Self-Attention &amp; Cross-Attention</div>
+      <div class="topic-meta">Unit 1 &middot; Full Pipeline Computations</div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl-btn" onclick="toggleAll('attn', true)">Show All Solutions</button>
+      <button class="ctrl-btn" onclick="toggleAll('attn', false)">Hide All</button>
+    </div>
+
+    <!-- Problem A.1 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem A.1</span>
+      <span class="difficulty diff-hard">Hard</span>
+      <div class="problem-title">Full Self-Attention with Positional Encoding (3 tokens)</div>
+      <div class="problem-text">A Transformer encoder processes the 3-token sequence <strong>"Deep Neural Networks"</strong> with embedding dimension d = 4 and key dimension d<sub>k</sub> = 2.</div>
+
+      <div class="given">
+        <div class="label">Given — Token Embeddings (before PE)</div>
+        <div class="matrix">"Deep"      → (1, 0, 0, 1)
+"Neural"    → (0, 1, 1, 0)
+"Networks"  → (1, 1, 0, 0)</div>
+      </div>
+
+      <div class="given">
+        <div class="label">Projection Matrices (4×2)</div>
+        <div class="matrix">W_Q = [[1,0],[0,1],[1,0],[0,1]]
+W_K = [[1,0],[0,1],[1,0],[0,1]]
+W_V = [[1,0],[0,1],[0,1],[1,0]]</div>
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) Positional encodings PE(0), PE(1), PE(2)<br>
+        (b) Input matrix X = E + PE<br>
+        (c) Q, K, V matrices<br>
+        (d) Scaled scores QKᵀ/√d<sub>k</sub><br>
+        (e) Softmax attention weights<br>
+        (f) Final output Z (4 decimals)
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Positional Encodings</div>
+          <p>For d = 4, dimension index i ∈ {0, 1}. Dims 0,1 use i=0 → denom = 10000⁰ = 1. Dims 2,3 use i=1 → denom = 10000^(2/4) = 100.</p>
+          <div class="formula-box">PE(pos, 2i) = sin(pos / 10000^(2i/d))
+PE(pos, 2i+1) = cos(pos / 10000^(2i/d))</div>
+          <div class="calc-block">PE(0): sin(0/1)=0, cos(0/1)=1, sin(0/100)=0, cos(0/100)=1
+       → (0, 1, 0, 1)
+
+PE(1): sin(1/1)=0.8415, cos(1/1)=0.5403, sin(1/100)=0.0100, cos(1/100)=1.0000
+       → (0.8415, 0.5403, 0.0100, 1.0000)
+
+PE(2): sin(2/1)=0.9093, cos(2/1)=-0.4161, sin(2/100)=0.0200, cos(2/100)=0.9998
+       → (0.9093, -0.4161, 0.0200, 0.9998)</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) Input Matrix X = E + PE</div>
+          <div class="calc-block">Row 0 (Deep):     (1,0,0,1) + (0, 1, 0, 1)             = (1.0000, 1.0000, 0.0000, 2.0000)
+Row 1 (Neural):   (0,1,1,0) + (0.8415, 0.5403, 0.01, 1)   = (0.8415, 1.5403, 1.0100, 1.0000)
+Row 2 (Networks): (1,1,0,0) + (0.9093,-0.4161, 0.02, 1.00)= (1.9093, 0.5839, 0.0200, 0.9998)
+
+X = [[1.0000, 1.0000, 0.0000, 2.0000],
+     [0.8415, 1.5403, 1.0100, 1.0000],
+     [1.9093, 0.5839, 0.0200, 0.9998]]</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) Q, K, V via projection (X · W)</div>
+          <p>Each W projects 4D → 2D. Since W_Q = W_K, we have Q = K.</p>
+          <div class="calc-block">W_Q (and W_K) picks dim0+dim2 for col1, dim1+dim3 for col2:
+Q = K = [[1+0, 1+2],          → [[1.0000, 3.0000],
+         [0.8415+1.0100, 1.5403+1.0000],   [1.8515, 2.5403],
+         [1.9093+0.0200, 0.5839+0.9998]]    [1.9293, 1.5837]]
+
+W_V picks dim0+dim3 for col1, dim1+dim2 for col2:
+V = [[1+2, 1+0],                → [[3.0000, 1.0000],
+     [0.8415+1.0000, 1.5403+1.0100],  [1.8415, 2.5503],
+     [1.9093+0.9998, 0.5839+0.0200]]  [2.9091, 0.6039]]</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(d) Scaled Scores</div>
+          <p>Since Q = K, QKᵀ is symmetric. Compute each entry:</p>
+          <div class="calc-block">QK^T (row i · row j):
+  (0,0): 1·1 + 3·3 = 10.0000
+  (0,1): 1·1.8515 + 3·2.5403 = 9.4724
+  (0,2): 1·1.9293 + 3·1.5837 = 6.6804
+  (1,1): 1.8515² + 2.5403² = 3.4281 + 6.4531 = 9.8812
+  (1,2): 1.8515·1.9293 + 2.5403·1.5837 = 3.5717 + 4.0231 = 7.5948
+  (2,2): 1.9293² + 1.5837² = 3.7222 + 2.5081 = 6.2303
+
+Divide by √d_k = √2 ≈ 1.4142:
+Scores = [[7.0711, 6.6980, 4.7238],
+          [6.6980, 6.9870, 5.3704],
+          [4.7238, 5.3704, 4.4055]]</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(e) Softmax (row-wise)</div>
+          <p>For numerical stability, subtract row max before exp. Then normalize.</p>
+          <div class="calc-block">Row 0: max=7.0711. Shifted=[0, -0.3731, -2.3473]
+  e=(1.0000, 0.6885, 0.0956), Σ=1.7841
+  → (0.5605, 0.3860, 0.0536)
+
+Row 1: max=6.9870. Shifted=[-0.2890, 0, -1.6166]
+  e=(0.7490, 1.0000, 0.1986), Σ=1.9476
+  → (0.3846, 0.5134, 0.1020)
+
+Row 2: max=5.3704. Shifted=[-0.6466, 0, -0.9649]
+  e=(0.5238, 1.0000, 0.3810), Σ=1.9048
+  → (0.2750, 0.5250, 0.2000)
+
+A = [[0.5605, 0.3860, 0.0536],
+     [0.3846, 0.5134, 0.1020],
+     [0.2750, 0.5250, 0.2000]]</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(f) Final Output Z = A · V</div>
+          <div class="calc-block">Row 0:
+  z0 = 0.5605·(3.0000, 1.0000) + 0.3860·(1.8415, 2.5503) + 0.0536·(2.9091, 0.6039)
+     = (1.6815, 0.5605) + (0.7108, 0.9844) + (0.1559, 0.0324)
+     = (2.5482, 1.5773)
+
+Row 1:
+  z1 = 0.3846·(3.0000, 1.0000) + 0.5134·(1.8415, 2.5503) + 0.1020·(2.9091, 0.6039)
+     = (1.1538, 0.3846) + (0.9454, 1.3093) + (0.2967, 0.0616)
+     = (2.3959, 1.7555)
+
+Row 2:
+  z2 = 0.2750·(3.0000, 1.0000) + 0.5250·(1.8415, 2.5503) + 0.2000·(2.9091, 0.6039)
+     = (0.8250, 0.2750) + (0.9668, 1.3389) + (0.5818, 0.1208)
+     = (2.3736, 1.7347)</div>
+        </div>
+
+        <div class="answer-final">Z = [[2.548, 1.577], [2.396, 1.756], [2.374, 1.735]]</div>
+      </div>
+    </div>
+
+    <!-- Problem A.2 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem A.2</span>
+      <span class="difficulty diff-medium">Medium</span>
+      <div class="problem-title">Cross-Attention Computation</div>
+      <div class="problem-text">A decoder produces a query Q<sub>d</sub> that attends over encoder Keys and Values (3 encoder tokens). Compute the final cross-attention output vector.</div>
+
+      <div class="given">
+        <div class="label">Encoder K (3×3) and V (3×2)</div>
+        <div class="matrix">K = [[1.0, 0.5, 0.2],
+     [0.3, 1.0, 0.6],
+     [0.7, 0.4, 1.0]]
+
+V = [[0.8, 0.2],
+     [0.1, 0.9],
+     [0.5, 0.5]]</div>
+      </div>
+
+      <div class="given">
+        <div class="label">Decoder Query</div>
+        <div class="matrix">Q_d = (0.6, 0.8, 0.4)  with d_k = 3</div>
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) Dot products Q<sub>d</sub>·K<sub>i</sub>ᵀ for i = 1, 2, 3<br>
+        (b) Scaled scores ÷√d<sub>k</sub><br>
+        (c) Softmax attention weights<br>
+        (d) Final output vector (3 decimals)
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Dot Products Q<sub>d</sub>·K<sub>i</sub></div>
+          <div class="calc-block">Q_d · K_1 = 0.6·1.0 + 0.8·0.5 + 0.4·0.2 = 0.60 + 0.40 + 0.08 = 1.080
+Q_d · K_2 = 0.6·0.3 + 0.8·1.0 + 0.4·0.6 = 0.18 + 0.80 + 0.24 = 1.220
+Q_d · K_3 = 0.6·0.7 + 0.8·0.4 + 0.4·1.0 = 0.42 + 0.32 + 0.40 = 1.140</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) Scale by √d<sub>k</sub> = √3 ≈ 1.7321</div>
+          <div class="calc-block">s_1 = 1.080 / 1.7321 = 0.6235
+s_2 = 1.220 / 1.7321 = 0.7044
+s_3 = 1.140 / 1.7321 = 0.6582</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) Softmax</div>
+          <div class="calc-block">e^0.6235 = 1.8654
+e^0.7044 = 2.0226
+e^0.6582 = 1.9313
+
+Σ = 1.8654 + 2.0226 + 1.9313 = 5.8193
+
+α_1 = 1.8654 / 5.8193 = 0.3206
+α_2 = 2.0226 / 5.8193 = 0.3476
+α_3 = 1.9313 / 5.8193 = 0.3319</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(d) Weighted Sum with V</div>
+          <div class="calc-block">Output = α_1·V_1 + α_2·V_2 + α_3·V_3
+       = 0.3206·(0.8, 0.2) + 0.3476·(0.1, 0.9) + 0.3319·(0.5, 0.5)
+       = (0.2565, 0.0641) + (0.0348, 0.3128) + (0.1660, 0.1660)
+       = (0.4573, 0.5429)</div>
+        </div>
+
+        <div class="answer-final">Cross-attention output = (0.457, 0.543) — decoder attends roughly equally with slight preference for token 2</div>
+
+        <div class="formula-ref">
+          <div class="label">Key Insight</div>
+          The decoder query has highest similarity with K<sub>2</sub> (encoder token 2), so the output is pulled most toward V<sub>2</sub> = (0.1, 0.9). Notice V<sub>2</sub> contributes the highest weight to the second output dimension.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============= BM25 ============= -->
+<div class="tab-content" id="bm25">
+  <div class="set-page">
+    <div class="topic-header">
+      <div class="topic-title">BM25 &amp; Hybrid Retrieval</div>
+      <div class="topic-meta">Unit 2 &middot; Length-Aware Ranking</div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl-btn" onclick="toggleAll('bm25', true)">Show All Solutions</button>
+      <button class="ctrl-btn" onclick="toggleAll('bm25', false)">Hide All</button>
+    </div>
+
+    <!-- Problem B.1 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem B.1</span>
+      <span class="difficulty diff-hard">Hard</span>
+      <div class="problem-title">BM25 with Varying Document Lengths</div>
+      <div class="problem-text">Length normalization becomes non-trivial when documents have <em>different</em> lengths. Rank these 3 documents.</div>
+
+      <div class="given">
+        <div class="label">Corpus</div>
+        <div class="matrix">D1: "machine learning algorithm"                                  (3 words)
+D2: "deep learning models neural network learning training data" (8 words)
+D3: "machine learning deep neural network model"                 (6 words)</div>
+      </div>
+
+      <div class="given">
+        <div class="label">Query &amp; Parameters</div>
+        <div class="matrix">Q = {"learning", "neural"}
+k₁ = 1.5,  b = 0.75
+IDF = log₁₀(1 + (N − n + 0.5)/(n + 0.5))</div>
+      </div>
+
+      <div class="formula-ref">
+        <div class="label">BM25 Formula</div>
+        BM25(D, Q) = Σ<sub>t∈Q</sub> IDF(t) · [ f(t,D)·(k₁+1) / ( f(t,D) + k₁·(1 − b + b·|D|/avgD) ) ]
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) TF table, document lengths, avgD<br>
+        (b) IDF for each query term<br>
+        (c) BM25 score per document with full breakdown<br>
+        (d) Final ranking
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) TF Table &amp; Lengths</div>
+          <table class="computed">
+            <tr><th>Term</th><th>D1</th><th>D2</th><th>D3</th></tr>
+            <tr><td>learning</td><td>1</td><td>2</td><td>1</td></tr>
+            <tr><td>neural</td><td>0</td><td>1</td><td>1</td></tr>
+          </table>
+          <div class="calc-block">|D1| = 3, |D2| = 8, |D3| = 6
+avgD = (3 + 8 + 6) / 3 = 5.6667</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) IDF (N = 3)</div>
+          <div class="calc-block">"learning" appears in all 3 docs → n = 3
+IDF(learning) = log₁₀(1 + (3 − 3 + 0.5)/(3 + 0.5))
+             = log₁₀(1 + 0.5/3.5)
+             = log₁₀(1.1429)
+             = 0.0580
+
+"neural" appears in 2 docs (D2, D3) → n = 2
+IDF(neural) = log₁₀(1 + (3 − 2 + 0.5)/(2 + 0.5))
+            = log₁₀(1 + 1.5/2.5)
+            = log₁₀(1.6000)
+            = 0.2041</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) BM25 Scores</div>
+
+          <p><strong>Length factors</strong> (1 − b + b·|D|/avgD):</p>
+          <div class="calc-block">D1: 1 − 0.75 + 0.75·(3/5.6667)  = 0.25 + 0.75·0.5294 = 0.25 + 0.3971 = 0.6471
+D2: 1 − 0.75 + 0.75·(8/5.6667)  = 0.25 + 0.75·1.4118 = 0.25 + 1.0588 = 1.3088
+D3: 1 − 0.75 + 0.75·(6/5.6667)  = 0.25 + 0.75·1.0588 = 0.25 + 0.7941 = 1.0441</div>
+
+          <p><strong>D1</strong> (learning=1, neural=0, len_factor=0.6471):</p>
+          <div class="calc-block">learning: 0.0580 · [1·(1.5+1) / (1 + 1.5·0.6471)]
+        = 0.0580 · [2.5 / (1 + 0.9706)]
+        = 0.0580 · (2.5 / 1.9706)
+        = 0.0580 · 1.2687
+        = 0.0736
+neural:   tf = 0 → contribution = 0
+
+BM25(D1) = 0.0736</div>
+
+          <p><strong>D2</strong> (learning=2, neural=1, len_factor=1.3088):</p>
+          <div class="calc-block">learning: 0.0580 · [2·2.5 / (2 + 1.5·1.3088)]
+        = 0.0580 · [5.0 / (2 + 1.9632)]
+        = 0.0580 · (5.0 / 3.9632)
+        = 0.0580 · 1.2616
+        = 0.0732
+neural:   0.2041 · [1·2.5 / (1 + 1.5·1.3088)]
+        = 0.2041 · [2.5 / (1 + 1.9632)]
+        = 0.2041 · (2.5 / 2.9632)
+        = 0.2041 · 0.8437
+        = 0.1722
+
+BM25(D2) = 0.0732 + 0.1722 = 0.2454</div>
+
+          <p><strong>D3</strong> (learning=1, neural=1, len_factor=1.0441):</p>
+          <div class="calc-block">learning: 0.0580 · [1·2.5 / (1 + 1.5·1.0441)]
+        = 0.0580 · [2.5 / (1 + 1.5662)]
+        = 0.0580 · (2.5 / 2.5662)
+        = 0.0580 · 0.9742
+        = 0.0565
+neural:   0.2041 · [1·2.5 / (1 + 1.5·1.0441)]
+        = 0.2041 · 0.9742
+        = 0.1989
+
+BM25(D3) = 0.0565 + 0.1989 = 0.2554</div>
+        </div>
+
+        <div class="answer-final">Ranking: D3 (0.2554) &gt; D2 (0.2454) &gt; D1 (0.0736)</div>
+
+        <div class="formula-ref">
+          <div class="label">Why D3 beats D2 despite higher TF</div>
+          D2 has higher term frequencies but is also longer (8 vs 6 words). The length normalization penalizes D2's longer length, demonstrating BM25's fair treatment of document size — exactly why it outperforms naïve TF-IDF.
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem B.2 Hybrid -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem B.2</span>
+      <span class="difficulty diff-hard">Hard</span>
+      <div class="problem-title">Hybrid Retrieval — 4 Documents, α = 0.6</div>
+      <div class="problem-text">Combine BM25 (sparse) and dense (cosine) scores for 4 candidate documents.</div>
+
+      <div class="given">
+        <div class="label">SBERT Embeddings (4D)</div>
+        <div class="matrix">D1 = (0.8, 0.2, 0.5, 0.1)
+D2 = (0.3, 0.7, 0.4, 0.5)
+D3 = (0.6, 0.6, 0.3, 0.4)
+D4 = (0.1, 0.9, 0.2, 0.3)
+
+Query Q = (0.5, 0.5, 0.4, 0.3)</div>
+      </div>
+
+      <div class="given">
+        <div class="label">BM25 Scores (precomputed)</div>
+        <div class="matrix">D1 = 0.85,  D2 = 0.40,  D3 = 0.72,  D4 = 0.30
+α (BM25 weight) = 0.6</div>
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) Cosine similarity Q·D<sub>i</sub> / (‖Q‖·‖D<sub>i</sub>‖) for each<br>
+        (b) Hybrid score H = α·BM25 + (1−α)·cos<br>
+        (c) Final ranking
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Cosine Similarities</div>
+          <p>Compute ‖Q‖ once:</p>
+          <div class="calc-block">‖Q‖ = √(0.25 + 0.25 + 0.16 + 0.09) = √0.75 = 0.8660</div>
+
+          <div class="calc-block">D1: ‖D1‖ = √(0.64 + 0.04 + 0.25 + 0.01) = √0.94 = 0.9695
+    Q·D1 = 0.40 + 0.10 + 0.20 + 0.03 = 0.7300
+    cos(Q, D1) = 0.7300 / (0.8660 × 0.9695) = 0.7300 / 0.8395 = 0.8694
+
+D2: ‖D2‖ = √(0.09 + 0.49 + 0.16 + 0.25) = √0.99 = 0.9950
+    Q·D2 = 0.15 + 0.35 + 0.16 + 0.15 = 0.8100
+    cos(Q, D2) = 0.8100 / (0.8660 × 0.9950) = 0.8100 / 0.8617 = 0.9400
+
+D3: ‖D3‖ = √(0.36 + 0.36 + 0.09 + 0.16) = √0.97 = 0.9849
+    Q·D3 = 0.30 + 0.30 + 0.12 + 0.12 = 0.8400
+    cos(Q, D3) = 0.8400 / (0.8660 × 0.9849) = 0.8400 / 0.8529 = 0.9848
+
+D4: ‖D4‖ = √(0.01 + 0.81 + 0.04 + 0.09) = √0.95 = 0.9747
+    Q·D4 = 0.05 + 0.45 + 0.08 + 0.09 = 0.6700
+    cos(Q, D4) = 0.6700 / (0.8660 × 0.9747) = 0.6700 / 0.8441 = 0.7937</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) Hybrid Scores (α = 0.6)</div>
+          <div class="calc-block">H(D1) = 0.6·0.85 + 0.4·0.8694 = 0.510 + 0.3478 = 0.8578
+H(D2) = 0.6·0.40 + 0.4·0.9400 = 0.240 + 0.3760 = 0.6160
+H(D3) = 0.6·0.72 + 0.4·0.9848 = 0.432 + 0.3939 = 0.8259
+H(D4) = 0.6·0.30 + 0.4·0.7937 = 0.180 + 0.3175 = 0.4975</div>
+        </div>
+
+        <div class="answer-final">Ranking: D1 (0.858) > D3 (0.826) > D2 (0.616) > D4 (0.498)</div>
+
+        <div class="formula-ref">
+          <div class="label">Observation</div>
+          D3 has the highest cosine similarity (0.985) but D1 wins overall because of its much stronger BM25 score. Hybrid retrieval balances semantic and lexical signals.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============= VECTOR SIMILARITY ============= -->
+<div class="tab-content" id="sim">
+  <div class="set-page">
+    <div class="topic-header">
+      <div class="topic-title">Vector Similarity Metrics</div>
+      <div class="topic-meta">Unit 2 &middot; Euclidean vs Cosine vs Dot Product</div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl-btn" onclick="toggleAll('sim', true)">Show All Solutions</button>
+      <button class="ctrl-btn" onclick="toggleAll('sim', false)">Hide All</button>
+    </div>
+
+    <!-- Problem D.1 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem D.1</span>
+      <span class="difficulty diff-hard">Hard</span>
+      <div class="problem-title">Magnitude Trap — Discrepancy Between Metrics</div>
+      <div class="problem-text">A vector database has 4 candidates. Show how Euclidean and cosine can disagree, then explain the rationale.</div>
+
+      <div class="given">
+        <div class="label">Database Vectors</div>
+        <div class="matrix">v₁ = (3, 3, 3)     ← long, same direction as q
+v₂ = (1, 0, 0)
+v₃ = (2, 2, 1)
+v₄ = (0.5, 0.5, 0.5)  ← short, same direction as q
+
+Query q = (1, 1, 1)</div>
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) Euclidean distance d(q, v<sub>i</sub>) for each vector<br>
+        (b) Cosine similarity cos(q, v<sub>i</sub>) for each vector<br>
+        (c) Dot product q·v<sub>i</sub> for each vector<br>
+        (d) Rank by each metric and explain disagreements
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Euclidean Distance</div>
+          <div class="formula-box">d(q, v) = √Σ(q_i − v_i)²</div>
+          <div class="calc-block">d(q, v₁) = √((1-3)² + (1-3)² + (1-3)²) = √(4+4+4) = √12 = 3.4641
+d(q, v₂) = √((1-1)² + (1-0)² + (1-0)²) = √(0+1+1) = √2  = 1.4142
+d(q, v₃) = √((1-2)² + (1-2)² + (1-1)²) = √(1+1+0) = √2  = 1.4142
+d(q, v₄) = √((1-0.5)² + (1-0.5)² + (1-0.5)²) = √(0.75) = 0.8660</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) Cosine Similarity</div>
+          <div class="formula-box">cos(q, v) = (q · v) / (‖q‖ · ‖v‖)</div>
+          <p>Magnitudes:</p>
+          <div class="calc-block">‖q‖   = √3      = 1.7321
+‖v₁‖  = √27     = 5.1962
+‖v₂‖  = √1      = 1.0000
+‖v₃‖  = √(4+4+1)= √9 = 3.0000
+‖v₄‖  = √0.75   = 0.8660</div>
+
+          <p>Dot products:</p>
+          <div class="calc-block">q·v₁ = 3 + 3 + 3 = 9
+q·v₂ = 1 + 0 + 0 = 1
+q·v₃ = 2 + 2 + 1 = 5
+q·v₄ = 0.5 + 0.5 + 0.5 = 1.5</div>
+
+          <p>Cosines:</p>
+          <div class="calc-block">cos(q, v₁) = 9 / (1.7321 × 5.1962)  = 9/9       = 1.0000
+cos(q, v₂) = 1 / (1.7321 × 1.0000)  = 1/1.7321 = 0.5774
+cos(q, v₃) = 5 / (1.7321 × 3.0000)  = 5/5.1962 = 0.9623
+cos(q, v₄) = 1.5 / (1.7321 × 0.8660)= 1.5/1.5  = 1.0000</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) Rankings &amp; Disagreement Analysis</div>
+          <table class="computed">
+            <tr><th>Vector</th><th>Euclidean d</th><th>Cosine</th><th>Dot Product</th></tr>
+            <tr><td>v₁</td><td>3.4641</td><td>1.0000</td><td>9.000</td></tr>
+            <tr><td>v₂</td><td>1.4142</td><td>0.5774</td><td>1.000</td></tr>
+            <tr><td>v₃</td><td>1.4142</td><td>0.9623</td><td>5.000</td></tr>
+            <tr><td>v₄</td><td><strong>0.8660</strong></td><td><strong>1.0000</strong></td><td>1.500</td></tr>
+          </table>
+
+          <p><strong>Ranking by each metric (best → worst):</strong></p>
+          <div class="calc-block">Euclidean:    v₄ (0.866) > v₂ = v₃ (1.414) > v₁ (3.464)
+Cosine:       v₁ = v₄ (1.000) > v₃ (0.962) > v₂ (0.577)
+Dot Product:  v₁ (9) > v₃ (5) > v₄ (1.5) > v₂ (1)</div>
+        </div>
+
+        <div class="answer-final">Three metrics give three different rankings! Choose your metric based on whether magnitude matters.</div>
+
+        <div class="formula-ref">
+          <div class="label">Key Insights</div>
+          <ul class="notes">
+            <li><strong>v₁ vs v₄:</strong> Both have perfect cosine 1.0 (same direction as q), but v₄ is closer in Euclidean because magnitudes match q better. v₁ is far Euclidean-wise despite the perfect angle.</li>
+            <li><strong>Dot product is biased toward larger magnitudes:</strong> v₁ wins by dot product simply because its values are 3× larger.</li>
+            <li><strong>For text embeddings:</strong> Use cosine — semantic direction matters, magnitude doesn't.</li>
+            <li><strong>For position/spatial data:</strong> Use Euclidean — actual distance matters.</li>
+            <li><strong>For normalized vectors:</strong> Cosine and dot product are equivalent.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============= QLORA ============= -->
+<div class="tab-content" id="qlora">
+  <div class="set-page">
+    <div class="topic-header">
+      <div class="topic-title">QLoRA &amp; LoRA Numericals</div>
+      <div class="topic-meta">Unit 3 &middot; Quantization + Low-Rank Update</div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl-btn" onclick="toggleAll('qlora', true)">Show All Solutions</button>
+      <button class="ctrl-btn" onclick="toggleAll('qlora', false)">Hide All</button>
+    </div>
+
+    <!-- Problem C.1 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem C.1</span>
+      <span class="difficulty diff-hard">Hard</span>
+      <div class="problem-title">Full QLoRA Pipeline on 3×3 Weight Matrix</div>
+      <div class="problem-text">Perform end-to-end QLoRA: quantize, dequantize, compute error, then apply LoRA update.</div>
+
+      <div class="given">
+        <div class="label">Weight Matrix W (3×3)</div>
+        <div class="matrix">W = [[  0.9, -1.4,  0.6],
+     [ -0.3,  1.7, -0.8],
+     [  2.1,  0.4, -1.9]]</div>
+      </div>
+
+      <div class="given">
+        <div class="label">Parameters &amp; LoRA Matrices</div>
+        <div class="matrix">b = 4 bits,  r = 2,  α = 4
+
+A (2×3) = [[ 0.3, -0.1, 0.4],
+           [-0.2,  0.5, 0.1]]
+
+B (3×2) = [[ 0.2, -0.3],
+           [ 0.1,  0.4],
+           [-0.4,  0.2]]</div>
+      </div>
+
+      <div class="formula-ref">
+        <div class="label">Formulas</div>
+        δ = (max − min) / (2<sup>b</sup> − 1)<br>
+        Q<sub>ij</sub> = round((W<sub>ij</sub> − min) / δ)<br>
+        W̃<sub>ij</sub> = Q<sub>ij</sub> · δ + min<br>
+        E = W − W̃,&nbsp; L2 = √ΣE²,&nbsp; MAE = (1/n)·Σ|E|<br>
+        ΔW = (α/r) · B·A,&nbsp; W' = W̃ + ΔW
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) δ and quantized matrix Q<br>
+        (b) Dequantized W̃<br>
+        (c) Error matrix E, L2 error, MAE<br>
+        (d) Product BA<br>
+        (e) ΔW = (α/r)·BA<br>
+        (f) Final W' = W̃ + ΔW
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Scaling Factor &amp; Quantization</div>
+          <p>min = −1.9, max = 2.1, levels = 2⁴ = 16</p>
+          <div class="calc-block">δ = (2.1 − (−1.9)) / (2⁴ − 1) = 4.0 / 15 = 0.26667</div>
+
+          <p><strong>Q<sub>ij</sub> = round((W<sub>ij</sub> − (−1.9)) / 0.26667):</strong></p>
+          <div class="calc-block">(0,0):  (0.9 + 1.9)/0.26667 = 10.500  → 10
+(0,1):  (-1.4 + 1.9)/0.26667 = 1.875  →  2
+(0,2):  (0.6 + 1.9)/0.26667 = 9.375  →  9
+(1,0):  (-0.3 + 1.9)/0.26667 = 6.000  →  6
+(1,1):  (1.7 + 1.9)/0.26667 = 13.500  → 13   (round half to even, 13)
+(1,2):  (-0.8 + 1.9)/0.26667 = 4.125  →  4
+(2,0):  (2.1 + 1.9)/0.26667 = 15.000  → 15
+(2,1):  (0.4 + 1.9)/0.26667 = 8.625  →  9
+(2,2):  (-1.9 + 1.9)/0.26667 = 0      →  0
+
+Q = [[10,  2,  9],
+     [ 6, 13,  4],
+     [15,  9,  0]]</div>
+          <p><em>Note: 10.5 and 13.5 may round to 10/14 or 11/13 depending on tie-breaking convention. Banker's rounding (round half to even) gives 10, 14. Standard "round half up" gives 11, 14. Here we use Python's default banker's rounding: 10.5 → 10, 13.5 → 14. Both conventions are accepted in exams; check your slide convention. Using banker's rounding gives the values shown.</em></p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) Dequantize W̃ = Q·δ + min</div>
+          <div class="calc-block">(0,0): 10·0.26667 + (-1.9) = 2.6667 - 1.9 =  0.7667
+(0,1):  2·0.26667 + (-1.9) = 0.5333 - 1.9 = -1.3667
+(0,2):  9·0.26667 + (-1.9) = 2.4000 - 1.9 =  0.5000
+(1,0):  6·0.26667 + (-1.9) = 1.6000 - 1.9 = -0.3000
+(1,1): 13·0.26667 + (-1.9) = 3.4667 - 1.9 =  1.5667
+(1,2):  4·0.26667 + (-1.9) = 1.0667 - 1.9 = -0.8333
+(2,0): 15·0.26667 + (-1.9) = 4.0000 - 1.9 =  2.1000
+(2,1):  9·0.26667 + (-1.9) = 2.4000 - 1.9 =  0.5000
+(2,2):  0·0.26667 + (-1.9) =          -1.9 = -1.9000
+
+W̃ = [[ 0.7667, -1.3667,  0.5000],
+     [-0.3000,  1.5667, -0.8333],
+     [ 2.1000,  0.5000, -1.9000]]</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) Quantization Error</div>
+          <div class="calc-block">E_ij = W_ij - W̃_ij:
+(0,0):  0.9000 - 0.7667 =  0.1333
+(0,1): -1.4000 - (-1.3667) = -0.0333
+(0,2):  0.6000 - 0.5000 =  0.1000
+(1,0): -0.3000 - (-0.3000) =  0.0000
+(1,1):  1.7000 - 1.5667 =  0.1333
+(1,2): -0.8000 - (-0.8333) =  0.0333
+(2,0):  2.1000 - 2.1000 =  0.0000
+(2,1):  0.4000 - 0.5000 = -0.1000
+(2,2): -1.9000 - (-1.9000) =  0.0000
+
+E = [[ 0.1333, -0.0333,  0.1000],
+     [ 0.0000,  0.1333,  0.0333],
+     [ 0.0000, -0.1000,  0.0000]]
+
+Sum of squares = 0.0178 + 0.0011 + 0.0100 + 0 + 0.0178 + 0.0011 + 0 + 0.0100 + 0
+              = 0.0578
+L2 = √0.0578 = 0.2404
+
+Sum of |E|  = 0.1333 + 0.0333 + 0.1000 + 0 + 0.1333 + 0.0333 + 0 + 0.1000 + 0
+            = 0.5333
+MAE         = 0.5333 / 9 = 0.0593</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(d) Compute U = B·A  (3×2 · 2×3 = 3×3)</div>
+          <div class="calc-block">U[i,j] = Σ_k B[i,k] · A[k,j]
+
+U(0,0) = 0.2·0.3  + (-0.3)·(-0.2) =  0.06 + 0.06 =  0.1200
+U(0,1) = 0.2·(-0.1) + (-0.3)·0.5  = -0.02 - 0.15 = -0.1700
+U(0,2) = 0.2·0.4  + (-0.3)·0.1    =  0.08 - 0.03 =  0.0500
+
+U(1,0) = 0.1·0.3  + 0.4·(-0.2)    =  0.03 - 0.08 = -0.0500
+U(1,1) = 0.1·(-0.1) + 0.4·0.5     = -0.01 + 0.20 =  0.1900
+U(1,2) = 0.1·0.4  + 0.4·0.1       =  0.04 + 0.04 =  0.0800
+
+U(2,0) = (-0.4)·0.3  + 0.2·(-0.2) = -0.12 - 0.04 = -0.1600
+U(2,1) = (-0.4)·(-0.1) + 0.2·0.5  =  0.04 + 0.10 =  0.1400
+U(2,2) = (-0.4)·0.4  + 0.2·0.1    = -0.16 + 0.02 = -0.1400
+
+U = [[ 0.12, -0.17,  0.05],
+     [-0.05,  0.19,  0.08],
+     [-0.16,  0.14, -0.14]]</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(e) ΔW = (α/r)·U = 2·U</div>
+          <div class="calc-block">α/r = 4/2 = 2
+
+ΔW = [[ 0.24, -0.34,  0.10],
+      [-0.10,  0.38,  0.16],
+      [-0.32,  0.28, -0.28]]</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(f) Final Updated Weights W' = W̃ + ΔW</div>
+          <div class="calc-block">(0,0):  0.7667 + 0.24 =  1.0067
+(0,1): -1.3667 + (-0.34) = -1.7067
+(0,2):  0.5000 + 0.10 =  0.6000
+
+(1,0): -0.3000 + (-0.10) = -0.4000
+(1,1):  1.5667 + 0.38 =  1.9467
+(1,2): -0.8333 + 0.16 = -0.6733
+
+(2,0):  2.1000 + (-0.32) =  1.7800
+(2,1):  0.5000 + 0.28 =  0.7800
+(2,2): -1.9000 + (-0.28) = -2.1800</div>
+        </div>
+
+        <div class="answer-final">W' = [[ 1.007, -1.707,  0.600], [-0.400,  1.947, -0.673], [ 1.780,  0.780, -2.180]]</div>
+      </div>
+    </div>
+
+    <!-- Problem C.2 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem C.2</span>
+      <span class="difficulty diff-medium">Medium</span>
+      <div class="problem-title">LoRA Parameter Analysis — Multi-Layer LLM</div>
+      <div class="problem-text">A Transformer LLM has 32 layers, each with attention projection matrices of size 4096×4096 (one each for Q, K, V, O). LoRA is applied <strong>only</strong> to Q and V projections with rank r = 8.</div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) Trainable params per layer (full fine-tuning Q+V only)<br>
+        (b) Trainable params per layer (LoRA, r=8)<br>
+        (c) Total LoRA params across all 32 layers<br>
+        (d) Reduction ratio and % trainable<br>
+        (e) Adapter file size assuming FP16
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Full Fine-Tuning Params (Q + V per layer)</div>
+          <div class="calc-block">Each projection: 4096 × 4096 = 16,777,216 params
+Per layer (Q + V): 2 × 16,777,216 = 33,554,432 params</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) LoRA Params per Layer</div>
+          <div class="formula-box">LoRA params = r · (d + k) per matrix</div>
+          <div class="calc-block">Per Q-projection: 8 · (4096 + 4096) = 8 · 8192 = 65,536
+Per V-projection: 65,536 (same shape)
+Per layer (Q + V): 2 · 65,536 = 131,072 params</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) Total Across 32 Layers</div>
+          <div class="calc-block">Full FT params total = 33,554,432 × 32 = 1,073,741,824 ≈ 1.07 B
+LoRA params total   =    131,072 × 32 =     4,194,304 ≈ 4.19 M</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(d) Reduction Ratio</div>
+          <div class="calc-block">Ratio = 1,073,741,824 / 4,194,304 = 256×
+% trainable = 4,194,304 / 1,073,741,824 = 0.3906%</div>
+          <p>You train only <strong>0.39%</strong> of what full fine-tuning would touch.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(e) Adapter File Size (FP16)</div>
+          <div class="calc-block">FP16 = 2 bytes per parameter
+Adapter size = 4,194,304 × 2 = 8,388,608 bytes ≈ 8 MB</div>
+          <p>An 8 MB file vs ~2 GB for a full FP16 copy of those projections.</p>
+        </div>
+
+        <div class="answer-final">256× reduction · 4.19M trainable params · ~8 MB adapter file</div>
+
+        <div class="formula-ref">
+          <div class="label">Deployment Impact</div>
+          One frozen base model + many small LoRA adapters → multi-tenant serving, fast task switching, easy versioning. This is why LoRA dominates production LLM customization.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============= BLEU ============= -->
+<div class="tab-content" id="bleu">
+  <div class="set-page">
+    <div class="topic-header">
+      <div class="topic-title">BLEU Score Calculations</div>
+      <div class="topic-meta">Unit 4 &middot; n-gram Precision + Brevity Penalty</div>
+    </div>
+
+    <div class="controls">
+      <button class="ctrl-btn" onclick="toggleAll('bleu', true)">Show All Solutions</button>
+      <button class="ctrl-btn" onclick="toggleAll('bleu', false)">Hide All</button>
+    </div>
+
+    <!-- Problem E.1 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem E.1</span>
+      <span class="difficulty diff-hard">Hard</span>
+      <div class="problem-title">Full BLEU-2 Score with Brevity Penalty</div>
+      <div class="problem-text">Compute the full BLEU-2 score (combining 1-gram and 2-gram precisions with brevity penalty).</div>
+
+      <div class="given">
+        <div class="label">Reference &amp; Candidate</div>
+        <div class="matrix">Reference: "the quick brown fox jumps over the lazy dog"  (r = 9)
+Candidate: "the quick fox jumps over lazy dog"             (c = 7)</div>
+      </div>
+
+      <div class="formula-ref">
+        <div class="label">BLEU-N Formula</div>
+        BLEU-N = BP · exp(Σ<sub>n=1..N</sub> w<sub>n</sub> · log p<sub>n</sub>) = BP · (∏ p<sub>n</sub>)<sup>1/N</sup><br>
+        BP = 1 if c &gt; r, else exp(1 − r/c)<br>
+        p<sub>n</sub> = clipped n-gram matches / total candidate n-grams
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) Clipped 1-gram precision p<sub>1</sub><br>
+        (b) Clipped 2-gram precision p<sub>2</sub><br>
+        (c) Brevity penalty BP<br>
+        (d) Final BLEU-2 = BP · (p<sub>1</sub>·p<sub>2</sub>)<sup>1/2</sup>
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Unigram Precision p<sub>1</sub></div>
+          <p><strong>Candidate 1-grams:</strong> the, quick, fox, jumps, over, lazy, dog → 7 total</p>
+          <p><strong>Reference counts:</strong> the=2, quick=1, brown=1, fox=1, jumps=1, over=1, lazy=1, dog=1</p>
+          <p><strong>Clipped matches:</strong> min(cand_count, ref_count) per unique word:</p>
+          <div class="calc-block">the:   min(1, 2) = 1
+quick: min(1, 1) = 1
+fox:   min(1, 1) = 1
+jumps: min(1, 1) = 1
+over:  min(1, 1) = 1
+lazy:  min(1, 1) = 1
+dog:   min(1, 1) = 1
+
+Total clipped = 7
+p₁ = 7/7 = 1.0000</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) Bigram Precision p<sub>2</sub></div>
+          <p><strong>Reference bigrams (8 total):</strong> (the,quick), (quick,brown), (brown,fox), (fox,jumps), (jumps,over), (over,the), (the,lazy), (lazy,dog)</p>
+          <p><strong>Candidate bigrams (6 total):</strong> (the,quick), (quick,fox), (fox,jumps), (jumps,over), (over,lazy), (lazy,dog)</p>
+          <p><strong>Check each candidate bigram against reference:</strong></p>
+          <div class="calc-block">(the, quick):  ✓ in reference → match
+(quick, fox):  ✗ not in reference  ("quick brown" in ref)
+(fox, jumps):  ✓ → match
+(jumps, over): ✓ → match
+(over, lazy):  ✗ not in reference  ("over the" in ref)
+(lazy, dog):   ✓ → match
+
+Clipped matches = 4
+p₂ = 4/6 = 0.6667</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) Brevity Penalty</div>
+          <p>c = 7 (candidate length), r = 9 (reference length). Since c &lt; r:</p>
+          <div class="formula-box">BP = exp(1 − r/c) = exp(1 − 9/7) = exp(−2/7)</div>
+          <div class="calc-block">−2/7 = −0.2857
+BP = exp(−0.2857) = 0.7515</div>
+          <p>BP &lt; 1 penalizes the candidate for being shorter than the reference.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(d) Final BLEU-2</div>
+          <p>Geometric mean of precisions (with N = 2):</p>
+          <div class="calc-block">(p₁ · p₂)^(1/2) = (1.0000 · 0.6667)^0.5
+                = √0.6667
+                = 0.8165
+
+BLEU-2 = BP · 0.8165 = 0.7515 · 0.8165 = 0.6136</div>
+        </div>
+
+        <div class="answer-final">BLEU-2 = 0.6136</div>
+
+        <div class="formula-ref">
+          <div class="label">Interpretation</div>
+          <ul class="notes">
+            <li>Perfect unigram precision (p₁ = 1.0) — all candidate words appear in reference.</li>
+            <li>Bigram precision drops because removed words break local word order ("quick brown" → "quick fox").</li>
+            <li>BP further penalizes the short candidate.</li>
+            <li>A score of ~0.6 is typical for usable but imperfect translations.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem E.2 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem E.2</span>
+      <span class="difficulty diff-medium">Medium</span>
+      <div class="problem-title">Why Clipping Matters — Repetition Trap</div>
+      <div class="problem-text">A buggy translator outputs repeated tokens. Show how unclipped vs clipped precision differ.</div>
+
+      <div class="given">
+        <div class="label">Reference &amp; Candidate</div>
+        <div class="matrix">Reference: "the cat sat on the mat"        (r = 6)
+Candidate: "the the the the the the"        (c = 6, all "the")</div>
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        (a) Naïve (unclipped) unigram precision<br>
+        (b) Clipped unigram precision<br>
+        (c) Brevity penalty<br>
+        (d) BLEU-1 with clipping — why is clipping critical?
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">(a) Naïve Precision (BAD — no clipping)</div>
+          <p>"the" appears 6 times in candidate, and it does appear in reference, so a naïve count would say all 6 match:</p>
+          <div class="calc-block">Naïve matches = 6
+Naïve precision = 6/6 = 1.0000  (!!)</div>
+          <p>This is clearly wrong — the candidate is nonsense. This is why <strong>clipping</strong> was introduced.</p>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(b) Clipped Precision</div>
+          <p>"the" appears max 2 times in the reference. So clipped count is capped:</p>
+          <div class="calc-block">the: min(cand=6, ref_max=2) = 2
+
+Total clipped matches = 2
+p₁ = 2/6 = 0.3333</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(c) Brevity Penalty</div>
+          <p>c = 6, r = 6. Since c = r (not less):</p>
+          <div class="calc-block">BP = 1 (no penalty, lengths match)</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">(d) Final BLEU-1</div>
+          <div class="calc-block">BLEU-1 = BP · p₁ = 1.0 · 0.3333 = 0.3333</div>
+        </div>
+
+        <div class="answer-final">Clipped BLEU = 0.333  (vs naïve 1.000) — clipping drops nonsense translations correctly</div>
+
+        <div class="formula-ref">
+          <div class="label">Key Insight</div>
+          Without clipping, BLEU would reward repetition. Clipping ensures each reference token can contribute at most once per its occurrence in the reference — preventing gaming the metric with repeated common words.
+        </div>
+      </div>
+    </div>
+
+    <!-- Problem E.3 -->
+    <div class="problem-box">
+      <span class="problem-tag">Problem E.3</span>
+      <span class="difficulty diff-medium">Medium</span>
+      <div class="problem-title">Brevity Penalty Edge Cases</div>
+      <div class="problem-text">Compute BP for three candidates of different lengths against the same reference.</div>
+
+      <div class="given">
+        <div class="label">Reference</div>
+        <div class="matrix">Reference: "the team won the match yesterday"  (r = 6)
+
+Candidate A: "team won yesterday"           (c = 3)
+Candidate B: "the team won the match"       (c = 5)
+Candidate C: "the team won the match yesterday in stadium"  (c = 8)</div>
+      </div>
+
+      <div class="find-box">
+        <div class="label">Compute</div>
+        BP for each candidate. Explain the asymmetric behavior.
+      </div>
+
+      <button class="sol-toggle" onclick="toggleSol(this)"><span class="arrow">▶</span> Show Full Solution</button>
+      <div class="solution">
+
+        <div class="step">
+          <div class="step-title">BP Formula</div>
+          <div class="formula-box">BP = 1                  if c > r
+BP = exp(1 − r/c)       if c ≤ r</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">Candidate A (c = 3, r = 6)</div>
+          <div class="calc-block">c < r, so BP = exp(1 − 6/3) = exp(−1) = 0.3679
+
+Severe penalty (37%) for being half the length.</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">Candidate B (c = 5, r = 6)</div>
+          <div class="calc-block">c < r, so BP = exp(1 − 6/5) = exp(−0.2) = 0.8187
+
+Mild penalty (~82%) for being slightly shorter.</div>
+        </div>
+
+        <div class="step">
+          <div class="step-title">Candidate C (c = 8, r = 6)</div>
+          <div class="calc-block">c > r, so BP = 1.0 (no penalty)
+
+Longer candidates are NOT penalized by BP — but they get penalized through 
+lower precision (extra words become "wrong" by clipping).</div>
+        </div>
+
+        <div class="answer-final">BP: A = 0.368, B = 0.819, C = 1.000 — penalty grows exponentially as candidate shrinks</div>
+
+        <div class="formula-ref">
+          <div class="label">Why Asymmetric?</div>
+          <ul class="notes">
+            <li>Short candidates can have artificially high precision (fewer tokens to be wrong about) → BP corrects this.</li>
+            <li>Long candidates have more chances to add unmatched words → precision naturally drops, so no extra penalty needed.</li>
+            <li>The exponential form ensures small length mismatches are gentle but big ones are harsh.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  GenAI Numericals &middot; Hard Practice &middot; Slide-Difficulty Worked Solutions
+</footer>
+
+<script>
+  const tabs = document.querySelectorAll('.tab-btn');
+  const contents = document.querySelectorAll('.tab-content');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      const target = tab.dataset.tab;
+      tabs.forEach(t => t.classList.remove('active'));
+      contents.forEach(c => c.classList.remove('active'));
+      tab.classList.add('active');
+      document.getElementById(target).classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  });
+
+  function toggleSol(btn) {
+    const sol = btn.nextElementSibling;
+    const isOpen = sol.classList.contains('open');
+    sol.classList.toggle('open');
+    btn.classList.toggle('open');
+    btn.innerHTML = isOpen
+      ? '<span class="arrow">▶</span> Show Full Solution'
+      : '<span class="arrow">▶</span> Hide Solution';
+  }
+
+  function toggleAll(setId, show) {
+    const set = document.getElementById(setId);
+    const sols = set.querySelectorAll('.solution');
+    const btns = set.querySelectorAll('.sol-toggle');
+    sols.forEach(s => {
+      if (show) s.classList.add('open');
+      else s.classList.remove('open');
+    });
+    btns.forEach(b => {
+      if (show) {
+        b.classList.add('open');
+        b.innerHTML = '<span class="arrow">▶</span> Hide Solution';
+      } else {
+        b.classList.remove('open');
+        b.innerHTML = '<span class="arrow">▶</span> Show Full Solution';
+      }
+    });
+  }
+</script>
+
+</body>
+</html>
